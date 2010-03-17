@@ -1,0 +1,26 @@
+Twiggy: a Pythonic logger
+
+- logs should be greppable
+- SOURCE should be greppable for logging.  We can write a custom fucking importer to do static  analysis & comment out lines that will never emit (instead of having to do this @ run time)
+- loggers should log internal exceptions, not raise them
+- no arbitrary levels - only debug, info, warning, error, critical.  There is a disabled level that's higher than critical to shut things off entirely.
+- NO FUNCTORS!
+- There should be one way to do it
+- partial binding gives new loggers.  We can do prefix formatting this way too.
+- dots are for propogation only.  You can only install emitters at top-level loggers
+- we'll have a master logger which receives all events (unless supressed)
+- users shouldn't have to pass logging objects around - logging.getLogger(..) is nice this way.
+- emitters do output; return True to suppress (so that events are propogated by default, ie if the user forgets an explicit return)
+- by default, replace newlines w/ '\n', w/ parameter at log site to override
+- tracebacks can have newlines (via option), but then have a prefix on each line
+- logging only uses varargs & kwargs - no prepacked tuples
+- if you have insufficient/wrong args for the format string, output *something* and log about fubarage (this gets complicated with %f vs. %s & named format params, I think - maybe just use %r?)
+- nice to have - "async" logging via thread/multiprocessing
+- formatter & emitter
+- if you want structured logs, you should be using kwargs. 
+- if you pass a callable, it will be called & the returned value subbed in the format string.  Use repr() if you want that
+- 90% use case compatability layer in twiggy.log4j.  twiggy.log4j.hijack_logging(..) will install it in sys.modules s.t. import logging gives you log4j
+- a log message that will not emit should be as fast as humanly possible.  In general, logging should have as little impact on performance/operation as possible.
+- how does configuration work?
+
+- ping Jesse Noller w/ this
