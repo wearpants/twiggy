@@ -10,6 +10,10 @@ log.database.debug("got %(num)d things", num=len(cursor))
 
 log.webserver.info("shutting down")
 
+## you can test if a message would emit anything - this construct should be discouraged tho
+if log.database.would_emit(twiggy.INFO):
+    do_something_slow() 
+
 ## if we're running interactively, there's a preconfigured logger that prints to the terminal.  Master logger is silent. ##
 
 log.shell.warning("OMG Snakes!", supress_newlines=False)
@@ -34,7 +38,6 @@ log.mylogger.emitters = [ list_of_emitters ]
 log.mylogger.forward_to_master = True/False
 log.mylogger.level = twiggy.INFO
 
-
 ## 2nd+ level
 log.mylogger.second ==> <DottedLogger(name='mylogger.second')>
 log.mylogger.second.level = twiggy.DISABLED
@@ -49,14 +52,12 @@ twiggy.master ==> <Logger> # same api as toplevel but no name/subs, maybe a comm
 
 ## messages from top-level loggers may be fwd'd here
 
-
 ### Emitters ###
 emitter = MyEmitter(level="info", format = twiggy.default_format, ...) # format is a func
 
 if msg.level > emitter.level:
     formatted_msg = emitter.format(msg)
     emitter.emit(formatted_msg)
-
 
 ### Message Object ###
 class Message(object):
@@ -66,20 +67,18 @@ def __init__(self, format_string, args, kwargs, text_traceback, suppress_newline
     self.all_args = [..]
     self.all_kwargs = [..]
 
-
-
 ### Cloning ###
 # All new loggers start out as clones of twiggy.default_logger
+# XXX this needs more thought
 
-twiggy.default_logger = TopLogger?(..).bind("%(date)s:%(time)s:%(next)s", date=get_date, time=get_time)
+twiggy.default_logger = TopLogger?(..).bind("%(date)sT%(time)s:%(logname)s:%(next)s", date=get_date, time=get_time)
 
 bound1 = log.webapp.bind("Request_id: %d %(next)s", 42)
 bound2 = bound1.bind("Remote IP: %(ip)s %(next)s", '1.2.3.4')
 bound2.info("I wear pants")
 
-
 ## we'll get a log message like
-date:time:webapp:Request_id: 42 Remote IP: 1.2.3.4 I wear pants
+2010-03-17T11:48:39:webapp:Request_id: 42 Remote IP: 1.2.3.4 I wear pants
 
 ## the emitter will see a Message like
 msg.format_strings =["Request_id: %d", "Remote IP: %(ip)s", "I wear pants"]
