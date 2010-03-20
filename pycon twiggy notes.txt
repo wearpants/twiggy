@@ -6,6 +6,7 @@ Principles
 - There should be one way to do it
 - 90% use case compatability layer in twiggy.log4j.  twiggy.log4j.hijack_logging(..) will install it in sys.modules s.t. `import logging` gives you log4j
 - reuse from stdlib logging, esp. Handlers? 
+- no hierarchy. A single logger & a list of emitters.  Logging system passes each message to emitters, who run regexes on name/entire message to decide what to do.
 - NO FUNCTORS!
 
 Usability
@@ -26,13 +27,14 @@ Output
 Errors
 ======
 - loggers should log internal exceptions, not raise them
-- if you have insufficient/wrong args for the format string, output *something* and log about fubarage (this gets complicated with %f vs. %s & named format params, I think - maybe just use %r?)
+- if you have insufficient/wrong args for the format string, output repr'd message & args
 
 Ideas
 =====
 - SOURCE should be greppable for logging.  We can write a custom fucking importer to do static analysis & "comment out" lines that will never emit (instead of having to do this @ run time)
 - if you pass a callable, it will be called & the returned value subbed in the format string.  Use repr() if you want the callable itself.
 - nice to have - "async" logging via thread/multiprocessing
+- logging configuration is frozen before any messages are output.
 
 Questions
 =========
