@@ -5,7 +5,7 @@ import sys
 class Message(object):
 
     def __init__(self, level, format_spec, fields,
-                 suppress_newlines = True, trace = None, source = False,
+                 suppress_newlines = True, trace = None,
                  *args, **kwargs):
 
         self.level = level
@@ -25,22 +25,31 @@ class Message(object):
             else:
                 self.traceback = tb
         elif trace == "always":
+            pass
             # XXX build a traceback using getframe
         elif trace is not None:
             raise ValueError("bad trace %r"%trace)
 
-        if source:
-            # XXX calculate source line & module
-            pass
+    def populate(self):
+
+        def doit(d):
+            for k, v in d.iteritems():
+                if callable(v):
+                    d[k] = v()
+
+        doit(self.fields)
+        doit(self.kwargs)
+
+        self.args = tuple(v() if callable(v) else v for v in self.args)
 
     def substitute(self):
         s = self.format_spec.format(*self.args, **self.kwargs)
         if s == self.format_spec:
             # a % style format
-            if args and kwargs:
+            if self.args and self.kwargs:
                 raise ValueError("can't have both args & kwargs with % style format specs")
             else:
-                s = self.format_spec % (args or kwargs)
+                s = self.format_spec % (self.args or self.kwargs)
 
         if self.suppress_newlines:
             s = s.replace('\n', '\\n')
@@ -49,7 +58,4 @@ class Message(object):
 
     @property
     def name(self):
-        try:
-            return self.fields['name']
-        except KeyError:
-            raise AttributeError
+        return self.fields.get('name', '')

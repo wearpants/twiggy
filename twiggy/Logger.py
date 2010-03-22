@@ -1,27 +1,33 @@
+import time
+
 from Message import Message
 import Levels
 
 emitters = {}
 
 def handle(msg):
-    for emitter in emitters.itervalues() if emitter.level >= msg.level:
-        # XXX add appropriate error trapping & logging; watch for recursion
-        emitter.handle(msg)
+    for emitter in emitters.itervalues():
+        if emitter.level >= msg.level:
+            # XXX add appropriate error trapping & logging; watch for recursion
+            emitter.handle(msg)
 
 class Logger(object):
-    __slots__ = []
-
-    def __init__(self):
-        pass
-
-    def _handle(self, level, format_spec = '',  *args, **kwargs):
-        handle(Message(level, format_spec, *args, **kwargs))
+    __slots__ = ['_fields']
+    def __init__(self, fields = None):
+        self._fields = fields if fields is not None else {}
 
     def fields(self, **kwargs):
-        return FieldsLogger(kwargs)
+        new_fields = self._fields.copy().update(**kwargs)
+        return self.__class__(new_fields)
+
+    def _handle(self, level, format_spec = '',  *args, **kwargs):
+        handle(Message(level, format_spec, self._fields.copy(), *args, **kwargs))
 
     def name(self, name):
         return self.fields(name=name)
+
+    def struct(self, **kwargs):
+        self.fields(**kwargs).info()
 
     def debug(self, *args, **kwargs):
         self._handle(Levels.DEBUG, *args, **kwargs)
@@ -38,15 +44,4 @@ class Logger(object):
     def critical(self, *args, **kwargs):
         self._handle(Levels.CRITICAL, *args, **kwargs)
 
-class FieldsLogger(Logger):
-    __slots__ = ['_fields']
-    def __init__(self, fields = None):
-        self._fields = fields if fields is not None else {}
-
-    def fields(self, **kwargs):
-        return type(self)(self._fields.copy())
-
-    def _handle(self, level, format_spec = '', *args, **kwargs):
-        super(FieldsLogger, self)._handle(level, format_spec,
-                                          fields = self._fields.copy(),
-                                          *args, **kwargs)
+log = Logger({'time':time.time})

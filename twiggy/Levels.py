@@ -1,7 +1,7 @@
 __all__ = ['DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL']
 
 class LogLevel(object):
-    __slots__ = ['__name,', '__value']
+    __slots__ = ['__name', '__value']
     levels = {}
 
     def __init__(self, name, value):
