@@ -30,8 +30,6 @@ class Message(object):
         elif trace is not None:
             raise ValueError("bad trace %r"%trace)
 
-    def populate(self):
-
         def doit(d):
             for k, v in d.iteritems():
                 if callable(v):
@@ -42,7 +40,10 @@ class Message(object):
 
         self.args = tuple(v() if callable(v) else v for v in self.args)
 
-    def substitute(self):
+        if self.format_spec == '':
+            s.text = ''
+            return
+
         s = self.format_spec.format(*self.args, **self.kwargs)
         if s == self.format_spec:
             # a % style format
@@ -50,9 +51,6 @@ class Message(object):
                 raise ValueError("can't have both args & kwargs with % style format specs")
             else:
                 s = self.format_spec % (self.args or self.kwargs)
-
-        if self.suppress_newlines:
-            s = s.replace('\n', '\\n')
 
         self.text = s
 
