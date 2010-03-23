@@ -1,7 +1,7 @@
 class Emitter(object):
     # XXX ABC me!
-    def __init__(self, level):
-        self.level = level
+    def __init__(self, min_level):
+        self.min_level = min_level
 
     def filter(self, msg):
         return True
@@ -19,11 +19,11 @@ class Emitter(object):
 
 class StandardEmitter(Emitter):
 
-    def __init__(self, level, separator=':', field_separator='=',
+    def __init__(self, min_level, separator=':', field_separator='=',
                  **kwargs):
         self.separator = separator
         self.field_separtor = field_separator
-        super(StandardEmitter, self).__init__(level, **kwargs)
+        super(StandardEmitter, self).__init__(min_level, **kwargs)
 
         # XXX entirely insufficient
         self.fields_map = [('time', '{0:f}'.format)]

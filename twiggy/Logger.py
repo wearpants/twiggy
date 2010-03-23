@@ -22,7 +22,7 @@ class Logger(object):
         msg = Message(level, format_spec, self._fields.copy(), *args, **kwargs)
 
         for emitter in self.emitters.itervalues():
-            if emitter.level >= msg.level:
+            if emitter.min_level >= msg.level:
                 # XXX add appropriate error trapping & logging; watch for recursion
                 emitter.emit(msg)
 
