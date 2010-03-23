@@ -2,15 +2,16 @@ from Message import Message
 import Levels
 
 class Logger(object):
-    __slots__ = ['_fields', 'emitters']
+    __slots__ = ['_fields', 'emitters', 'min_level']
 
-    def __init__(self, fields = None, emitters = None):
+    def __init__(self, fields = None, emitters = None, min_level = Levels.DEBUG):
         self._fields = fields if fields is not None else {}
         self.emitters = emitters if emitters is not None else {}
+        self.min_level = min_level
 
     def fields(self, **kwargs):
         new_fields = self._fields.copy().update(**kwargs)
-        return self.__class__(new_fields, self.emitters)
+        return self.__class__(new_fields, self.emitters, self.min_level)
 
     def name(self, name):
         return self.fields(name=name)
@@ -19,6 +20,8 @@ class Logger(object):
         self.fields(**kwargs).info()
 
     def _emit(self, level, format_spec = '',  *args, **kwargs):
+        if level < self.min_level: return
+
         msg = Message(level, format_spec, self._fields.copy(), *args, **kwargs)
 
         for emitter in self.emitters.itervalues():
