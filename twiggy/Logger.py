@@ -10,7 +10,8 @@ class Logger(object):
         self.min_level = min_level
 
     def fields(self, **kwargs):
-        new_fields = self._fields.copy().update(**kwargs)
+        new_fields = self._fields.copy()
+        new_fields.update(**kwargs)
         return self.__class__(new_fields, self.emitters, self.min_level)
 
     def name(self, name):
