@@ -33,6 +33,7 @@ class StandardEmitter(Emitter):
         self.converters = [
             FieldConverter('time', time.ctime, '{1}'.format),
             FieldConverter('name', str, '{1}'.format),
+            FieldConverter('level', str, '{1}'.format),
         ]
 
     @staticmethod
@@ -57,13 +58,12 @@ class StandardEmitter(Emitter):
     def format_fields(self, msg):
         # XXX I could be much faster & efficient!
         # XXX needs to deal with required fields
+        # XXX I have written this pattern at least 10 times
         converts = set(x.name for x in self.converters)
         fields = set(msg.fields.iterkeys())
 
         unknowns = fields - converts
         knowns = fields & converts
-
-        print knowns, unknowns, fields
 
         l = []
         for name, toString, toColumn in self.converters:

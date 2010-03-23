@@ -8,12 +8,13 @@ class Message(object):
                  suppress_newlines = True, trace = None,
                  *args, **kwargs):
 
-        self.level = level
         self.format_spec = format_spec
         self.args = args
         self.kwargs = kwargs
         self.fields = fields
         self.suppress_newlines = suppress_newlines
+
+        self.fields['level'] = level
 
         if isinstance(trace, tuple):
             assert len(trace) == 3
@@ -58,3 +59,7 @@ class Message(object):
     @property
     def name(self):
         return self.fields.get('name', '')
+
+    @property
+    def level(self):
+        return self.fields['level']
