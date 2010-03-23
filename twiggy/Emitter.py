@@ -12,7 +12,7 @@ class Emitter(object):
     def output(self, msg, fields, text):
         raise NotImplementedError
 
-    def handle(self, msg):
+    def emit(self, msg):
         if self.filter(msg):
             s = self.format(msg)
             self.output(msg, s)

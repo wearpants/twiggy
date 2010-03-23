@@ -1,8 +1,11 @@
 __all__=['log']
+import time
 
 import Logger
-emitters = Logger.emitters
-log = Logger.log
+
+log = Logger.Logger({'time':time.time})
+emitters = log.emitters
+
 
 from Levels import *
 

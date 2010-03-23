@@ -27,6 +27,7 @@ class Message(object):
         elif trace == "always":
             pass
             # XXX build a traceback using getframe
+            # XXX maybe an option to just provide current frame info instead of full stack?
         elif trace is not None:
             raise ValueError("bad trace %r"%trace)
 
