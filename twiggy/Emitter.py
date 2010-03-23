@@ -1,3 +1,6 @@
+from collections import namedtuple
+import time
+
 class Emitter(object):
     # XXX ABC me!
     def __init__(self, min_level):
@@ -17,16 +20,28 @@ class Emitter(object):
             s = self.format(msg)
             self.output(msg, s)
 
+# XXX this prolly needs a 'required' field...
+FieldConverter = namedtuple('FieldConverter', ['name', 'toString', 'toColumn'])
+
 class StandardEmitter(Emitter):
 
-    def __init__(self, min_level, separator=':', field_separator='=',
-                 **kwargs):
+    def __init__(self, min_level, separator=':', **kwargs):
         self.separator = separator
-        self.field_separtor = field_separator
         super(StandardEmitter, self).__init__(min_level, **kwargs)
 
         # XXX entirely insufficient
-        self.fields_map = [('time', '{0:f}'.format)]
+        self.converters = [
+            FieldConverter('time', time.ctime, '{1}'.format),
+            FieldConverter('name', str, '{1}'.format),
+        ]
+
+    @staticmethod
+    def unknown_toString(x):
+        return str(x)
+
+    @staticmethod
+    def unknown_toColumn(name, value):
+        return "{0}={1}".format(name, value)
 
     def format(self, msg):
         fields = self.format_fields(msg)
@@ -40,10 +55,27 @@ class StandardEmitter(Emitter):
             return msg.text
 
     def format_fields(self, msg):
-        # XXX this too
-        l = [stringify(msg.fields[f]) for (f, stringify) in self.fields_map]
+        # XXX I could be much faster & efficient!
+        # XXX needs to deal with required fields
+        converts = set(x.name for x in self.converters)
+        fields = set(msg.fields.iterkeys())
+
+        unknowns = fields - converts
+        knowns = fields & converts
+
+        print knowns, unknowns, fields
+
+        l = []
+        for name, toString, toColumn in self.converters:
+            if name in knowns:
+                l.append(toColumn(name, toString(msg.fields[name])))
+
+        for name in sorted(unknowns):
+            l.append(self.unknown_toColumn(self.unknown_toString(msg.fields[name])))
+
         return self.separator.join(l)
 
     def output(self, msg, s):
         print s
+
 
