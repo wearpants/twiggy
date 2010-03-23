@@ -1,6 +1,7 @@
 __all__ = ['Message']
 
 import sys
+import traceback
 
 class Message(object):
 
@@ -16,21 +17,22 @@ class Message(object):
 
         self.fields['level'] = level
 
-        if isinstance(trace, tuple):
-            assert len(trace) == 3
-            self.traceback = trace
+        if isinstance(trace, tuple) and len(trace) == 3:
+            self.traceback = "\n".join(traceback.format_exception(trace))
         elif trace == "error":
             tb = sys.exc_info()
             if tb[0] is None:
                 self.traceback = None
             else:
-                self.traceback = tb
+                self.traceback = traceback.format_exc()
         elif trace == "always":
             pass
             # XXX build a traceback using getframe
             # XXX maybe an option to just provide current frame info instead of full stack?
         elif trace is not None:
             raise ValueError("bad trace %r"%trace)
+        else:
+            self.traceback = None
 
         def doit(d):
             for k, v in d.iteritems():

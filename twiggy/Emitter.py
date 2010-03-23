@@ -25,8 +25,9 @@ FieldConverter = namedtuple('FieldConverter', ['name', 'toString', 'toColumn'])
 
 class StandardEmitter(Emitter):
 
-    def __init__(self, min_level, separator=':', **kwargs):
+    def __init__(self, min_level, separator=':', traceback_prefix='\nTRACE ', **kwargs):
         self.separator = separator
+        self.traceback_prefix = traceback_prefix
         super(StandardEmitter, self).__init__(min_level, **kwargs)
 
         # XXX entirely insufficient
@@ -47,13 +48,24 @@ class StandardEmitter(Emitter):
     def format(self, msg):
         fields = self.format_fields(msg)
         text = self.format_text(msg)
-        return self.separator.join((fields, text))
+        trace = self.format_traceback(msg)
+        return "{fields}{self.separator}{text}{trace}".format(**locals()) # XXX gross?
+
 
     def format_text(self, msg):
         if msg.suppress_newlines:
             return msg.text.replace('\n', '\\n')
         else:
             return msg.text
+
+    def format_traceback(self, msg):
+        if msg.traceback is not None:
+            # XXX this could be faster
+            l = msg.traceback.split('\n')
+            l = [""] + l[:-1]
+            return self.traceback_prefix.join(l)
+        else:
+            return ""
 
     def format_fields(self, msg):
         # XXX I could be much faster & efficient!
