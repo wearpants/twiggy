@@ -16,7 +16,10 @@ class LogLevel(object):
         return "<LogLevel %s>"%self.__name
 
     def __cmp__(self, other):
-        return cmp(self.__value, other.__value)
+        if not isinstance(other, LogLevel):
+            return NotImplemented
+        else:
+            return cmp(self.__value, other.__value)
 
 def name2level(name):
     return LogLevel._name2levels[name.upper()]
