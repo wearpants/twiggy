@@ -1,7 +1,11 @@
-from collections import namedtuple
+class Converter(object):
+    __slots__ = ['name', 'convertValue', 'convertItem', 'required']
 
-# XXX this prolly needs a 'required' field...
-Converter = namedtuple('Converter', ['name', 'convertValue', 'convertItem', 'required'])
+    def __init__(self, name, convertValue, convertItem, required = False):
+        self.name = name
+        self.convertValue = convertValue
+        self.convertItem = convertItem
+        self.required = required
 
 class ConversionTable(list):
 

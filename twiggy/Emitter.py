@@ -30,10 +30,10 @@ class StandardEmitter(Emitter):
         # XXX entirely insufficient
         self.conversion_table = ConversionTable([
             Converter('time', time.ctime, '{1}'.format, True),
-            Converter('name', str, '{1}'.format, False),
+            Converter('name', str, '{1}'.format),
             Converter('level', str, '{1}'.format, True),
         ])
-        
+
         self.conversion_table.genericValue = str
         self.conversion_table.genericItem = "{0}={1}".format
         self.conversion_table.aggregate = self.separator.join
