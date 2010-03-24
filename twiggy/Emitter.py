@@ -1,4 +1,6 @@
 import time
+import sys
+
 from .lib import ConversionTable, Converter
 
 class Emitter(object):
@@ -22,28 +24,31 @@ class Emitter(object):
 
 class StandardEmitter(Emitter):
 
-    def __init__(self, min_level, separator=':', traceback_prefix='\nTRACE ', **kwargs):
+    def __init__(self, min_level, separator=':', traceback_prefix='\nTRACE ',
+                 conversion=None, **kwargs):
+        super(StandardEmitter, self).__init__(min_level, **kwargs)
         self.separator = separator
         self.traceback_prefix = traceback_prefix
-        super(StandardEmitter, self).__init__(min_level, **kwargs)
 
-        # XXX entirely insufficient
-        self.conversion_table = ConversionTable([
-            Converter('time', time.ctime, '{1}'.format, True),
-            Converter('name', str, '{1}'.format),
-            Converter('level', str, '{1}'.format, True),
-        ])
+        if conversion is not None:
+            self.conversion = conversion
+        else:
+            # XXX move this def out of init
+            self.conversion = ConversionTable([
+                Converter('time', time.ctime, '{1}'.format, True),
+                Converter('level', str, '{1}'.format, True),
+                Converter('name', str, '{1}'.format),
+            ])
 
-        self.conversion_table.genericValue = str
-        self.conversion_table.genericItem = "{0}={1}".format
-        self.conversion_table.aggregate = self.separator.join
+            self.conversion.genericValue = str
+            self.conversion.genericItem = "{0}={1}".format
+            self.conversion.aggregate = self.separator.join
 
     def format(self, msg):
         fields = self.format_fields(msg)
         text = self.format_text(msg)
         trace = self.format_traceback(msg)
         return "{fields}{self.separator}{text}{trace}".format(**locals()) # XXX gross?
-
 
     def format_text(self, msg):
         if msg.suppress_newlines:
@@ -61,9 +66,7 @@ class StandardEmitter(Emitter):
             return ""
 
     def format_fields(self, msg):
-        return self.conversion_table.convert(msg.fields)
+        return self.conversion.convert(msg.fields)
 
     def output(self, msg, s):
-        print s
-
-
+        print>>sys.stderr, s

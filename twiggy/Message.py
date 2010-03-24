@@ -14,9 +14,10 @@ class Message(object):
         self.kwargs = kwargs
         self.fields = fields
         self.suppress_newlines = suppress_newlines
-
         self.fields['level'] = level
 
+        ## format traceback
+        # XXX this needs some cleanup/branch consolidation
         if isinstance(trace, tuple) and len(trace) == 3:
             self.traceback = "\n".join(traceback.format_exception(trace))
         elif trace == "error":
@@ -30,24 +31,30 @@ class Message(object):
             # XXX build a traceback using getframe
             # XXX maybe an option to just provide current frame info instead of full stack?
         elif trace is not None:
-            raise ValueError("bad trace %r"%trace)
+            raise ValueError("bad trace {0!r}".format(trace))
         else:
             self.traceback = None
 
-        def doit(d):
-            for k, v in d.iteritems():
-                if callable(v):
-                    d[k] = v()
+        self.substitute() # XXX it'd be nice to do this only if we're going to emit
 
-        doit(self.fields)
-        doit(self.kwargs)
+    def substitute(self):
+        ## call any callables
+        for k, v in self.fields.iteritems():
+            if callable(v):
+                self.fields[k] = v()
+
+        for k, v in self.kwargs.iteritems():
+            if callable(v):
+                self.kwargs[k] = v()
 
         self.args = tuple(v() if callable(v) else v for v in self.args)
 
+        ## substitute
         if self.format_spec == '':
             s.text = ''
             return
 
+        # XXX I doubt this works as intended in all cases
         s = self.format_spec.format(*self.args, **self.kwargs)
         if s == self.format_spec:
             # a % style format
