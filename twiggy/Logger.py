@@ -23,14 +23,18 @@ class Logger(object):
         self.fields(**kwargs).info()
 
     def _emit(self, level, format_spec = '',  *args, **kwargs):
-        if level < self.min_level or not self.filter(format_spec): return
+        if (level < self.min_level or not self.filter(format_spec)): return
+
+        potential_emitters = [(name, emitter) for name, emitter in self.emitters.iteritems()
+                              if level >= emitter.min_level]
+
+        if not potential_emitters: return
 
         msg = Message(level, format_spec, self._fields.copy(), *args, **kwargs)
 
-        for name, emitter in self.emitters.iteritems():
-            if msg.level >= emitter.min_level:
-                # XXX add appropriate error trapping & logging; watch for recursion
-                emitter.emit(msg)
+        for name, emitter in potential_emitters:
+            # XXX add appropriate error trapping & logging; watch for recursion
+            emitter.emit(msg)
 
     def debug(self, *args, **kwargs):
         self._emit(Levels.DEBUG, *args, **kwargs)
