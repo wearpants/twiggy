@@ -1,5 +1,7 @@
-import twiggy.Emitter
-twiggy.emitters['*'] = twiggy.Emitter.StandardEmitter(twiggy.Levels.DEBUG)
+import twiggy
+
+twiggy.basicConfig()
+
 twiggy.log.debug('OMFG')
 twiggy.log.name('alfredo').debug('hello\njulius')
 twiggy.log.name('donjuan').fields(pants='sexy').info('hello, ladies')
