@@ -2,19 +2,37 @@ from Message import Message
 import Levels
 
 class Logger(object):
-    __slots__ = ['_fields', 'emitters', 'min_level', 'filter']
+    __slots__ = ['_fields', '_options', 'emitters', 'min_level', 'filter']
 
-    def __init__(self, fields = None, emitters = None,
+    # XXX slurp this dynamically from Message via inspect
+    __default_options = {'suppress_newlines' : True,
+                         'trace' : None}
+    
+    __valid_options = set(__default_options)
+    
+    def __init__(self, fields = None, options = None, emitters = None,
                  min_level = Levels.DEBUG, filter = None):
         self._fields = fields if fields is not None else {}
+        self._options = options if options is not None else self.__default_options.copy()
         self.emitters = emitters if emitters is not None else {}
         self.min_level = min_level
         self.filter = filter if filter is not None else lambda format_spec: True
 
+    def options(self, **kwargs):
+        new_options = self._options.copy()
+        new_options.update(**kwargs)
+        bad_options = set(kwargs) - self.__valid_options
+        if bad_options:
+            raise ValueError("Invalid option {0!r}".format(tuple(bad_options)))
+        return self.__class__(self._fields.copy(), new_options, self.emitters, self.min_level, self.filter)        
+    
+    def trace(self, trace='error'):
+        return self.options(trace=trace)
+    
     def fields(self, **kwargs):
         new_fields = self._fields.copy()
         new_fields.update(**kwargs)
-        return self.__class__(new_fields, self.emitters, self.min_level, self.filter)
+        return self.__class__(new_fields, self._options.copy(), self.emitters, self.min_level, self.filter)
 
     def name(self, name):
         return self.fields(name=name)
@@ -30,7 +48,7 @@ class Logger(object):
 
         if not potential_emitters: return
 
-        msg = Message(level, format_spec, self._fields.copy(), *args, **kwargs)
+        msg = Message(level, format_spec, self._fields.copy(), self._options, *args, **kwargs)
 
         for name, emitter in potential_emitters:
             # XXX add appropriate error trapping & logging; watch for recursion

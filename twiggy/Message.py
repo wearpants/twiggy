@@ -5,19 +5,19 @@ import traceback
 
 class Message(object):
 
-    def __init__(self, level, format_spec, fields,
-                 suppress_newlines = True, trace = None,
+    def __init__(self, level, format_spec, fields, options,
                  *args, **kwargs):
 
         self.format_spec = format_spec
         self.args = args
         self.kwargs = kwargs
         self.fields = fields
-        self.suppress_newlines = suppress_newlines
+        self.suppress_newlines = options['suppress_newlines']
         self.fields['level'] = level
 
         ## format traceback
         # XXX this needs some cleanup/branch consolidation
+        trace = options['trace']
         if isinstance(trace, tuple) and len(trace) == 3:
             self.traceback = "\n".join(traceback.format_exception(trace))
         elif trace == "error":
@@ -51,7 +51,7 @@ class Message(object):
 
         ## substitute
         if self.format_spec == '':
-            s.text = ''
+            self.text = ''
             return
 
         # XXX I doubt this works as intended in all cases
