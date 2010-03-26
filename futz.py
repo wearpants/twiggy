@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 ## A file to futz around in ##
 
 ## Simple setup
@@ -94,7 +95,9 @@ mylog.info("End silliness")
 
 ## Any pet peeves from logging I may have forgotten about?
 
-## Does the method chaining technique make sense?  Is it too magic?  I <3 it.
+## Does the method chaining technique make sense? Is it too magic? I <3 it.
+## You can do as many .fields()/.name()/.etc() in any order, as long as the
+## .action() is last.
 
 ## Timing data: In a super-simple smoke test, twiggy was about 40% faster than
 ## logging. Not rigorous.
