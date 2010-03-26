@@ -2,17 +2,30 @@ from Message import Message
 import Levels
 
 class Logger(object):
+    """
+    :ivar min_level: only emit if message level is above this
+    :type min_level: Levels.LogLevel
+
+    :ivar filter: ..function:: filter(msg) -> bool
+    """
     __slots__ = ['_fields', '_options', 'emitters', 'min_level', 'filter']
 
     __valid_options = set(Message._default_options)
 
     def __init__(self, fields = None, options = None, emitters = None,
                  min_level = Levels.DEBUG, filter = None):
+        """Constructor for internal module use only, basically."""
         self._fields = fields if fields is not None else {}
-        self._options = options if options is not None else Message._default_options.copy()
         self.emitters = emitters if emitters is not None else {}
+        self._options = options if options is not None else Message._default_options.copy()
         self.min_level = min_level
         self.filter = filter if filter is not None else lambda format_spec: True
+
+    def fields(self, **kwargs):
+        new_fields = self._fields.copy()
+        new_fields.update(**kwargs)
+        return self.__class__(new_fields, self._options.copy(),
+                              self.emitters, self.min_level, self.filter)
 
     def options(self, **kwargs):
         new_options = self._options.copy()
@@ -20,21 +33,20 @@ class Logger(object):
         bad_options = set(kwargs) - self.__valid_options
         if bad_options:
             raise ValueError("Invalid options {0!r}".format(tuple(bad_options)))
-        return self.__class__(self._fields.copy(), new_options, self.emitters, self.min_level, self.filter)
+        return self.__class__(self._fields.copy(), new_options,
+                              self.emitters, self.min_level, self.filter)
 
+    ##  Convenience
     def trace(self, trace='error'):
         return self.options(trace=trace)
-
-    def fields(self, **kwargs):
-        new_fields = self._fields.copy()
-        new_fields.update(**kwargs)
-        return self.__class__(new_fields, self._options.copy(), self.emitters, self.min_level, self.filter)
 
     def name(self, name):
         return self.fields(name=name)
 
     def struct(self, **kwargs):
         self.fields(**kwargs).info()
+
+    ## Boring stuff
 
     def _emit(self, level, format_spec = '',  *args, **kwargs):
         if (level < self.min_level or not self.filter(format_spec)): return

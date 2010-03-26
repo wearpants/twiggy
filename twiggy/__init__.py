@@ -1,4 +1,4 @@
-__all__=['log', 'Levels']
+__all__=['log']
 import time
 
 import Logger
