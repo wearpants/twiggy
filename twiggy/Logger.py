@@ -4,16 +4,12 @@ import Levels
 class Logger(object):
     __slots__ = ['_fields', '_options', 'emitters', 'min_level', 'filter']
 
-    # XXX slurp this dynamically from Message via inspect
-    __default_options = {'suppress_newlines' : True,
-                         'trace' : None}
-    
-    __valid_options = set(__default_options)
-    
+    __valid_options = set(Message._default_options)
+
     def __init__(self, fields = None, options = None, emitters = None,
                  min_level = Levels.DEBUG, filter = None):
         self._fields = fields if fields is not None else {}
-        self._options = options if options is not None else self.__default_options.copy()
+        self._options = options if options is not None else Message._default_options.copy()
         self.emitters = emitters if emitters is not None else {}
         self.min_level = min_level
         self.filter = filter if filter is not None else lambda format_spec: True
@@ -23,12 +19,12 @@ class Logger(object):
         new_options.update(**kwargs)
         bad_options = set(kwargs) - self.__valid_options
         if bad_options:
-            raise ValueError("Invalid option {0!r}".format(tuple(bad_options)))
-        return self.__class__(self._fields.copy(), new_options, self.emitters, self.min_level, self.filter)        
-    
+            raise ValueError("Invalid options {0!r}".format(tuple(bad_options)))
+        return self.__class__(self._fields.copy(), new_options, self.emitters, self.min_level, self.filter)
+
     def trace(self, trace='error'):
         return self.options(trace=trace)
-    
+
     def fields(self, **kwargs):
         new_fields = self._fields.copy()
         new_fields.update(**kwargs)
