@@ -4,20 +4,39 @@ import sys
 from .lib import ConversionTable, Converter
 
 class Emitter(object):
-    # XXX ABC me!
+    """
+    Emits!
+
+    :ivar min_level: only emit if greater than this
+    :type min_level: Levels.LogLevel
+    """
+    # XXX ABC me?
     def __init__(self, min_level):
         self.min_level = min_level
 
     def filter(self, msg):
+        """return True if the message should be emitted
+
+        I could be <some_regex>.match, perhaps
+        """
         return True
 
     def format(self, msg):
+        """
+        :returns: the formatted message, ready for output
+        :rtype: string
+        """
         raise NotImplementedError
 
-    def output(self, msg, fields, text):
+    def output(self, msg, s):
+        """write out the message"""
         raise NotImplementedError
 
     def emit(self, msg):
+        """emit a message.
+
+        This is the only external API
+        """
         if self.filter(msg):
             s = self.format(msg)
             self.output(msg, s)
@@ -26,6 +45,14 @@ class StandardEmitter(Emitter):
 
     def __init__(self, min_level, separator=':', traceback_prefix='\nTRACE ',
                  conversion=None, **kwargs):
+        """
+        Interesting trick:
+        Setting traceback_prefix to '\\n' rolls it up to a single line.
+
+        :ivar conversion: helper to turn a message to a string
+        :type conversion: ConversionTable
+
+        """
         super(StandardEmitter, self).__init__(min_level, **kwargs)
         self.separator = separator
         self.traceback_prefix = traceback_prefix
@@ -35,7 +62,7 @@ class StandardEmitter(Emitter):
         else:
             # XXX move this def out of init
             self.conversion = ConversionTable([
-                Converter('time', time.ctime, '{1}'.format, True),
+                Converter(key='time', convertValue=time.ctime, convertItem='{1}'.format, required=True),
                 Converter('level', str, '{1}'.format, True),
                 Converter('name', str, '{1}'.format),
             ])
