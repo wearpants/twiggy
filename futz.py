@@ -83,9 +83,18 @@ for i in xrange(3): # or much larger
 mylog.info("End silliness")
 
 
-## Questions:
+## Questions etc:
 
 ## Only required attributes of message now are level & format_spec (the text).
 ## I've thought about making name mandatory (eh). Going the other way, I've
 ## thought about making level optional (too flexible, and easy enough to
 ## ignore - see struct())
+
+## can build a decent fascimle of user-side of log4j with this
+
+## Any pet peeves from logging I may have forgotten about?
+
+## Does the method chaining technique make sense?  Is it too magic?  I <3 it.
+
+## Timing data: In a super-simple smoke test, twiggy was about 40% faster than
+## logging. Not rigorous.
