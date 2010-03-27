@@ -1,3 +1,138 @@
+Usage:
+======
+Setup is simple
++++++++++++++++
+In your main.py:
+>>> import twiggy
+>>> twiggy.basicConfig()
+
+Logging Messages
+++++++++++++++++
+>>> from twiggy import *
+
+Main interface is the the magic _log_:
+>>> log
+<twiggy.Logger.Logger object at 0x28ab368>
+
+It works out of the box, using standard levels:
+>>> log.debug('You may not care')
+2010-03-27T19:42:50:DEBUG:You may not care
+>>> log.error('OMFG! Pants on fire!')
+
+It supports format strings:
+>>> log.info('I like %s', "bikes")
+Fri Mar 26 20:18:55 2010:INFO:I like bikes
+2010-03-27T19:42:50:INFO:I like bikes
+
+But prefers new style:
+>>> log.info('I wear {0} on my {where}', 'pants', where='
+Fri Mar 26 20:18:55 2010:INFO:I wear pants on my legs
+2010-03-27T19:42:50:INFO:I wear pants on my legs
+
+You can name your loggers:
+>>> mylog = log.name('alfredo')
+>>> mylog.debug('hello')
+2010-03-27T19:42:50:ERROR:OMFG! Pants on fire!
+2010-03-27T19:42:50:DEBUG:alfredo:hello
+
+
+
+2010-03-27T19:42:50:INFO:benito:hi there
+2010-03-27T19:42:50:INFO:paths=42:Going for a walk
+2010-03-27T19:42:50:INFO:dolphins=thankful:paths=42:
+2010-03-27T19:42:50:INFO:request_id=12345:frobnicating database
+2010-03-27T19:42:50:INFO:request_id=12345:sending page over tubes
+2010-03-27T19:42:50:INFO:donjuan:pants=sexy:hello, ladies
+2010-03-27T19:42:50:INFO:pid=723:I'm in thread MainThread
+2010-03-27T19:42:50:INFO:alfredo:You see this
+2010-03-27T19:42:50:INFO:alfredo:Starting silliness
+2010-03-27T19:42:50:INFO:alfredo:End silliness
+
+Fri Mar 26 20:18:55 2010:DEBUG:alfredo:hello
+
+Better output
++++++++++++++
+Newlines are suppressed by default; that can be turned off per-message:
+>>> log.info('user\ninput\nannoys\nus')
+2010-03-27T19:42:50:INFO:user\ninput\nannoys\nus
+
+>>> log.options(suppress_newlines=False).info('we\ndeal')
+2010-03-27T19:42:50:INFO:user\ninput\nannoys\nus
+2010-03-27T19:42:50:INFO:we
+deal
+
+
+
+# Exceptions.  Can also pass exc_info. Each line is prefixed.
+>>> try:
+>>>     1/0
+>>> except:
+>>>     log.trace('error').warning('oh noes') # error is the default & can be omitted
+2010-03-27T19:42:50:WARNING:oh noes
+TRACE Traceback (most recent call last):
+TRACE   File "./futz.py", line 35, in <module>
+TRACE     1/0
+TRACE ZeroDivisionError: integer division or modulo by zero
+
+
+## Method Chaining
+# this is not getLogger tho
+>>> print log.name('alfredo') is not mylog
+XXX fill me/kill me
+
+# You don't need to store loggers
+# I like this chained style a lot.
+>>> log.name('benito').info('hi there')
+2010-03-27T19:46:52:INFO:benito:hi there
+
+# structured logging is easy
+>>> log.fields(paths=42).info('Going for a walk')
+2010-03-27T19:46:52:INFO:paths=42:Going for a walk
+
+# short cut.  great for runtime statistics gathering
+>>> log.struct(paths=42, dolphins='thankful')
+2010-03-27T19:46:52:INFO:dolphins=thankful:paths=42:
+
+# This kind of partial binding is great for webapps
+>>> per_request_log = log.fields(request_id='12345')
+>>> per_request_log.info('frobnicating database')
+2010-03-27T19:46:52:INFO:request_id=12345:frobnicating database
+>>> per_request_log.info('sending page over tubes')
+2010-03-27T19:46:52:INFO:request_id=12345:sending page over tubes
+
+# Chained style is awesome
+>>> log.name('donjuan').fields(pants='sexy').info("hello, {who} want to {what}?", 	                                            who='ladies', what='dance')
+2010-03-27T19:50:49:INFO:donjuan:pants=sexy:hello, ladies want to dance?
+
+## Dynamic
+# More fun. Any functions in args/fields are called and the value substitued.
+>>> import os
+>>> import threading
+
+# we'll provide a useful collection of such things
+>>> def thread_name():
+>>>     return threading.currentThread().getName()
+
+>>> log.fields(pid=os.getpid).info("I'm in thread {0}", thread_name)
+
+## Optimizations
+# loggers can take a min_level
+>>> mylog.min_level = twiggy.Levels.INFO
+>>> mylog.info("You see this")
+>>> mylog.debug("This is hidden")
+
+# Also take a filter that operates on format_spec. Use case is efficiently
+# shutting off specific messages in a library which is doing something stupid
+>>> mylog.filter = lambda s: "shenanigans" not in s
+>>> mylog.info("Starting silliness")
+>>> for i in xrange(3): # or much larger
+>>>     mylog.info("I call shenanigans!")
+>>> mylog.info("End silliness")
+
+
+
+
+
 
 Questions etc:
 =========

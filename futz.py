@@ -38,7 +38,7 @@ except:
 
 ## Method Chaining
 # this is not getLogger tho
-print log.name('alfredo') is not mylog
+log.name('alfredo') is not mylog
 
 # You don't need to store loggers
 # I like this chained style a lot.
@@ -56,7 +56,8 @@ per_request_log.info('frobnicating database')
 per_request_log.info('sending page over tubes')
 
 # Chained style is awesome
-log.name('donjuan').fields(pants='sexy').info('hello, ladies')
+log.name('donjuan').fields(pants='sexy').info("hello, {who} want to {what}?",
+                                              who='ladies', what='dance')
 
 ## Dynamic
 # More fun. Any functions in args/fields are called and the value substitued.

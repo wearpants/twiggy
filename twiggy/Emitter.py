@@ -62,7 +62,11 @@ class StandardEmitter(Emitter):
         else:
             # XXX move this def out of init
             self.conversion = ConversionTable([
-                Converter(key='time', convertValue=time.ctime, convertItem='{1}'.format, required=True),
+                Converter(key='time',
+                          # ISO 8601 - it sucks less!
+                          convertValue=lambda gmtime: time.strftime("%Y-%m-%dT%H:%M:%S", gmtime),
+                          convertItem='{1}'.format,
+                          required=True),
                 Converter('level', str, '{1}'.format, True),
                 Converter('name', str, '{1}'.format),
             ])
