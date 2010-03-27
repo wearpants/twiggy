@@ -18,37 +18,20 @@ It works out of the box, using standard levels:
 >>> log.debug('You may not care')
 2010-03-27T19:42:50:DEBUG:You may not care
 >>> log.error('OMFG! Pants on fire!')
+2010-03-27T19:42:50:ERROR:OMFG! Pants on fire!
 
 It supports format strings:
 >>> log.info('I like %s', "bikes")
-Fri Mar 26 20:18:55 2010:INFO:I like bikes
 2010-03-27T19:42:50:INFO:I like bikes
 
 But prefers new style:
->>> log.info('I wear {0} on my {where}', 'pants', where='
-Fri Mar 26 20:18:55 2010:INFO:I wear pants on my legs
+>>> log.info('I wear {0} on my {where}', 'pants', where='legs')
 2010-03-27T19:42:50:INFO:I wear pants on my legs
 
 You can name your loggers:
 >>> mylog = log.name('alfredo')
 >>> mylog.debug('hello')
-2010-03-27T19:42:50:ERROR:OMFG! Pants on fire!
 2010-03-27T19:42:50:DEBUG:alfredo:hello
-
-
-
-2010-03-27T19:42:50:INFO:benito:hi there
-2010-03-27T19:42:50:INFO:paths=42:Going for a walk
-2010-03-27T19:42:50:INFO:dolphins=thankful:paths=42:
-2010-03-27T19:42:50:INFO:request_id=12345:frobnicating database
-2010-03-27T19:42:50:INFO:request_id=12345:sending page over tubes
-2010-03-27T19:42:50:INFO:donjuan:pants=sexy:hello, ladies
-2010-03-27T19:42:50:INFO:pid=723:I'm in thread MainThread
-2010-03-27T19:42:50:INFO:alfredo:You see this
-2010-03-27T19:42:50:INFO:alfredo:Starting silliness
-2010-03-27T19:42:50:INFO:alfredo:End silliness
-
-Fri Mar 26 20:18:55 2010:DEBUG:alfredo:hello
 
 Better output
 +++++++++++++
@@ -57,13 +40,10 @@ Newlines are suppressed by default; that can be turned off per-message:
 2010-03-27T19:42:50:INFO:user\ninput\nannoys\nus
 
 >>> log.options(suppress_newlines=False).info('we\ndeal')
-2010-03-27T19:42:50:INFO:user\ninput\nannoys\nus
 2010-03-27T19:42:50:INFO:we
 deal
 
-
-
-# Exceptions.  Can also pass exc_info. Each line is prefixed.
+Exceptions are prefixed. Can also pass exc_info. Use '\\n' as a prefix to fold into a single line.
 >>> try:
 >>>     1/0
 >>> except:
@@ -74,89 +54,72 @@ TRACE   File "./futz.py", line 35, in <module>
 TRACE     1/0
 TRACE ZeroDivisionError: integer division or modulo by zero
 
+Method Chaining
+++++++++++++++++++
+Each logger instance is created on the fly & is independent:
+>>> mylog
+<twiggy.Logger.Logger object at 0x20899f0>
+>>> log.name('alfredo')
+<twiggy.Logger.Logger object at 0x2089c58>
 
-## Method Chaining
-# this is not getLogger tho
->>> print log.name('alfredo') is not mylog
-XXX fill me/kill me
-
-# You don't need to store loggers
-# I like this chained style a lot.
+You don't need to store loggers. I like this chained style a lot.
 >>> log.name('benito').info('hi there')
 2010-03-27T19:46:52:INFO:benito:hi there
 
-# structured logging is easy
+It makes structured logging easy:
 >>> log.fields(paths=42).info('Going for a walk')
 2010-03-27T19:46:52:INFO:paths=42:Going for a walk
 
-# short cut.  great for runtime statistics gathering
+Short cut.  Great for runtime statistics gathering
 >>> log.struct(paths=42, dolphins='thankful')
 2010-03-27T19:46:52:INFO:dolphins=thankful:paths=42:
 
-# This kind of partial binding is great for webapps
+Partial binding can be useful for webapps:
 >>> per_request_log = log.fields(request_id='12345')
->>> per_request_log.info('frobnicating database')
-2010-03-27T19:46:52:INFO:request_id=12345:frobnicating database
->>> per_request_log.info('sending page over tubes')
-2010-03-27T19:46:52:INFO:request_id=12345:sending page over tubes
+>>> per_request_log.fields(rows=100, user='frank').info('frobnicating database')
+2010-03-27T20:17:31:INFO:request_id=12345:rows=100:user=frank:frobnicating database
+>>> per_request_log.fields(bytes=5678).info('sending page over tubes')
+2010-03-27T20:17:31:INFO:bytes=5678:request_id=12345:sending page over tubes
 
-# Chained style is awesome
+Chained style is awesome:
 >>> log.name('donjuan').fields(pants='sexy').info("hello, {who} want to {what}?", 	                                            who='ladies', what='dance')
 2010-03-27T19:50:49:INFO:donjuan:pants=sexy:hello, ladies want to dance?
 
-## Dynamic
-# More fun. Any functions in args/fields are called and the value substitued.
+Dynamic!
+++++++++
+Any functions in args/fields are called and the value substitued.
 >>> import os
 >>> import threading
 
-# we'll provide a useful collection of such things
+We'll provide a useful collection of such things:
 >>> def thread_name():
 >>>     return threading.currentThread().getName()
 
->>> log.fields(pid=os.getpid).info("I'm in thread {0}", thread_name)
+>>> log.fields(pid=os.getpid).info("I'm in thread {0}", log.utils.thread_name)
+2010-03-27T19:56:16:INFO:pid=1076:I'm in thread MainThread
 
-## Optimizations
-# loggers can take a min_level
+If you really want to log a callable, repr() it or wrap it in lambda.
+
+Optimizations
++++++++++++++
+As an optimization, a min_level can be set on loggers:
 >>> mylog.min_level = twiggy.Levels.INFO
 >>> mylog.info("You see this")
+2010-03-27T19:56:16:INFO:alfredo:You see this
 >>> mylog.debug("This is hidden")
 
-# Also take a filter that operates on format_spec. Use case is efficiently
-# shutting off specific messages in a library which is doing something stupid
+They also take a filter that operates on format_spec. The use case is efficiently
+shutting off specific messages in a library which is doing something stupid:
 >>> mylog.filter = lambda s: "shenanigans" not in s
 >>> mylog.info("Starting silliness")
->>> for i in xrange(3): # or much larger
+2010-03-27T19:56:16:INFO:alfredo:Starting silliness
+>>> for i in xrange(3): # for large values of 3
 >>>     mylog.info("I call shenanigans!")
 >>> mylog.info("End silliness")
-
-
-
-
-
-
-Questions etc:
-=========
-
-Only required attributes of message now are level & format_spec (the text).
-I've thought about making name mandatory (eh). Going the other way, I've
-thought about making level optional (too flexible, and easy enough to
-ignore - see log.struct())
-
-Any pet peeves from logging I may have forgotten about?
-
-Does the method chaining technique make sense? Is it too magic? I <3 it.
-You can do as many .fields()/.name()/.etc() in any order, as long as the
-.action() is last.
-
-Timing data: In a super-simple smoke test, twiggy was about 40% faster than
-logging. Not rigorous.  sloccount says 220 lines.
-
-The future
-=========
-Needs tests, proper docstrings, etc. obviously, but most of the long-term work is in emitters.
+2010-03-27T19:56:16:INFO:alfredo:End silliness
 
 Emitters
-++++++
+=========
 Simple API now:
 
 class Emitter(object):
@@ -187,9 +150,31 @@ class Emitter(object):
     def output(self, msg, s):
         """write out the message"""
     
-The filtering, formatting, and outputting should be  indepenent & composable nicely, ideally. Not really sure what the right pattern is here - I'm a little tired of mixins.
+The filtering, formatting, and outputting should be  indepenent & composable nicely, ideally. Not really sure what the right pattern is here - I'm a little tired of mixins.  Batteries include a small formatting microframework for common output cases.
 
-I'd like to support 'asynchronous' emitting, at some point - queueing the message and moving the write out of the critical path of user code.  Backends that talk to syslog, as well as batteries included via threading/multiprocessing.
+Questions:
+==============
+The only required attributes of message atm are level & format_spec (the text).
+I've thought about making name mandatory (eh). Going the other way, I've
+thought about making level optional (too flexible, and easy enough to
+ignore - see log.struct())
+
+Does the method chaining technique make sense? Is it too magic? I <3 it.
+You can do as many .fields()/.name()/.etc() in any order, as long as the
+.action() is last.
+
+Speed
+=====
+Timing data: In a super-simple smoke test, twiggy was about 40% faster than
+logging. Not rigorous.  sloccount says 220 lines.
+
+The future
+=========
+Needs tests, proper docstrings, etc. obviously, but most of the long-term work is in emitters.
+
+I'd like to support 'asynchronous' emitting, at some point - queueing the message and moving the write out of the critical path of user code.  Backends that talk to syslog, as well as batteries included via threading/multiprocessing. Might be interesting to have an emitter/configuration that lets you run unittests on your log output.
+
+I have some thoughts about HTML output (perhaps served from a child process & streamed via AJAX?) but that's getting ahead of ourselves. ;-)
 
 Log4j
 ++++
@@ -198,3 +183,11 @@ I think I can build a decent fascimle of user-side of log4j with this:
 from twiggy import log4j
 log4j.getLogger('oldstyle')  -> log.name()
 <etc>
+
+Further Ahead of Ourself
+++++++++++++++++++++++++
+Lumberjack: log *parsing* should be easier, esp for casual/ad-hoc use. construct log parsers from same formats used for emitters?  snazzy
+
+Any other pet peeves from logging I may have forgotten about?
+
+YOUR IDEA HERE!

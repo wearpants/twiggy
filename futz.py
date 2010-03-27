@@ -36,6 +36,7 @@ try:
 except:
     log.trace('error').warning('oh noes') # error is the default & can be omitted
 
+
 ## Method Chaining
 # this is not getLogger tho
 log.name('alfredo') is not mylog
@@ -52,8 +53,8 @@ log.struct(paths=42, dolphins='thankful')
 
 # This kind of partial binding is great for webapps
 per_request_log = log.fields(request_id='12345')
-per_request_log.info('frobnicating database')
-per_request_log.info('sending page over tubes')
+per_request_log.fields(rows=100, user='frank').info('frobnicating database')
+per_request_log.fields(bytes=5678).info('sending page over tubes')
 
 # Chained style is awesome
 log.name('donjuan').fields(pants='sexy').info("hello, {who} want to {what}?",
