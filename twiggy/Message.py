@@ -7,7 +7,7 @@ class Message(object):
 
     # don't change these!
     _default_options = {'suppress_newlines' : True,
-                         'trace' : None}
+                        'trace' : None}
 
     def __init__(self, level, format_spec, fields, options,
                  *args, **kwargs):

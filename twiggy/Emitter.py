@@ -1,7 +1,63 @@
 import time
 import sys
+import re
 
 from .lib import ConversionTable, Converter
+
+def msgFilter(x):
+    if isinstance(x, bool):
+        return lambda msg: x
+    elif isinstance(x, basestring):
+        return regex_wrapper(re.compile(x))
+    elif isinstance(x, re.RegexObject):
+        return regex_wrapper(x)
+    elif callable(x): # XXX test w/ inspect.getargs here?
+        return x
+    else:
+        # XXX a dict could be used to filter on fields (w/ callables?)
+        raise ValueError("Unknown filter: {0!r}".format(x))
+
+def regex_wrapper(regexp):
+    assert isinstance(regexp, re.RegexObject)
+    def wrapped(msg):
+        return regexp.match(msg.text) is not None
+    return wrapped
+
+
+class Outputter(object):
+
+    def __init__(self, format, write):
+        self._format = format
+        self._write = write
+
+    def output(self, msg):
+        x = self._format(msg)
+        self._write(x)
+
+
+class Emitter2(object):
+
+    def __init__(self, min_level, filter, format, write):
+        self.min_level = min_level
+        self.filter = filter
+        self._outputter = Outputter(format, write)
+
+    def emit(self, msg):
+        if self.filter(msg):
+            self._outputter.output(msg)
+
+    @property
+    def filter(self):
+        return self._filter
+
+    @filter.setter
+    def filter(self, f):
+        self._filter = msgFilter(f)
+
+    @filter.deleter
+    def filter(self):
+        del self._filter
+
 
 class Emitter(object):
     """
@@ -41,9 +97,9 @@ class Emitter(object):
             s = self.format(msg)
             self.output(msg, s)
 
-class StandardEmitter(Emitter):
+class LineFormatter(object):
 
-    def __init__(self, min_level, separator=':', traceback_prefix='\nTRACE ',
+    def __init__(self, separator=':', traceback_prefix='\nTRACE ',
                  conversion=None, **kwargs):
         """
         Interesting trick:
@@ -53,7 +109,6 @@ class StandardEmitter(Emitter):
         :type conversion: ConversionTable
 
         """
-        super(StandardEmitter, self).__init__(min_level, **kwargs)
         self.separator = separator
         self.traceback_prefix = traceback_prefix
 
@@ -99,5 +154,5 @@ class StandardEmitter(Emitter):
     def format_fields(self, msg):
         return self.conversion.convert(msg.fields)
 
-    def output(self, msg, s):
-        print>>sys.stderr, s
+def printer(s):
+    print>>sys.stderr, s
