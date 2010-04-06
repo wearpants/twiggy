@@ -7,7 +7,15 @@ import Emitter
 log = Logger.Logger({'time':time.gmtime})
 emitters = log.emitters
 
-def basicConfig(min_level=Levels.DEBUG):
-    emitters['*'] = Emitter.Emitter2(min_level, True,
-                                     Emitter.LineFormatter().format,
-                                     Emitter.printer)
+def quick_setup(min_level=Levels.DEBUG, conversion = None, fname = None):
+    if conversion is None:
+        conversion = Emitter.line_conversion
+
+    if fname is None:
+        writer = Emitter.printer
+    else:
+        writer = open(fname, 'a').write
+
+    emitters['*'] = Emitter.Emitter(min_level, True,
+                                    Emitter.LineFormatter(conversion=conversion).format,
+                                    writer)

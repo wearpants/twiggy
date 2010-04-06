@@ -9,9 +9,9 @@ logfile = open(fname, 'w')
 def output(msg, s):
     logfile.write(s)
 
-my_emitter = twiggy.Emitter.Emitter2(twiggy.Levels.DEBUG, True,
-                                     twiggy.Emitter.LineFormatter().format,
-                                     logfile.write)
+my_emitter = twiggy.Emitter.Emitter(twiggy.Levels.DEBUG, True,
+                                    twiggy.Emitter.LineFormatter().format,
+                                    logfile.write)
 
 twiggy.emitters['*'] = my_emitter
 

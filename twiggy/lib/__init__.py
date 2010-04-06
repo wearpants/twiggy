@@ -10,7 +10,18 @@ class Converter(object):
 class ConversionTable(list):
 
     def __init__(self, seq):
-        super(ConversionTable, self).__init__(seq)
+        l = []
+        for i in seq:
+            if isinstance(i, Converter):
+                l.append(i)
+            elif isinstance(i, (tuple, list)) and len(i) in (3, 4):
+                l.append(Converter(*i))
+            elif isinstance(i, dict):
+                l.append(Converter(**i))
+            else:
+                raise ValueError("Bad converter: {0!r}".format(i))
+
+        super(ConversionTable, self).__init__(l)
         # XXX cache converts & requireds below
 
     def genericValue(self, value):
@@ -36,10 +47,14 @@ class ConversionTable(list):
         l = []
         for c in self:
             if c.key in d:
-                l.append(c.convertItem(c.key, c.convertValue(d[c.key])))
+                item = c.convertItem(c.key, c.convertValue(d[c.key]))
+                if item is not None:
+                    l.append(item)
 
         for key in sorted(avail - converts):
-            l.append(self.genericItem(key, self.genericValue(d[key])))
+            item = self.genericItem(key, self.genericValue(d[key]))
+            if item is not None:
+                l.append(item)
 
         return self.aggregate(l)
 

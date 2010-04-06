@@ -5,7 +5,9 @@ import re
 from .lib import ConversionTable, Converter
 
 def msgFilter(x):
-    if isinstance(x, bool):
+    if x is None:
+        return lambda msg: True
+    elif isinstance(x, bool):
         return lambda msg: x
     elif isinstance(x, basestring):
         return regex_wrapper(re.compile(x))
@@ -35,14 +37,35 @@ class Outputter(object):
         self._write(x)
 
 
-class Emitter2(object):
+class Emitter(object):
+    """
+    Emits!
 
-    def __init__(self, min_level, filter, format, write):
+    :ivar min_level: only emit if greater than this
+    :type min_level: Levels.LogLevel
+
+    filter(msg) -> bool
+    should the message be emitted
+
+    format(msg) -> <whatever>
+    format the message for writing. Output type is user-specified, as long as
+    it's compatible with write()
+
+    write(<whatever>) -> None
+    writes out the formatted message
+
+    """
+
+    def __init__(self, min_level, filter, format, write, outputter=Outputter):
         self.min_level = min_level
         self.filter = filter
-        self._outputter = Outputter(format, write)
+        self._outputter = outputter(format, write)
 
     def emit(self, msg):
+        """emit a message.
+
+        This is the only external API
+        """
         if self.filter(msg):
             self._outputter.output(msg)
 
@@ -59,48 +82,24 @@ class Emitter2(object):
         del self._filter
 
 
-class Emitter(object):
-    """
-    Emits!
+line_conversion = ConversionTable([
+    Converter(key='time',
+              # ISO 8601 - it sucks less!
+              convertValue=lambda gmtime: time.strftime("%Y-%m-%dT%H:%M:%S", gmtime),
+              convertItem='{1}'.format,
+              required=True),
+    ('level', str, '{1}'.format, True),
+    ('name', str, '{1}'.format),
+])
 
-    :ivar min_level: only emit if greater than this
-    :type min_level: Levels.LogLevel
-    """
-    # XXX ABC me?
-    def __init__(self, min_level):
-        self.min_level = min_level
-
-    def filter(self, msg):
-        """return True if the message should be emitted
-
-        I could be <some_regex>.match, perhaps
-        """
-        return True
-
-    def format(self, msg):
-        """
-        :returns: the formatted message, ready for output
-        :rtype: string
-        """
-        raise NotImplementedError
-
-    def output(self, msg, s):
-        """write out the message"""
-        raise NotImplementedError
-
-    def emit(self, msg):
-        """emit a message.
-
-        This is the only external API
-        """
-        if self.filter(msg):
-            s = self.format(msg)
-            self.output(msg, s)
+line_conversion.genericValue = str
+line_conversion.genericItem = "{0}={1}".format
+line_conversion.aggregate = ':'.join
 
 class LineFormatter(object):
 
     def __init__(self, separator=':', traceback_prefix='\nTRACE ',
-                 conversion=None, **kwargs):
+                 conversion=line_conversion, **kwargs):
         """
         Interesting trick:
         Setting traceback_prefix to '\\n' rolls it up to a single line.
@@ -111,24 +110,7 @@ class LineFormatter(object):
         """
         self.separator = separator
         self.traceback_prefix = traceback_prefix
-
-        if conversion is not None:
-            self.conversion = conversion
-        else:
-            # XXX move this def out of init
-            self.conversion = ConversionTable([
-                Converter(key='time',
-                          # ISO 8601 - it sucks less!
-                          convertValue=lambda gmtime: time.strftime("%Y-%m-%dT%H:%M:%S", gmtime),
-                          convertItem='{1}'.format,
-                          required=True),
-                Converter('level', str, '{1}'.format, True),
-                Converter('name', str, '{1}'.format),
-            ])
-
-            self.conversion.genericValue = str
-            self.conversion.genericItem = "{0}={1}".format
-            self.conversion.aggregate = self.separator.join
+        self.conversion = conversion
 
     def format(self, msg):
         fields = self.format_fields(msg)
