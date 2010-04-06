@@ -9,9 +9,11 @@ logfile = open(fname, 'w')
 def output(msg, s):
     logfile.write(s)
 
-twiggy.emitters['*'] = twiggy.Emitter.StandardEmitter(twiggy.Levels.DEBUG)
+my_emitter = twiggy.Emitter.Emitter2(twiggy.Levels.DEBUG, True,
+                                     twiggy.Emitter.LineFormatter().format,
+                                     logfile.write)
 
-twiggy.emitters['*'].output = output
+twiggy.emitters['*'] = my_emitter
 
 import timeit
 
