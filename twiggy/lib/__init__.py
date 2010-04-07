@@ -1,3 +1,5 @@
+import copy
+
 class Converter(object):
     __slots__ = ['key', 'convertValue', 'convertItem', 'required']
 
@@ -58,3 +60,8 @@ class ConversionTable(list):
 
         return self.aggregate(l)
 
+    def copy(self):
+        return copy.deepcopy(self)
+
+    def get(self, key):
+        return [c for c in self if c.key == key]

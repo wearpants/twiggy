@@ -5,15 +5,14 @@
 import twiggy
 twiggy.quick_setup()
 
-#import copy
-#my_convert = copy.deepcopy(twiggy.Emitter.line_conversion)
-#my_convert[0].convertItem = lambda k, v: None
+my_convert = twiggy.Emitter.line_conversion.copy()
+my_convert.get('time')[0].convertItem = lambda k, v: None
 
-#twiggy.emitters['*'] = twiggy.Emitter.Emitter(
-    #twiggy.Levels.DEBUG,
-    #True,
-    #twiggy.Emitter.LineFormatter(conversion=my_convert).format,
-    #twiggy.Emitter.printer)
+twiggy.emitters['*'] = twiggy.Emitter.Emitter(
+    twiggy.Levels.DEBUG,
+    True,
+    twiggy.Emitter.LineFormatter(conversion=my_convert).format,
+    twiggy.Emitter.printer)
 
 
 ## User-facing features
