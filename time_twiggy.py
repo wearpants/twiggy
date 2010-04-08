@@ -4,17 +4,8 @@ import tempfile
 import os
 
 fname = tempfile.mktemp()
-logfile = open(fname, 'w')
 
-def output(msg, s):
-    logfile.write(s)
-
-my_emitter = twiggy.Emitter.Emitter(twiggy.Levels.DEBUG, True,
-                                    twiggy.Emitter.LineFormatter().format,
-                                    logfile.write)
-
-twiggy.emitters['*'] = my_emitter
-
+twiggy.quick_setup(twiggy.Levels.DEBUG, fname)
 import timeit
 
 loops = 100000

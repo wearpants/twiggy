@@ -5,6 +5,17 @@ import re
 from .lib import ConversionTable, Converter
 
 def msgFilter(x):
+    """return a function suitable for use as a filter with emitters.
+
+    You may pass:
+
+    :None, True: the filter will always return True
+    :False: the filter will always return False
+    :string: compiled into a regex
+    :regex: match()ed against the message text
+    :callable: returned as is
+
+    """
     if x is None:
         return lambda msg: True
     elif isinstance(x, bool):
@@ -25,8 +36,20 @@ def regex_wrapper(regexp):
         return regexp.match(msg.text) is not None
     return wrapped
 
-
 class Outputter(object):
+    """
+    Does the work of formatting and writing a message.
+
+    Multiple implementations are expected.
+
+    format(msg) -> <whatever>
+    format the message for writing. Output type is user-specified, as long as
+    it's compatible with write()
+
+    write(<whatever>) -> None
+    writes out the formatted message
+
+    """
 
     def __init__(self, format, write):
         self._format = format
@@ -36,6 +59,7 @@ class Outputter(object):
         x = self._format(msg)
         self._write(x)
 
+    # XXX I prolly need a close() or somesuch
 
 class Emitter(object):
     """
@@ -46,13 +70,6 @@ class Emitter(object):
 
     filter(msg) -> bool
     should the message be emitted
-
-    format(msg) -> <whatever>
-    format the message for writing. Output type is user-specified, as long as
-    it's compatible with write()
-
-    write(<whatever>) -> None
-    writes out the formatted message
 
     """
 
@@ -81,7 +98,9 @@ class Emitter(object):
     def filter(self):
         del self._filter
 
+    # XXX I prolly need a close() or somesuch
 
+# a default converter
 line_conversion = ConversionTable([
     Converter(key='time',
               # ISO 8601 - it sucks less!
@@ -97,6 +116,7 @@ line_conversion.genericItem = "{0}={1}".format
 line_conversion.aggregate = ':'.join
 
 class LineFormatter(object):
+    """format a message for text-oriented output"""
 
     def __init__(self, separator=':', traceback_prefix='\nTRACE ',
                  conversion=line_conversion, **kwargs):
