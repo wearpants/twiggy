@@ -4,6 +4,8 @@ import re
 
 from .lib import ConversionTable, Converter
 
+__re_type = type(re.compile('foo')) # XXX is there a canonical place for this?
+
 def msgFilter(x):
     """return a function suitable for use as a filter with emitters.
 
@@ -22,7 +24,7 @@ def msgFilter(x):
         return lambda msg: x
     elif isinstance(x, basestring):
         return regex_wrapper(re.compile(x))
-    elif isinstance(x, re.RegexObject):
+    elif isinstance(x, __re_type):
         return regex_wrapper(x)
     elif callable(x): # XXX test w/ inspect.getargs here?
         return x
@@ -31,7 +33,7 @@ def msgFilter(x):
         raise ValueError("Unknown filter: {0!r}".format(x))
 
 def regex_wrapper(regexp):
-    assert isinstance(regexp, re.RegexObject)
+    assert isinstance(regexp, __re_type)
     def wrapped(msg):
         return regexp.match(msg.text) is not None
     return wrapped

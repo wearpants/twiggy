@@ -55,6 +55,28 @@ But the name has no relation to the object; it's just for human use:
 >>> mylog is log.name('alfredo')
 False
 
+Emitting Messages
++++++++++++++++++
+Emitters are loosely coupled:
+>>> twiggy.emitters
+{'*': <twiggy.Emitter.Emitter object at 0xc1f7d0>}
+
+You can set a min_level on Emitters:
+>>> twiggy.emitters['*'].min_level = twiggy.Levels.INFO
+>>> log.debug("Help, help I'm being suppressed")
+>>> log.info("I'm not quite dead yet")
+INFO:I'm not quite dead yet
+
+You can filter on regexes:
+>>> twiggy.emitters['*'].filter = ".*pants.*"
+>>> log.info("Got my {0} on", "pants")
+INFO:Got my pants on
+>>> log.info("Got my {0} on", "shirt")
+
+Let's reset that:
+>>> twiggy.emitters['*'].filter = True
+>>> twiggy.emitters['*'].min_level = twiggy.Levels.DEBUG
+
 Better output
 +++++++++++++
 Newlines are suppressed by default; that can be turned off per-message:
@@ -167,43 +189,6 @@ INFO:alfredo:Starting silliness
 ...     mylog.info("I call shenanigans!")
 >>> mylog.info("End silliness")
 INFO:alfredo:End silliness
-
-Emitters
-=========
-Multiple emitters can be used by adding to twiggy.emitters (a dict).
-
-Filtering, formatting, and outputting should ideally be indepenent & composable. Not really sure what the right pattern is here - I'm a little tired of mixins.  Batteries include a small formatting microframework for common output formats.
-
-class Emitter(object):
-    """Emits!
-
-    :ivar min_level: only emit if greater than this
-    :type min_level: Levels.LogLevel
-
-    """
-
-    def emit(self, msg):
-        """emit a message.
-
-        This is the only external API
-        """
-
-    def filter(self, msg):
-        """return True if the message should be emitted
-
-        I could be <some_regex>.match, perhaps
-        """
-
-    def format(self, msg):
-        """
-        :returns: the formatted message, ready for output
-        :rtype: string
-
-        """
-
-    def output(self, msg, s):
-        """write out the message"""
-
 
 Questions:
 ==============

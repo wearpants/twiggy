@@ -2,6 +2,7 @@ import copy
 import threading
 
 def thread_name():
+    """return the name of the current thread"""
     return threading.currentThread().getName()
 
 
