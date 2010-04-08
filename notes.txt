@@ -8,12 +8,15 @@ Flubberage:
 
 Usage:
 ======
+Make doctest work:
+>>> import sys; sys.stderr = sys.stdout
+
 Setup is simple
 +++++++++++++++
 In your main.py:
 
 >>> import twiggy
->>> twiggy.basicConfig()
+>>> twiggy.quick_setup()
 
 Logging Messages
 ++++++++++++++++
@@ -28,44 +31,44 @@ Main interface is the the magic _log_:
 It works out of the box, using standard levels:
 
 >>> log.debug('You may not care')
-2010-03-27T19:42:50:DEBUG:You may not care
+DEBUG:You may not care
 >>> log.error('OMFG! Pants on fire!')
-2010-03-27T19:42:50:ERROR:OMFG! Pants on fire!
+ERROR:OMFG! Pants on fire!
 
 It supports format strings:
 
 >>> log.info('I like %s', "bikes")
-2010-03-27T19:42:50:INFO:I like bikes
+INFO:I like bikes
 
 But prefers new style:
 
 >>> log.info('I wear {0} on my {where}', 'pants', where='legs')
-2010-03-27T19:42:50:INFO:I wear pants on my legs
+INFO:I wear pants on my legs
 
 You can name your loggers:
 
 >>> mylog = log.name('alfredo')
 >>> mylog.debug('hello')
-2010-03-27T19:42:50:DEBUG:alfredo:hello
+DEBUG:alfredo:hello
 
 Better output
 +++++++++++++
 Newlines are suppressed by default; that can be turned off per-message:
 
 >>> log.info('user\ninput\nannoys\nus')
-2010-03-27T19:42:50:INFO:user\ninput\nannoys\nus
+INFO:user\ninput\nannoys\nus
 
 >>> log.options(suppress_newlines=False).info('we\ndeal')
-2010-03-27T19:42:50:INFO:we
+INFO:we
 deal
 
-Exceptions are prefixed. Can also pass exc_info. Use '\\n' as a prefix to fold into a single line.
+Exceptions are prefixed. Can also pass exc_info. Use '\\n' as a prefix to fold into a single line:
 
 >>> try:
->>>     1/0
->>> except:
->>>     log.trace('error').warning('oh noes') # error is the default & can be omitted
-2010-03-27T19:42:50:WARNING:oh noes
+...     1/0
+... except:
+...     log.trace('error').warning('oh noes') # error is the default & can be omitted
+WARNING:oh noes
 TRACE Traceback (most recent call last):
 TRACE   File "./futz.py", line 35, in <module>
 TRACE     1/0
@@ -83,31 +86,30 @@ Each logger instance is created on the fly & is independent:
 You don't need to store loggers. I like this chained style a lot.
 
 >>> log.name('benito').info('hi there')
-2010-03-27T19:46:52:INFO:benito:hi there
+INFO:benito:hi there
 
 It makes structured logging easy:
 
 >>> log.fields(paths=42).info('Going for a walk')
-2010-03-27T19:46:52:INFO:paths=42:Going for a walk
+INFO:paths=42:Going for a walk
 
 Short cut.  Great for runtime statistics gathering
 
 >>> log.struct(paths=42, dolphins='thankful')
-2010-03-27T19:46:52:INFO:dolphins=thankful:paths=42:
+INFO:dolphins=thankful:paths=42:
 
 Partial binding can be useful for webapps:
 
 >>> per_request_log = log.fields(request_id='12345')
 >>> per_request_log.fields(rows=100, user='frank').info('frobnicating database')
-2010-03-27T20:17:31:INFO:request_id=12345:rows=100:user=frank:frobnicating database
+INFO:request_id=12345:rows=100:user=frank:frobnicating database
 >>> per_request_log.fields(bytes=5678).info('sending page over tubes')
-2010-03-27T20:17:31:INFO:bytes=5678:request_id=12345:sending page over tubes
+INFO:bytes=5678:request_id=12345:sending page over tubes
 
 Chained style is awesome:
 
->>> log.name('donjuan').fields(pants='sexy').info("hello, {who} want to {what}?",
-                                                  who='ladies', what='dance')
-2010-03-27T19:50:49:INFO:donjuan:pants=sexy:hello, ladies want to dance?
+>>> log.name('donjuan').fields(pants='sexy').info("hello, {who} want to {what}?", who='ladies', what='dance')
+INFO:donjuan:pants=sexy:hello, ladies want to dance?
 
 Dynamic!
 ++++++++
@@ -119,10 +121,10 @@ Any functions in args/fields are called and the value substitued.
 We'll provide a useful collection of such things:
 
 >>> def thread_name():
->>>     return threading.currentThread().getName()
+...     return threading.currentThread().getName()
 
 >>> log.fields(pid=os.getpid).info("I'm in thread {0}", log.utils.thread_name)
-2010-03-27T19:56:16:INFO:pid=1076:I'm in thread MainThread
+INFO:pid=1076:I'm in thread MainThread
 
 If you really want to log a callable, repr() it or wrap it in lambda.
 
@@ -132,7 +134,7 @@ As an optimization, a min_level can be set on loggers:
 
 >>> mylog.min_level = twiggy.Levels.INFO
 >>> mylog.info("You see this")
-2010-03-27T19:56:16:INFO:alfredo:You see this
+INFO:alfredo:You see this
 >>> mylog.debug("This is hidden")
 
 They also take a filter that operates on format_spec. The use case is efficiently
@@ -140,11 +142,11 @@ shutting off specific messages in a library which is doing something stupid:
 
 >>> mylog.filter = lambda s: "shenanigans" not in s
 >>> mylog.info("Starting silliness")
-2010-03-27T19:56:16:INFO:alfredo:Starting silliness
+INFO:alfredo:Starting silliness
 >>> for i in xrange(3): # for large values of 3
->>>     mylog.info("I call shenanigans!")
+...     mylog.info("I call shenanigans!")
 >>> mylog.info("End silliness")
-2010-03-27T19:56:16:INFO:alfredo:End silliness
+INFO:alfredo:End silliness
 
 Emitters
 =========
@@ -165,23 +167,23 @@ class Emitter(object):
 
         This is the only external API
         """
-    
+
     def filter(self, msg):
         """return True if the message should be emitted
 
         I could be <some_regex>.match, perhaps
         """
-    
+
     def format(self, msg):
         """
         :returns: the formatted message, ready for output
         :rtype: string
 
         """
-    
+
     def output(self, msg, s):
         """write out the message"""
-    
+
 
 Questions:
 ==============
