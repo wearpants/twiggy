@@ -25,8 +25,8 @@ Logging Messages
 
 Main interface is the the magic **log**:
 
->>> log
-<twiggy.Logger.Logger object at 0x28ab368>
+>>> log #doctest:+ELLIPSIS
+<twiggy.Logger.Logger object at 0x...>
 
 It works out of the box, using standard levels:
 
@@ -58,8 +58,8 @@ False
 Emitting Messages
 +++++++++++++++++
 Emitters are loosely coupled:
->>> twiggy.emitters
-{'*': <twiggy.Emitter.Emitter object at 0xc1f7d0>}
+>>> twiggy.emitters #doctest:+ELLIPSIS
+{'*': <twiggy.Emitter.Emitter object at 0x...>}
 
 You can set a min_level on Emitters:
 >>> twiggy.emitters['*'].min_level = twiggy.Levels.INFO
@@ -90,13 +90,13 @@ deal
 
 Exceptions are prefixed. Can also pass exc_info. Use '\\n' as a prefix to fold into a single line:
 
->>> try:
+>>> try: #doctest:+ELLIPSIS
 ...     1/0
 ... except:
-...     log.trace('error').warning('oh noes') # error is the default & can be omitted
+...     log.trace('error').warning('oh noes')
 WARNING:oh noes
 TRACE Traceback (most recent call last):
-TRACE   File "./futz.py", line 35, in <module>
+TRACE   File "<doctest notes.txt[...]>", line 2, in <module>
 TRACE     1/0
 TRACE ZeroDivisionError: integer division or modulo by zero
 
@@ -138,7 +138,7 @@ Any functions in args/fields are called and the value substitued:
 >>> from twiggy.lib import thread_name
 >>> thread_name()
 'MainThread'
->>> log.fields(pid=os.getpid).info("I'm in thread {0}", thread_name)
+>>> log.fields(pid=os.getpid).info("I'm in thread {0}", thread_name) #doctest:+ELLIPSIS
 INFO:pid=1076:I'm in thread MainThread
 
 This can be useful with partially-bound loggers, which let's us do some cool stuff:
