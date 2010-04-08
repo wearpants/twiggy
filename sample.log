@@ -21,3 +21,55 @@ TRACE ZeroDivisionError: integer division or modulo by zero
 2010-03-28T00:23:34:INFO:alfredo:You see this
 2010-03-28T00:23:34:INFO:alfredo:Starting silliness
 2010-03-28T00:23:34:INFO:alfredo:End silliness
+2010-04-08T07:18:56:DEBUG:You may not care
+2010-04-08T07:18:56:ERROR:OMFG! Pants on fire!
+2010-04-08T07:18:56:INFO:I like bikes
+2010-04-08T07:18:56:INFO:I wear pants on my legs
+2010-04-08T07:18:56:DEBUG:alfredo:hello
+2010-04-08T07:18:56:INFO:user\ninput\nannoys\nus
+2010-04-08T07:18:56:INFO:we
+deal
+2010-04-08T07:18:56:WARNING:oh noes
+TRACE Traceback (most recent call last):
+TRACE   File "<doctest notes.txt[14]>", line 2, in <module>
+TRACE     1/0
+TRACE ZeroDivisionError: integer division or modulo by zero
+2010-04-08T07:18:56:INFO:benito:hi there
+2010-04-08T07:18:56:INFO:paths=42:Going for a walk
+2010-04-08T07:18:56:INFO:dolphins=thankful:paths=42:
+2010-04-08T07:18:56:INFO:request_id=12345:rows=100:user=frank:frobnicating database
+2010-04-08T07:18:56:INFO:bytes=5678:request_id=12345:sending page over tubes
+2010-04-08T07:18:56:INFO:donjuan:pants=sexy:hello, ladies want to dance?
+2010-04-08T07:18:56:INFO:pid=2305:I'm in thread MainThread
+2010-04-08T07:18:56:DEBUG:tracker:obj_id=36121552:thread=MainThread:started tracking
+2010-04-08T07:18:56:DEBUG:tracker:obj_id=36121552:thread=MainThread:accessed bar
+2010-04-08T07:18:56:DEBUG:tracker:obj_id=36121552:thread=TheDoubler:accessed bar
+2010-04-08T07:18:56:INFO:alfredo:You see this
+2010-04-08T07:18:56:INFO:alfredo:Starting silliness
+2010-04-08T07:18:56:INFO:alfredo:End silliness
+2010-04-08T07:22:28:DEBUG:You may not care
+2010-04-08T07:22:28:ERROR:OMFG! Pants on fire!
+2010-04-08T07:22:28:INFO:I like bikes
+2010-04-08T07:22:28:INFO:I wear pants on my legs
+2010-04-08T07:22:28:DEBUG:alfredo:hello
+2010-04-08T07:22:28:INFO:user\ninput\nannoys\nus
+2010-04-08T07:22:28:INFO:we
+deal
+2010-04-08T07:22:28:WARNING:oh noes
+TRACE Traceback (most recent call last):
+TRACE   File "<doctest notes.txt[14]>", line 2, in <module>
+TRACE     1/0
+TRACE ZeroDivisionError: integer division or modulo by zero
+2010-04-08T07:22:28:INFO:benito:hi there
+2010-04-08T07:22:28:INFO:paths=42:Going for a walk
+2010-04-08T07:22:28:INFO:dolphins=thankful:paths=42:
+2010-04-08T07:22:28:INFO:request_id=12345:rows=100:user=frank:frobnicating database
+2010-04-08T07:22:28:INFO:bytes=5678:request_id=12345:sending page over tubes
+2010-04-08T07:22:28:INFO:donjuan:pants=sexy:hello, ladies want to dance?
+2010-04-08T07:22:28:INFO:pid=2366:I'm in thread MainThread
+2010-04-08T07:22:28:DEBUG:tracker:obj_id=40573840:thread=MainThread:started tracking
+2010-04-08T07:22:28:DEBUG:tracker:obj_id=40573840:thread=MainThread:accessed bar
+2010-04-08T07:22:28:DEBUG:tracker:obj_id=40573840:thread=TheDoubler:accessed bar
+2010-04-08T07:22:28:INFO:alfredo:You see this
+2010-04-08T07:22:28:INFO:alfredo:Starting silliness
+2010-04-08T07:22:28:INFO:alfredo:End silliness
