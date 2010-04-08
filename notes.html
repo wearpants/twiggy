@@ -243,11 +243,13 @@ p.sidebar-subtitle {
 </div>
 <div class="section">
 <h1><a id="usage" name="usage">Usage:</a></h1>
+<p>Make doctest work:
+&gt;&gt;&gt; import sys; sys.stderr = sys.stdout</p>
 <div class="section">
 <h2><a id="setup-is-simple" name="setup-is-simple">Setup is simple</a></h2>
 <p>In your main.py:</p>
 <pre class="doctest-block">&gt;&gt;&gt; import twiggy
-&gt;&gt;&gt; twiggy.basicConfig()
+&gt;&gt;&gt; twiggy.quick_setup()
 </pre>
 </div>
 <div class="section">
@@ -260,40 +262,40 @@ p.sidebar-subtitle {
 </pre>
 <p>It works out of the box, using standard levels:</p>
 <pre class="doctest-block">&gt;&gt;&gt; log.debug('You may not care')
-2010-03-27T19:42:50:DEBUG:You may not care
+DEBUG:You may not care
 &gt;&gt;&gt; log.error('OMFG! Pants on fire!')
-2010-03-27T19:42:50:ERROR:OMFG! Pants on fire!
+ERROR:OMFG! Pants on fire!
 </pre>
 <p>It supports format strings:</p>
 <pre class="doctest-block">&gt;&gt;&gt; log.info('I like %s', "bikes")
-2010-03-27T19:42:50:INFO:I like bikes
+INFO:I like bikes
 </pre>
 <p>But prefers new style:</p>
 <pre class="doctest-block">&gt;&gt;&gt; log.info('I wear {0} on my {where}', 'pants', where='legs')
-2010-03-27T19:42:50:INFO:I wear pants on my legs
+INFO:I wear pants on my legs
 </pre>
 <p>You can name your loggers:</p>
 <pre class="doctest-block">&gt;&gt;&gt; mylog = log.name('alfredo')
 &gt;&gt;&gt; mylog.debug('hello')
-2010-03-27T19:42:50:DEBUG:alfredo:hello
+DEBUG:alfredo:hello
 </pre>
 </div>
 <div class="section">
 <h2><a id="better-output" name="better-output">Better output</a></h2>
 <p>Newlines are suppressed by default; that can be turned off per-message:</p>
 <pre class="doctest-block">&gt;&gt;&gt; log.info('user\ninput\nannoys\nus')
-2010-03-27T19:42:50:INFO:user\ninput\nannoys\nus
+INFO:user\ninput\nannoys\nus
 </pre>
 <pre class="doctest-block">&gt;&gt;&gt; log.options(suppress_newlines=False).info('we\ndeal')
-2010-03-27T19:42:50:INFO:we
+INFO:we
 deal
 </pre>
-<p>Exceptions are prefixed. Can also pass exc_info. Use '\n' as a prefix to fold into a single line.</p>
+<p>Exceptions are prefixed. Can also pass exc_info. Use '\n' as a prefix to fold into a single line:</p>
 <pre class="doctest-block">&gt;&gt;&gt; try:
-&gt;&gt;&gt;     1/0
-&gt;&gt;&gt; except:
-&gt;&gt;&gt;     log.trace('error').warning('oh noes') # error is the default &amp; can be omitted
-2010-03-27T19:42:50:WARNING:oh noes
+...     1/0
+... except:
+...     log.trace('error').warning('oh noes') # error is the default &amp; can be omitted
+WARNING:oh noes
 TRACE Traceback (most recent call last):
 TRACE   File "./futz.py", line 35, in &lt;module&gt;
 TRACE     1/0
@@ -310,27 +312,26 @@ TRACE ZeroDivisionError: integer division or modulo by zero
 </pre>
 <p>You don't need to store loggers. I like this chained style a lot.</p>
 <pre class="doctest-block">&gt;&gt;&gt; log.name('benito').info('hi there')
-2010-03-27T19:46:52:INFO:benito:hi there
+INFO:benito:hi there
 </pre>
 <p>It makes structured logging easy:</p>
 <pre class="doctest-block">&gt;&gt;&gt; log.fields(paths=42).info('Going for a walk')
-2010-03-27T19:46:52:INFO:paths=42:Going for a walk
+INFO:paths=42:Going for a walk
 </pre>
 <p>Short cut.  Great for runtime statistics gathering</p>
 <pre class="doctest-block">&gt;&gt;&gt; log.struct(paths=42, dolphins='thankful')
-2010-03-27T19:46:52:INFO:dolphins=thankful:paths=42:
+INFO:dolphins=thankful:paths=42:
 </pre>
 <p>Partial binding can be useful for webapps:</p>
 <pre class="doctest-block">&gt;&gt;&gt; per_request_log = log.fields(request_id='12345')
 &gt;&gt;&gt; per_request_log.fields(rows=100, user='frank').info('frobnicating database')
-2010-03-27T20:17:31:INFO:request_id=12345:rows=100:user=frank:frobnicating database
+INFO:request_id=12345:rows=100:user=frank:frobnicating database
 &gt;&gt;&gt; per_request_log.fields(bytes=5678).info('sending page over tubes')
-2010-03-27T20:17:31:INFO:bytes=5678:request_id=12345:sending page over tubes
+INFO:bytes=5678:request_id=12345:sending page over tubes
 </pre>
 <p>Chained style is awesome:</p>
-<pre class="doctest-block">&gt;&gt;&gt; log.name('donjuan').fields(pants='sexy').info("hello, {who} want to {what}?",
-                                                  who='ladies', what='dance')
-2010-03-27T19:50:49:INFO:donjuan:pants=sexy:hello, ladies want to dance?
+<pre class="doctest-block">&gt;&gt;&gt; log.name('donjuan').fields(pants='sexy').info("hello, {who} want to {what}?", who='ladies', what='dance')
+INFO:donjuan:pants=sexy:hello, ladies want to dance?
 </pre>
 </div>
 <div class="section">
@@ -341,10 +342,10 @@ TRACE ZeroDivisionError: integer division or modulo by zero
 </pre>
 <p>We'll provide a useful collection of such things:</p>
 <pre class="doctest-block">&gt;&gt;&gt; def thread_name():
-&gt;&gt;&gt;     return threading.currentThread().getName()
+...     return threading.currentThread().getName()
 </pre>
 <pre class="doctest-block">&gt;&gt;&gt; log.fields(pid=os.getpid).info("I'm in thread {0}", log.utils.thread_name)
-2010-03-27T19:56:16:INFO:pid=1076:I'm in thread MainThread
+INFO:pid=1076:I'm in thread MainThread
 </pre>
 <p>If you really want to log a callable, repr() it or wrap it in lambda.</p>
 </div>
@@ -353,18 +354,18 @@ TRACE ZeroDivisionError: integer division or modulo by zero
 <p>As an optimization, a min_level can be set on loggers:</p>
 <pre class="doctest-block">&gt;&gt;&gt; mylog.min_level = twiggy.Levels.INFO
 &gt;&gt;&gt; mylog.info("You see this")
-2010-03-27T19:56:16:INFO:alfredo:You see this
+INFO:alfredo:You see this
 &gt;&gt;&gt; mylog.debug("This is hidden")
 </pre>
 <p>They also take a filter that operates on format_spec. The use case is efficiently
 shutting off specific messages in a library which is doing something stupid:</p>
 <pre class="doctest-block">&gt;&gt;&gt; mylog.filter = lambda s: "shenanigans" not in s
 &gt;&gt;&gt; mylog.info("Starting silliness")
-2010-03-27T19:56:16:INFO:alfredo:Starting silliness
+INFO:alfredo:Starting silliness
 &gt;&gt;&gt; for i in xrange(3): # for large values of 3
-&gt;&gt;&gt;     mylog.info("I call shenanigans!")
+...     mylog.info("I call shenanigans!")
 &gt;&gt;&gt; mylog.info("End silliness")
-2010-03-27T19:56:16:INFO:alfredo:End silliness
+INFO:alfredo:End silliness
 </pre>
 </div>
 </div>
