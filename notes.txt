@@ -9,6 +9,7 @@ Flubberage:
 Usage:
 ======
 Make doctest work:
+
 >>> import sys; sys.stderr = sys.stdout
 
 Setup is simple
@@ -52,28 +53,33 @@ You can name your loggers:
 DEBUG:alfredo:hello
 
 But the name has no relation to the object; it's just for human use:
+
 >>> mylog is log.name('alfredo')
 False
 
 Emitting Messages
 +++++++++++++++++
 Emitters are loosely coupled:
+
 >>> twiggy.emitters #doctest:+ELLIPSIS
 {'*': <twiggy.Emitter.Emitter object at 0x...>}
 
 You can set a min_level on Emitters:
+
 >>> twiggy.emitters['*'].min_level = twiggy.Levels.INFO
 >>> log.debug("Help, help I'm being suppressed")
 >>> log.info("I'm not quite dead yet")
 INFO:I'm not quite dead yet
 
-You can filter on regexes:
+You can filter on regexes, or with arbitrary functions:
+
 >>> twiggy.emitters['*'].filter = ".*pants.*"
 >>> log.info("Got my {0} on", "pants")
 INFO:Got my pants on
 >>> log.info("Got my {0} on", "shirt")
 
-Let's reset that:
+Let's reset all that:
+
 >>> twiggy.emitters['*'].filter = True
 >>> twiggy.emitters['*'].min_level = twiggy.Levels.DEBUG
 
@@ -204,7 +210,7 @@ You can do as many .fields()/.name()/.etc() in any order, as long as the
 Speed
 =====
 Timing data: In a super-simple smoke test, twiggy was about 40% faster than
-logging. Not rigorous.  sloccount says 220 lines.
+logging. Not rigorous.  sloccount says about 400 lines.
 
 The future
 ==============

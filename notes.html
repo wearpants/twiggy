@@ -243,8 +243,9 @@ p.sidebar-subtitle {
 </div>
 <div class="section">
 <h1><a id="usage" name="usage">Usage:</a></h1>
-<p>Make doctest work:
-&gt;&gt;&gt; import sys; sys.stderr = sys.stdout</p>
+<p>Make doctest work:</p>
+<pre class="doctest-block">&gt;&gt;&gt; import sys; sys.stderr = sys.stdout
+</pre>
 <div class="section">
 <h2><a id="setup-is-simple" name="setup-is-simple">Setup is simple</a></h2>
 <p>In your main.py:</p>
@@ -256,9 +257,9 @@ p.sidebar-subtitle {
 <h2><a id="logging-messages" name="logging-messages">Logging Messages</a></h2>
 <pre class="doctest-block">&gt;&gt;&gt; from twiggy import *
 </pre>
-<p>Main interface is the the magic _log_:</p>
-<pre class="doctest-block">&gt;&gt;&gt; log
-&lt;twiggy.Logger.Logger object at 0x28ab368&gt;
+<p>Main interface is the the magic <strong>log</strong>:</p>
+<pre class="doctest-block">&gt;&gt;&gt; log #doctest:+ELLIPSIS
+&lt;twiggy.Logger.Logger object at 0x...&gt;
 </pre>
 <p>It works out of the box, using standard levels:</p>
 <pre class="doctest-block">&gt;&gt;&gt; log.debug('You may not care')
@@ -279,6 +280,33 @@ INFO:I wear pants on my legs
 &gt;&gt;&gt; mylog.debug('hello')
 DEBUG:alfredo:hello
 </pre>
+<p>But the name has no relation to the object; it's just for human use:</p>
+<pre class="doctest-block">&gt;&gt;&gt; mylog is log.name('alfredo')
+False
+</pre>
+</div>
+<div class="section">
+<h2><a id="emitting-messages" name="emitting-messages">Emitting Messages</a></h2>
+<p>Emitters are loosely coupled:</p>
+<pre class="doctest-block">&gt;&gt;&gt; twiggy.emitters #doctest:+ELLIPSIS
+{'*': &lt;twiggy.Emitter.Emitter object at 0x...&gt;}
+</pre>
+<p>You can set a min_level on Emitters:</p>
+<pre class="doctest-block">&gt;&gt;&gt; twiggy.emitters['*'].min_level = twiggy.Levels.INFO
+&gt;&gt;&gt; log.debug("Help, help I'm being suppressed")
+&gt;&gt;&gt; log.info("I'm not quite dead yet")
+INFO:I'm not quite dead yet
+</pre>
+<p>You can filter on regexes, or with arbitrary functions:</p>
+<pre class="doctest-block">&gt;&gt;&gt; twiggy.emitters['*'].filter = ".*pants.*"
+&gt;&gt;&gt; log.info("Got my {0} on", "pants")
+INFO:Got my pants on
+&gt;&gt;&gt; log.info("Got my {0} on", "shirt")
+</pre>
+<p>Let's reset all that:</p>
+<pre class="doctest-block">&gt;&gt;&gt; twiggy.emitters['*'].filter = True
+&gt;&gt;&gt; twiggy.emitters['*'].min_level = twiggy.Levels.DEBUG
+</pre>
 </div>
 <div class="section">
 <h2><a id="better-output" name="better-output">Better output</a></h2>
@@ -294,23 +322,17 @@ deal
 <pre class="doctest-block">&gt;&gt;&gt; try:
 ...     1/0
 ... except:
-...     log.trace('error').warning('oh noes') # error is the default &amp; can be omitted
+...     log.trace('error').warning('oh noes') #doctest:+ELLIPSIS
 WARNING:oh noes
 TRACE Traceback (most recent call last):
-TRACE   File "./futz.py", line 35, in &lt;module&gt;
+TRACE   File "&lt;doctest notes.txt[...]&gt;", line 2, in &lt;module&gt;
 TRACE     1/0
 TRACE ZeroDivisionError: integer division or modulo by zero
 </pre>
 </div>
 <div class="section">
 <h2><a id="method-chaining" name="method-chaining">Method Chaining</a></h2>
-<p>Each logger instance is created on the fly &amp; is independent:</p>
-<pre class="doctest-block">&gt;&gt;&gt; mylog
-&lt;twiggy.Logger.Logger object at 0x20899f0&gt;
-&gt;&gt;&gt; log.name('alfredo')
-&lt;twiggy.Logger.Logger object at 0x2089c58&gt;
-</pre>
-<p>You don't need to store loggers. I like this chained style a lot.</p>
+<p>I like this chained style a lot.</p>
 <pre class="doctest-block">&gt;&gt;&gt; log.name('benito').info('hi there')
 INFO:benito:hi there
 </pre>
@@ -318,7 +340,7 @@ INFO:benito:hi there
 <pre class="doctest-block">&gt;&gt;&gt; log.fields(paths=42).info('Going for a walk')
 INFO:paths=42:Going for a walk
 </pre>
-<p>Short cut.  Great for runtime statistics gathering</p>
+<p>Short cut.  Great for runtime statistics gathering.</p>
 <pre class="doctest-block">&gt;&gt;&gt; log.struct(paths=42, dolphins='thankful')
 INFO:dolphins=thankful:paths=42:
 </pre>
@@ -336,16 +358,39 @@ INFO:donjuan:pants=sexy:hello, ladies want to dance?
 </div>
 <div class="section">
 <h2><a id="dynamic" name="dynamic">Dynamic!</a></h2>
-<p>Any functions in args/fields are called and the value substitued.</p>
+<p>Any functions in args/fields are called and the value substitued:</p>
 <pre class="doctest-block">&gt;&gt;&gt; import os
-&gt;&gt;&gt; import threading
-</pre>
-<p>We'll provide a useful collection of such things:</p>
-<pre class="doctest-block">&gt;&gt;&gt; def thread_name():
-...     return threading.currentThread().getName()
-</pre>
-<pre class="doctest-block">&gt;&gt;&gt; log.fields(pid=os.getpid).info("I'm in thread {0}", log.utils.thread_name)
+&gt;&gt;&gt; from twiggy.lib import thread_name
+&gt;&gt;&gt; thread_name()
+'MainThread'
+&gt;&gt;&gt; log.fields(pid=os.getpid).info("I'm in thread {0}", thread_name) #doctest:+ELLIPSIS
 INFO:pid=1076:I'm in thread MainThread
+</pre>
+<p>This can be useful with partially-bound loggers, which let's us do some cool stuff:</p>
+<pre class="doctest-block">&gt;&gt;&gt; class ThreadTracker(object):
+...     def __init__(self, obj):
+...         self.__obj = obj
+...         # a partially bound logger
+...         self.__log = log.name("tracker").fields(obj_id=id(obj), thread=thread_name)
+...         self.__log.debug("started tracking")
+...     def __getattr__(self, attr):
+...         self.__log.debug("accessed {0}", attr)
+...         return getattr(self.__obj, attr)
+...
+&gt;&gt;&gt; class Bunch(object):
+...     pass
+...
+&gt;&gt;&gt; foo = Bunch()
+&gt;&gt;&gt; foo.bar = 42
+&gt;&gt;&gt; tracked = ThreadTracker(foo)
+DEBUG:tracker:obj_id=14063980:thread=MainThread:started tracking
+&gt;&gt;&gt; tracked.bar
+DEBUG:tracker:obj_id=14063980:thread=MainThread:accessed bar
+42
+&gt;&gt;&gt; import threading
+&gt;&gt;&gt; t=threading.Thread(target = lambda: tracked.bar * 2, name = "TheDoubler")
+&gt;&gt;&gt; t.start()
+DEBUG:tracker:obj_id=14063980:thread=TheDoubler:accessed bar
 </pre>
 <p>If you really want to log a callable, repr() it or wrap it in lambda.</p>
 </div>
@@ -370,50 +415,6 @@ INFO:alfredo:End silliness
 </div>
 </div>
 <div class="section">
-<h1><a id="emitters" name="emitters">Emitters</a></h1>
-<p>Multiple emitters can be used by adding to twiggy.emitters (a dict).</p>
-<p>Filtering, formatting, and outputting should ideally be indepenent
-&amp; composable. Not really sure what the right pattern is here - I'm
-a little tired of mixins. Batteries include a small formatting
-microframework for common output formats.</p>
-<dl class="docutils">
-<dt>class Emitter(object):</dt>
-<dd><p class="first">"""Emits!</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name">
-<col class="field-body">
-<tbody valign="top">
-<tr class="field"><th class="field-name">ivar min_level:</th><td class="field-body">only emit if greater than this</td>
-</tr>
-<tr class="field"><th class="field-name">type min_level:</th><td class="field-body">Levels.LogLevel</td>
-</tr>
-</tbody>
-</table>
-<p>"""</p>
-<dl class="last docutils">
-<dt>def emit(self, msg):</dt>
-<dd><p class="first">"""emit a message.</p>
-<p class="last">This is the only external API
-"""</p>
-</dd>
-<dt>def filter(self, msg):</dt>
-<dd><p class="first">"""return True if the message should be emitted</p>
-<p class="last">I could be &lt;some_regex&gt;.match, perhaps
-"""</p>
-</dd>
-<dt>def format(self, msg):</dt>
-<dd><p class="first">"""
-:returns: the formatted message, ready for output
-:rtype: string</p>
-<p class="last">"""</p>
-</dd>
-<dt>def output(self, msg, s):</dt>
-<dd>"""write out the message"""</dd>
-</dl>
-</dd>
-</dl>
-</div>
-<div class="section">
 <h1><a id="questions" name="questions">Questions:</a></h1>
 <p>The only required attributes of message atm are level &amp; format_spec (the text).
 I've thought about making name mandatory (eh). Going the other way, I've
@@ -426,7 +427,7 @@ You can do as many .fields()/.name()/.etc() in any order, as long as the
 <div class="section">
 <h1><a id="speed" name="speed">Speed</a></h1>
 <p>Timing data: In a super-simple smoke test, twiggy was about 40% faster than
-logging. Not rigorous.  sloccount says 220 lines.</p>
+logging. Not rigorous.  sloccount says about 400 lines.</p>
 </div>
 <div class="section">
 <h1><a id="the-future" name="the-future">The future</a></h1>
