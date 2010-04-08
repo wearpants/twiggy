@@ -90,10 +90,10 @@ deal
 
 Exceptions are prefixed. Can also pass exc_info. Use '\\n' as a prefix to fold into a single line:
 
->>> try: #doctest:+ELLIPSIS
+>>> try:
 ...     1/0
 ... except:
-...     log.trace('error').warning('oh noes')
+...     log.trace('error').warning('oh noes') #doctest:+ELLIPSIS
 WARNING:oh noes
 TRACE Traceback (most recent call last):
 TRACE   File "<doctest notes.txt[...]>", line 2, in <module>
