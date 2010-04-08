@@ -23,7 +23,7 @@ Logging Messages
 
 >>> from twiggy import *
 
-Main interface is the the magic _log_:
+Main interface is the the magic **log**:
 
 >>> log
 <twiggy.Logger.Logger object at 0x28ab368>
@@ -51,6 +51,10 @@ You can name your loggers:
 >>> mylog.debug('hello')
 DEBUG:alfredo:hello
 
+But the name has no relation to the object; it's just for human use:
+>>> mylog is log.name('alfredo')
+False
+
 Better output
 +++++++++++++
 Newlines are suppressed by default; that can be turned off per-message:
@@ -76,14 +80,7 @@ TRACE ZeroDivisionError: integer division or modulo by zero
 
 Method Chaining
 ++++++++++++++++++
-Each logger instance is created on the fly & is independent:
-
->>> mylog
-<twiggy.Logger.Logger object at 0x20899f0>
->>> log.name('alfredo')
-<twiggy.Logger.Logger object at 0x2089c58>
-
-You don't need to store loggers. I like this chained style a lot.
+I like this chained style a lot.
 
 >>> log.name('benito').info('hi there')
 INFO:benito:hi there
@@ -93,7 +90,7 @@ It makes structured logging easy:
 >>> log.fields(paths=42).info('Going for a walk')
 INFO:paths=42:Going for a walk
 
-Short cut.  Great for runtime statistics gathering
+Short cut.  Great for runtime statistics gathering.
 
 >>> log.struct(paths=42, dolphins='thankful')
 INFO:dolphins=thankful:paths=42:
@@ -113,18 +110,43 @@ INFO:donjuan:pants=sexy:hello, ladies want to dance?
 
 Dynamic!
 ++++++++
-Any functions in args/fields are called and the value substitued.
+Any functions in args/fields are called and the value substitued:
 
 >>> import os
 >>> import threading
-
-We'll provide a useful collection of such things:
-
->>> def thread_name():
-...     return threading.currentThread().getName()
-
->>> log.fields(pid=os.getpid).info("I'm in thread {0}", log.utils.thread_name)
+>>> log.fields(pid=os.getpid).info("I'm in thread {0}", threading.currentThread().getName)
 INFO:pid=1076:I'm in thread MainThread
+
+This can be useful with partially-bound loggers, which let's us do some cool stuff:
+
+>>> from twiggy.lib import thread_name
+>>> thread_name()
+MainThread
+>>> class ThreadTracker(object):
+...     def __init__(self, obj):
+...         self.__obj = obj
+...         # a partially bound logger
+...         self.__log = log.name("tracker").fields(obj_id=id(obj), thread=thread_name)
+...         self.__log.debug("started tracking")
+...     def __getattr__(self, attr):
+...         self.__log.debug("accessed {0}", attr)
+...         return getattr(self.__obj, attr)
+...
+>>> class Bunch(object):
+...     pass
+...
+>>> foo = Bunch()
+>>> foo.bar = 42
+>>> tracked = ThreadTracker(foo)
+DEBUG:tracker:obj_id=14063980:thread=MainThread:started tracking
+>>> tracked.bar
+DEBUG:tracker:obj_id=14063980:thread=MainThread:accessed bar
+42
+>>>
+>>> import threading
+>>> t=threading.Thread(target = lambda: tracked.bar * 2, name = "TheDoubler")
+>>> t.start()
+DEBUG:tracker:obj_id=14063980:thread=TheDoubler:accessed bar
 
 If you really want to log a callable, repr() it or wrap it in lambda.
 

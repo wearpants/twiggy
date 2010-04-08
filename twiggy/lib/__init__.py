@@ -1,4 +1,9 @@
 import copy
+import threading
+
+def thread_name():
+    return threading.currentThread().getName()
+
 
 class Converter(object):
     __slots__ = ['key', 'convertValue', 'convertItem', 'required']
