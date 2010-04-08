@@ -3,17 +3,8 @@
 
 ## Simple setup
 import twiggy
+import sys
 twiggy.quick_setup()
-
-my_convert = twiggy.Emitter.line_conversion.copy()
-my_convert.get('time')[0].convertItem = lambda k, v: None
-
-twiggy.emitters['*'] = twiggy.Emitter.Emitter(
-    twiggy.Levels.DEBUG,
-    True,
-    twiggy.Emitter.LineFormatter(conversion=my_convert).format,
-    twiggy.Emitter.printer)
-
 
 ## User-facing features
 from twiggy import *

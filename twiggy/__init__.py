@@ -1,5 +1,6 @@
 __all__=['log']
 import time
+import sys
 
 import Logger
 import Emitter
@@ -7,12 +8,16 @@ import Emitter
 log = Logger.Logger({'time':time.gmtime})
 emitters = log.emitters
 
-def quick_setup(min_level=Levels.DEBUG, fname = None):
-    if fname is None:
-        writer = Emitter.printer
-    else:
-        writer = open(fname, 'a').write
+def quick_setup(min_level=Levels.DEBUG, file = None):
+    if file is None:
+        file = sys.stderr
 
-    emitters['*'] = Emitter.Emitter(min_level, True,
-                                    Emitter.LineFormatter().format,
-                                    writer)
+    if file is sys.stderr or file is sys.stdout:
+        conversion = Emitter.shell_conversion
+        writer = file.write
+    else:
+        conversion = Emitter.line_conversion
+        writer = open(file, 'a').write
+
+    format = Emitter.LineFormatter(conversion=conversion).format
+    emitters['*'] = Emitter.Emitter(min_level, True, format, writer)

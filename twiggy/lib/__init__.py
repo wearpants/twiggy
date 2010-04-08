@@ -64,4 +64,9 @@ class ConversionTable(list):
         return copy.deepcopy(self)
 
     def get(self, key):
+        for c in self:
+            if c.key == key:
+                return c
+
+    def getAll(self, key):
         return [c for c in self if c.key == key]

@@ -115,6 +115,10 @@ line_conversion.genericValue = str
 line_conversion.genericItem = "{0}={1}".format
 line_conversion.aggregate = ':'.join
 
+# a converter for use in the shell - no timestamp
+shell_conversion = line_conversion.copy()
+shell_conversion.get('time').convertItem = lambda k, v: None
+
 class LineFormatter(object):
     """format a message for text-oriented output"""
 
@@ -136,7 +140,7 @@ class LineFormatter(object):
         fields = self.format_fields(msg)
         text = self.format_text(msg)
         trace = self.format_traceback(msg)
-        return "{fields}{self.separator}{text}{trace}".format(**locals()) # XXX gross?
+        return "{fields}{self.separator}{text}{trace}\n".format(**locals()) # XXX gross?
 
     def format_text(self, msg):
         if msg.suppress_newlines:
@@ -155,6 +159,3 @@ class LineFormatter(object):
 
     def format_fields(self, msg):
         return self.conversion.convert(msg.fields)
-
-def printer(s):
-    print>>sys.stderr, s
