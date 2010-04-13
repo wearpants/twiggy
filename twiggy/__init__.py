@@ -20,4 +20,6 @@ def quick_setup(min_level=Levels.DEBUG, file = None):
         writer = open(file, 'a').write
 
     format = Emitter.LineFormatter(conversion=conversion).format
-    emitters['*'] = Emitter.Emitter(min_level, True, format, writer)
+    outputter = Emitter.Outputter(format, writer)
+
+    emitters['*'] = Emitter.Emitter(min_level, True, outputter)

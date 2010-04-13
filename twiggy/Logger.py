@@ -16,8 +16,8 @@ class Logger(object):
                  min_level = Levels.DEBUG, filter = None):
         """Constructor for internal module use only, basically."""
         self._fields = fields if fields is not None else {}
-        self.emitters = emitters if emitters is not None else {}
         self._options = options if options is not None else Message._default_options.copy()
+        self.emitters = emitters if emitters is not None else {}
         self.min_level = min_level
         self.filter = filter if filter is not None else lambda format_spec: True
 
@@ -58,9 +58,10 @@ class Logger(object):
 
         msg = Message(level, format_spec, self._fields.copy(), self._options, *args, **kwargs)
 
-        for name, emitter in potential_emitters:
-            # XXX add appropriate error trapping & logging; watch for recursion
-            emitter.emit(msg)
+        # XXX add appropriate error trapping & logging; watch for recursion
+        # don't forget to trap errors from filter!
+        for o in set(e.outputter for n, e in potential_emitters if e.filter(msg)):
+            o.output(msg)
 
     def debug(self, *args, **kwargs):
         self._emit(Levels.DEBUG, *args, **kwargs)

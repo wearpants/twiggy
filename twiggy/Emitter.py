@@ -75,18 +75,10 @@ class Emitter(object):
 
     """
 
-    def __init__(self, min_level, filter, format, write, outputter=Outputter):
+    def __init__(self, min_level, filter, outputter):
         self.min_level = min_level
         self.filter = filter
-        self._outputter = outputter(format, write)
-
-    def emit(self, msg):
-        """emit a message.
-
-        This is the only external API
-        """
-        if self.filter(msg):
-            self._outputter.output(msg)
+        self.outputter = outputter
 
     @property
     def filter(self):
