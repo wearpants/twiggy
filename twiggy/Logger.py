@@ -60,7 +60,7 @@ class Logger(object):
 
         # XXX add appropriate error trapping & logging; watch for recursion
         # don't forget to trap errors from filter!
-        for o in set(e.outputter for n, e in potential_emitters if e.filter(msg)):
+        for o in set(e._outputter for n, e in potential_emitters if e.filter(msg)):
             o.output(msg)
 
     def debug(self, *args, **kwargs):

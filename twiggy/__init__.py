@@ -4,6 +4,8 @@ import sys
 
 import Logger
 import Emitter
+import Formatter
+import Outputter
 
 log = Logger.Logger({'time':time.gmtime})
 emitters = log.emitters
@@ -13,13 +15,13 @@ def quick_setup(min_level=Levels.DEBUG, file = None):
         file = sys.stderr
 
     if file is sys.stderr or file is sys.stdout:
-        conversion = Emitter.shell_conversion
+        conversion = Formatter.shell_conversion
         writer = file.write
     else:
-        conversion = Emitter.line_conversion
+        conversion = Formatter.line_conversion
         writer = open(file, 'a').write
 
-    format = Emitter.LineFormatter(conversion=conversion).format
-    outputter = Emitter.Outputter(format, writer)
+    format = Formatter.LineFormatter(conversion=conversion).format
+    outputter = Outputter.Outputter(format, writer)
 
     emitters['*'] = Emitter.Emitter(min_level, True, outputter)
