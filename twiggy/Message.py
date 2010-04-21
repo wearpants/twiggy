@@ -2,12 +2,14 @@ __all__ = ['Message']
 
 import sys
 import traceback
+from string import Template
 
 class Message(object):
 
     # don't change these!
     _default_options = {'suppress_newlines' : True,
-                        'trace' : None}
+                        'trace' : None,
+                        'style': 'braces'}
 
     def __init__(self, level, format_spec, fields, options,
                  *args, **kwargs):
@@ -39,6 +41,14 @@ class Message(object):
         else:
             self.traceback = None
 
+        style = options['style']
+        ## XXX maybe allow '%', '$', and '{}' as aliases?
+        if style not in ('braces', 'percent', 'dollar'):
+            raise ValueError("Bad format_style {0!r}".format(style))
+        else:
+            self.style = style
+
+
         self.substitute() # XXX it'd be nice to do this only if we're going to emit
 
     def substitute(self):
@@ -58,14 +68,20 @@ class Message(object):
             self.text = ''
             return
 
-        # XXX I doubt this works as intended in all cases
-        s = self.format_spec.format(*self.args, **self.kwargs)
-        if s == self.format_spec:
+        if self.style == 'braces':
+            s = self.format_spec.format(*self.args, **self.kwargs)
+        elif self.style == 'percent':
             # a % style format
             if self.args and self.kwargs:
                 raise ValueError("can't have both args & kwargs with % style format specs")
             else:
                 s = self.format_spec % (self.args or self.kwargs)
+        elif self.style == 'dollar':
+            if self.args:
+                raise ValueError("can't use args with $ style format specs")
+            s = Template(self.format_spec).substitute(self.kwargs)
+        else:
+            assert False, "impossible style"
 
         self.text = s
 
