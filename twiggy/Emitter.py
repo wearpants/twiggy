@@ -1,3 +1,5 @@
+import Levels
+
 import re
 
 __re_type = type(re.compile('foo')) # XXX is there a canonical place for this?
@@ -47,6 +49,9 @@ class Emitter(object):
     """
 
     def __init__(self, min_level, filter, outputter):
+        if not isinstance(min_level, Levels.LogLevel):
+            raise ValueError("Unknown min_level: {0}".format(min_level))
+
         self.min_level = min_level
         self.filter = filter
         self._outputter = outputter
