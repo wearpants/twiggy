@@ -36,15 +36,21 @@ DEBUG:You may not care
 >>> log.error('OMFG! Pants on fire!')
 ERROR:OMFG! Pants on fire!
 
-It supports format strings:
-
->>> log.info('I like %s', "bikes")
-INFO:I like bikes
-
-But prefers new style:
+It supports a variety of format strings, defaulting to new-style:
 
 >>> log.info('I wear {0} on my {where}', 'pants', where='legs')
 INFO:I wear pants on my legs
+
+Old style works fine though:
+
+>>> log.options(style='percent').info('I like %s', "bikes")
+INFO:I like bikes
+
+As do templates:
+
+>>> log.options(style='dollar').info('$what kill', what='Cars')
+INFO:Cars kill
+
 
 You can name your loggers:
 
