@@ -8,7 +8,7 @@ Flubberage:
 
 Usage:
 ======
-Make doctest work:
+Make display work:
 
 >>> import sys; sys.stderr = sys.stdout
 
