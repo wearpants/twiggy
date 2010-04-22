@@ -29,7 +29,6 @@ class Outputter(object):
     @staticmethod
     def __child_main(self):
         self._open()
-
         while True:
             msg = self.__queue.get()
             if msg is not self.SHUTDOWN:
@@ -37,10 +36,9 @@ class Outputter(object):
                 self.__queue.task_done()
             else:
                 assert self.__queue.empty(), "Shutdown but queue not empty"
+                self._close()
+                self.__queue.task_done()
                 break
-
-        self._close()
-        self.__queue.task_done()
 
     def _init(self, **kwargs):
         raise NotImplementedError
