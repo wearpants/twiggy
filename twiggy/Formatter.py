@@ -38,7 +38,7 @@ class LineFormatter(object):
         self.traceback_prefix = traceback_prefix
         self.conversion = conversion
 
-    def format(self, msg):
+    def __call__(self, msg):
         fields = self.format_fields(msg)
         text = self.format_text(msg)
         trace = self.format_traceback(msg)
