@@ -9,9 +9,8 @@ class Outputter(object):
     Multiple implementations are expected.
     """
 
-    def __init__(self, format, async = False, **kwargs):
+    def __init__(self, format, async = False):
         self._format = format
-        self._init(async, **kwargs)
 
         if not async:
             self.output = self.__sync_output
@@ -22,7 +21,7 @@ class Outputter(object):
             self.close = self.__async_close
             self.__queue = multiprocessing.JoinableQueue(100)
             self.__child = multiprocessing.Process(target=self.__child_main, args=(self,))
-            self.__child.start() # XXX s.b. daemon?
+            self.__child.start() # XXX s.b. daemon=True? don't think so, b/c atexit instead
 
         atexit.register(self.close)
 
@@ -40,9 +39,6 @@ class Outputter(object):
                 self._close()
                 self.__queue.task_done()
                 break
-
-    def _init(self, async, **kwargs):
-        self.init_kwargs = kwargs
 
     def _open(self):
         raise NotImplementedError
@@ -66,9 +62,14 @@ class Outputter(object):
         self.__queue.join()
 
 class FileOutputter(Outputter):
+    def __init__(self, format, name, mode='a', buffering=1, async=False):
+        self.filename = name
+        self.mode = mode
+        self.buffering = buffering
+        super(FileOutputter, self).__init__(format, async)
 
     def _open(self):
-        self.file = open(**self.init_kwargs)
+        self.file = open(self.filename, self.mode, self.buffering)
 
     def _close(self):
         self.file.close()
@@ -78,11 +79,9 @@ class FileOutputter(Outputter):
 
 class StreamOutputter(Outputter):
 
-    def _init(self, async, stream=sys.stderr):
-        if async:
-            raise ValueError("Async not supported")
-
+    def __init__(self, format, stream=sys.stderr):
         self.stream = stream
+        super(StreamOutputter, self).__init__(format)
 
     def _open(self):
         pass

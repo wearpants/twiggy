@@ -67,5 +67,3 @@ class Emitter(object):
     @filter.deleter
     def filter(self):
         del self._filter
-
-    # XXX I prolly need a close() or somesuch
