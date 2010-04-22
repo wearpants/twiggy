@@ -65,7 +65,6 @@ class Outputter(object):
         self.__queue.close()
         self.__queue.join()
 
-
 class FileOutputter(Outputter):
 
     def _open(self):

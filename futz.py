@@ -4,7 +4,7 @@
 ## Simple setup
 import twiggy
 import sys
-twiggy.quick_setup()
+twiggy.quick_setup(file="momma.txt", async=True)
 
 ## User-facing features
 from twiggy import *
