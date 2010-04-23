@@ -1,4 +1,5 @@
 import multiprocessing
+import threading
 import sys
 import atexit
 
@@ -13,6 +14,7 @@ class Outputter(object):
         self._format = format
 
         if not async:
+            self._lock = threading.Lock()
             self.output = self.__sync_output
             self.close = self._close
             self._open()
@@ -32,7 +34,9 @@ class Outputter(object):
         while True:
             msg = self.__queue.get()
             if msg != "SHUTDOWN":
-                self.__sync_output(msg)
+                x = self._format(msg)
+                self._write(x)
+                del x, msg
                 self.__queue.task_done()
             else:
                 assert self.__queue.empty(), "Shutdown but queue not empty"
@@ -51,7 +55,8 @@ class Outputter(object):
 
     def __sync_output(self, msg):
         x = self._format(msg)
-        self._write(x)
+        with self._lock:
+            self._write(x)
 
     def __async_output(self, msg):
         self.__queue.put_nowait(msg)
