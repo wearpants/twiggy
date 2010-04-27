@@ -1,3 +1,8 @@
+"""Logging Levels
+
+Levels include (increasing severity): DEBUG, INFO, WARNING, ERROR, CRITICAL
+"""
+
 __all__ = ['DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL']
 
 class LogLevel(object):
@@ -22,6 +27,7 @@ class LogLevel(object):
             return cmp(self.__value, other.__value)
 
 def name2level(name):
+    """return a LogLevel from a case-insensitve string"""
     return LogLevel._name2levels[name.upper()]
 
 DEBUG = LogLevel('DEBUG', 1)
