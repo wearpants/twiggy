@@ -7,6 +7,14 @@ def thread_name():
 
 
 class Converter(object):
+    """Holder for ConversionTable items
+    
+    :ivar key: the key to apply the conversion to
+    :ivar convertValue: one-argument function to convert the value
+    :ivar convertItem: two-argument function converting the key & converted value 
+    :ivar required: is the item required to present
+    """
+    
     __slots__ = ['key', 'convertValue', 'convertItem', 'required']
 
     def __init__(self, key, convertValue, convertItem, required = False):
