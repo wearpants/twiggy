@@ -24,8 +24,22 @@ class Converter(object):
         self.required = required
 
 class ConversionTable(list):
+    """Converts dictionaries using Converters
+    
+    For each item, one or more corresponding Converters *c* are found by matching key. A list is built by calling c.convertItem(item_key, c.convertValue(item_value)) in the same order as converters are supplied. Any values for which no Converter is found are sorted by key, passed to genericValue/genericItem and appended. If any required items are missing, ValueError is raised. The resulting list is passed to aggregate, and its return value is returned as the result of the conversion.
+    
+    Users may override genericValue/genericItem/aggregate by subclassing or assigning a new function on a ConversionTable instance.
+    
+    Really, it's pretty intuitive.
+    
+    XXX doctest example?
+    """
 
     def __init__(self, seq):
+        """
+        :arg seq: a sequence of Converters, arg tuples or kwarg dicts (which will be used to create Converters)
+        """
+        
         l = []
         for i in seq:
             if isinstance(i, Converter):
@@ -40,16 +54,23 @@ class ConversionTable(list):
         super(ConversionTable, self).__init__(l)
         # XXX cache converts & requireds below
 
-    def genericValue(self, value):
+    @staticmethod
+    def genericValue(value):
+        """convert values for which no specific Converter is supplied"""
         return value
 
-    def genericItem(self, key, value):
+    @staticmethod
+    def genericItem(key, value):
+        """convert items for which no specific Converter is supplied"""
         return key, value
 
-    def aggregate(self, converteds):
+    @staticmethod
+    def aggregate(converteds):
+        """aggregate the list of converted items"""
         return dict(converteds)
 
     def convert(self, d):
+        """do the conversion.  See class docstring"""
         # XXX I could be much faster & efficient!
         # XXX I have written this pattern at least 10 times
         converts = set(x.key for x in self)
@@ -75,12 +96,15 @@ class ConversionTable(list):
         return self.aggregate(l)
 
     def copy(self):
+        """Make an independent copy"""
         return copy.deepcopy(self)
 
     def get(self, key):
+        """return the *first* Converter for key"""
         for c in self:
             if c.key == key:
                 return c
 
     def getAll(self, key):
+        """return a list of all Converters for key"""
         return [c for c in self if c.key == key]
