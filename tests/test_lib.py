@@ -1,5 +1,12 @@
 import unittest2
+import doctest
+
 from twiggy.lib import Converter, ConversionTable
+import twiggy.lib as twiggy_lib
+
+def load_tests(loader, tests, ignore):
+    tests.addTests(doctest.DocTestSuite(twiggy_lib))
+    return tests
 
 def convVal(x):
     return x

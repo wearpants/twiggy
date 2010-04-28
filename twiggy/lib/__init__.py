@@ -32,7 +32,14 @@ class ConversionTable(list):
     
     Really, it's pretty intuitive.
     
-    XXX doctest example?
+    >>> 8*8
+    64
+    
+    Math is hard:
+    
+    >>> 2+2
+    4
+    
     """
 
     def __init__(self, seq):
