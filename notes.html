@@ -1,380 +1,483 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xml:lang="en" xmlns="http://www.w3.org/1999/xhtml" lang="en"><head>
-
-
-
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<meta name="generator" content="Docutils 0.4: http://docutils.sourceforge.net/">
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="Docutils 0.6: http://docutils.sourceforge.net/" />
 <title></title>
 <style type="text/css">
 
 /*
-Author: Peter Parente
-Date: 2008/01/22
-Version: 1.0
-Copyright: This stylesheet has been placed in the public domain - free to edit and use for all uses.
+:Author: David Goodger (goodger@python.org)
+:Id: $Id: html4css1.css 5951 2009-05-18 18:03:10Z milde $
+:Copyright: This stylesheet has been placed in the public domain.
+
+Default cascading style sheet for the HTML output of Docutils.
+
+See http://docutils.sf.net/docs/howto/html-stylesheets.html for how to
+customize this style sheet.
 */
 
-body {
-  font: 100% sans-serif;
-  background: #ffffff;
-  color: black;
-  margin: 2em;
-  padding: 0em 2em;
-}
+/* used to remove borders from tables and images */
+.borderless, table.borderless td, table.borderless th {
+  border: 0 }
 
-p.topic-title {
-  font-weight: bold;
-}
+table.borderless td, table.borderless th {
+  /* Override padding for "table.docutils td" with "! important".
+     The right padding separates the table cells. */
+  padding: 0 0.5em 0 0 ! important }
 
-table.docinfo {
-  text-align: left;
-  margin: 2em 0em;
-}
+.first {
+  /* Override more specific margin styles with "! important". */
+  margin-top: 0 ! important }
 
-a[href] {
-  color: #436976;
-  background-color: transparent;
-}
+.last, .with-subtitle {
+  margin-bottom: 0 ! important }
+
+.hidden {
+  display: none }
 
 a.toc-backref {
-  text-decoration: none;
-}
+  text-decoration: none ;
+  color: black }
 
-h1 a[href] {
-  color: #003a6b;
-  text-decoration: none;
-  background-color: transparent;
-}
+blockquote.epigraph {
+  margin: 2em 5em ; }
 
-a.strong {
-  font-weight: bold;
-}
+dl.docutils dd {
+  margin-bottom: 0.5em }
 
-img {
-  margin: 0;
-  border: 0;
-}
+/* Uncomment (and remove this text!) to get bold-faced definition list terms
+dl.docutils dt {
+  font-weight: bold }
+*/
 
-p {
-  margin: 0.5em 0 1em 0;
-  line-height: 1.5em;
-}
+div.abstract {
+  margin: 2em 5em }
 
-p a:visited {
-  color: purple;
-  background-color: transparent;
-}
+div.abstract p.topic-title {
+  font-weight: bold ;
+  text-align: center }
 
-p a:active {
-  color: red;
-  background-color: transparent;
-}
+div.admonition, div.attention, div.caution, div.danger, div.error,
+div.hint, div.important, div.note, div.tip, div.warning {
+  margin: 2em ;
+  border: medium outset ;
+  padding: 1em }
 
-a:hover {
-  text-decoration: none;
-}
+div.admonition p.admonition-title, div.hint p.admonition-title,
+div.important p.admonition-title, div.note p.admonition-title,
+div.tip p.admonition-title {
+  font-weight: bold ;
+  font-family: sans-serif }
 
-p img {
-  border: 0;
-  margin: 0;
-}
+div.attention p.admonition-title, div.caution p.admonition-title,
+div.danger p.admonition-title, div.error p.admonition-title,
+div.warning p.admonition-title {
+  color: red ;
+  font-weight: bold ;
+  font-family: sans-serif }
 
-p.rubric {
-  font-weight: bold;
-  font-style: italic;
-}
+/* Uncomment (and remove this text!) to get reduced vertical space in
+   compound paragraphs.
+div.compound .compound-first, div.compound .compound-middle {
+  margin-bottom: 0.5em }
 
-h1.title {
-  color: #003a6b;
-  font-size: 250%;
-  margin-bottom: 0em;
-}
+div.compound .compound-last, div.compound .compound-middle {
+  margin-top: 0.5em }
+*/
 
-h2.subtitle {
-  color: #003a6b;
-  border-bottom: 0px;
-}
+div.dedication {
+  margin: 2em 5em ;
+  text-align: center ;
+  font-style: italic }
 
-h1, h2, h3, h4, h5, h6 {
-  color: #555;
-  background-color: transparent;
-  margin: 0em;
-  padding-top: 0.5em;
-}
+div.dedication p.topic-title {
+  font-weight: bold ;
+  font-style: normal }
 
-h1 {
-  font-size: 160%;
-  margin-bottom: 0.5em;
-  border-bottom: 2px solid #aaa;
-}
+div.figure {
+  margin-left: 2em ;
+  margin-right: 2em }
 
-h2 {
-  font-size: 140%;
-  margin-bottom: 0.5em;
-  border-bottom: 1px solid #aaa;
-}
+div.footer, div.header {
+  clear: both;
+  font-size: smaller }
 
-h3 {
-  font-size: 130%;
-  margin-bottom: 0.5em;
-}
+div.line-block {
+  display: block ;
+  margin-top: 1em ;
+  margin-bottom: 1em }
 
-h4 {
-  font-size: 110%;
-  font-weight: bold;
-  margin-bottom: 0.5em;
-}
-
-h5 {
-  font-size: 105%;
-  font-weight: bold;
-  margin-bottom: 0.5em;
-}
-
-h6 {
-  font-size: 100%;
-  font-weight: bold;
-  margin-bottom: 0.5em;
-}
-
-dt {
-  font-style: italic;
-}
-
-dd {
-  margin-bottom: 1.5em;
-}
-
-div.admonition, div.note, div.tip, div.caution, div.important {
-  margin: 2em 2em;
-  padding: 0em 1em;
-  border-top: 1px solid #aaa;
-  border-left: 1px solid #aaa;
-  border-bottom: 2px solid #555;
-  border-right: 2px solid #555;
-}
-
-div.important {
-  background: transparent url('../images/important.png') 10px 2px no-repeat;
-}
-
-div.caution {
-  background: transparent url('../images/caution.png') 10px 2px no-repeat;
-}
-
-div.note {
-  background: transparent url('../images/note.png') 10px 2px no-repeat;
-}
-
-div.tip {
-  background: transparent url('../images/tip.png') 10px 2px no-repeat;
-}
-
-div.admonition-example {
-  background: transparent url('../images/tip.png') 10px 2px no-repeat;
-}
-
-div.admonition-critical-example {
-  background: transparent url('../images/important.png') 10px 2px no-repeat;
-}
-
-p.admonition-title {
-  font-weight: bold;
-  border-bottom: 1px solid #aaa;
-  padding-left: 30px;
-}
-
-table.docutils {
-  text-align: left;
-  border: 1px solid gray;
-  border-collapse: collapse;
-  width: 100%;
-  margin: 1.5em 0em;
-}
-
-table.docutils caption {
-  font-style: italic;
-}
-
-table.docutils td, table.docutils th {
-  padding: 0.25em 0.5em;
-}
-
-table.docutils th {
-  background-color: #dddddd;
-}
+div.line-block div.line-block {
+  margin-top: 0 ;
+  margin-bottom: 0 ;
+  margin-left: 1.5em }
 
 div.sidebar {
-  width: 33%;
-  float: right;
-  margin: 0em 2em;
-  padding: 0em 1em;
-  border-top: 1px solid #aaa;
-  border-left: 1px solid #aaa;
-  border-bottom: 2px solid #555;
-  border-right: 2px solid #555;
-}
+  margin: 0 0 0.5em 1em ;
+  border: medium outset ;
+  padding: 1em ;
+  background-color: #ffffee ;
+  width: 40% ;
+  float: right ;
+  clear: right }
+
+div.sidebar p.rubric {
+  font-family: sans-serif ;
+  font-size: medium }
+
+div.system-messages {
+  margin: 5em }
+
+div.system-messages h1 {
+  color: red }
+
+div.system-message {
+  border: medium outset ;
+  padding: 1em }
+
+div.system-message p.system-message-title {
+  color: red ;
+  font-weight: bold }
+
+div.topic {
+  margin: 2em }
+
+h1.section-subtitle, h2.section-subtitle, h3.section-subtitle,
+h4.section-subtitle, h5.section-subtitle, h6.section-subtitle {
+  margin-top: 0.4em }
+
+h1.title {
+  text-align: center }
+
+h2.subtitle {
+  text-align: center }
+
+hr.docutils {
+  width: 75% }
+
+img.align-left, .figure.align-left{
+  clear: left ;
+  float: left ;
+  margin-right: 1em }
+
+img.align-right, .figure.align-right {
+  clear: right ;
+  float: right ;
+  margin-left: 1em }
+
+.align-left {
+  text-align: left }
+
+.align-center {
+  clear: both ;
+  text-align: center }
+
+.align-right {
+  text-align: right }
+
+/* reset inner alignment in figures */
+div.align-right {
+  text-align: left }
+
+/* div.align-center * { */
+/*   text-align: left } */
+
+ol.simple, ul.simple {
+  margin-bottom: 1em }
+
+ol.arabic {
+  list-style: decimal }
+
+ol.loweralpha {
+  list-style: lower-alpha }
+
+ol.upperalpha {
+  list-style: upper-alpha }
+
+ol.lowerroman {
+  list-style: lower-roman }
+
+ol.upperroman {
+  list-style: upper-roman }
+
+p.attribution {
+  text-align: right ;
+  margin-left: 50% }
+
+p.caption {
+  font-style: italic }
+
+p.credits {
+  font-style: italic ;
+  font-size: smaller }
+
+p.label {
+  white-space: nowrap }
+
+p.rubric {
+  font-weight: bold ;
+  font-size: larger ;
+  color: maroon ;
+  text-align: center }
 
 p.sidebar-title {
-  margin-bottom: 0em;
-  color: #003a6b;
-  border-bottom: 1px solid #aaa;
-  font-weight: bold;
-}
+  font-family: sans-serif ;
+  font-weight: bold ;
+  font-size: larger }
 
 p.sidebar-subtitle {
-  margin-top: 0em;
-  font-style: italic;
-  color: #003a6b;
-}
+  font-family: sans-serif ;
+  font-weight: bold }
+
+p.topic-title {
+  font-weight: bold }
+
+pre.address {
+  margin-bottom: 0 ;
+  margin-top: 0 ;
+  font: inherit }
+
+pre.literal-block, pre.doctest-block {
+  margin-left: 2em ;
+  margin-right: 2em }
+
+span.classifier {
+  font-family: sans-serif ;
+  font-style: oblique }
+
+span.classifier-delimiter {
+  font-family: sans-serif ;
+  font-weight: bold }
+
+span.interpreted {
+  font-family: sans-serif }
+
+span.option {
+  white-space: nowrap }
+
+span.pre {
+  white-space: pre }
+
+span.problematic {
+  color: red }
+
+span.section-subtitle {
+  /* font-size relative to parent (h1..h6 element) */
+  font-size: 80% }
+
+table.citation {
+  border-left: solid 1px gray;
+  margin-left: 1px }
+
+table.docinfo {
+  margin: 2em 4em }
+
+table.docutils {
+  margin-top: 0.5em ;
+  margin-bottom: 0.5em }
+
+table.footnote {
+  border-left: solid 1px black;
+  margin-left: 1px }
+
+table.docutils td, table.docutils th,
+table.docinfo td, table.docinfo th {
+  padding-left: 0.5em ;
+  padding-right: 0.5em ;
+  vertical-align: top }
+
+table.docutils th.field-name, table.docinfo th.docinfo-name {
+  font-weight: bold ;
+  text-align: left ;
+  white-space: nowrap ;
+  padding-left: 0 }
+
+h1 tt.docutils, h2 tt.docutils, h3 tt.docutils,
+h4 tt.docutils, h5 tt.docutils, h6 tt.docutils {
+  font-size: 100% }
+
+ul.auto-toc {
+  list-style-type: none }
 
 </style>
-</head><body>
+</head>
+<body>
 <div class="document">
-<div class="section">
-<h1><a id="flubberage" name="flubberage">Flubberage:</a></h1>
+
+
+<div class="section" id="flubberage">
+<h1>Flubberage:</h1>
 <ul class="simple">
 <li>author Peter Fein</li>
-<li>email <a class="reference" href="mailto:pfein@pobox.com">pfein@pobox.com</a></li>
-<li>web <a class="reference" href="http://python-twiggy.googlecode.com/">http://python-twiggy.googlecode.com</a></li>
-<li>hg <a class="reference" href="https://python-twiggy.googlecode.com/hg/">https://python-twiggy.googlecode.com/hg/</a></li>
+<li>email <a class="reference external" href="mailto:pfein&#64;pobox.com">pfein&#64;pobox.com</a></li>
+<li>web <a class="reference external" href="http://python-twiggy.googlecode.com">http://python-twiggy.googlecode.com</a></li>
+<li>hg <a class="reference external" href="https://python-twiggy.googlecode.com/hg/">https://python-twiggy.googlecode.com/hg/</a></li>
 </ul>
 </div>
-<div class="section">
-<h1><a id="usage" name="usage">Usage:</a></h1>
-<p>Make doctest work:</p>
-<pre class="doctest-block">&gt;&gt;&gt; import sys; sys.stderr = sys.stdout
+<div class="section" id="usage">
+<h1>Usage:</h1>
+<p>Make display work:</p>
+<pre class="doctest-block">
+&gt;&gt;&gt; import sys; sys.stderr = sys.stdout
 </pre>
-<div class="section">
-<h2><a id="setup-is-simple" name="setup-is-simple">Setup is simple</a></h2>
+<div class="section" id="setup-is-simple">
+<h2>Setup is simple</h2>
 <p>In your main.py:</p>
-<pre class="doctest-block">&gt;&gt;&gt; import twiggy
+<pre class="doctest-block">
+&gt;&gt;&gt; import twiggy
 &gt;&gt;&gt; twiggy.quick_setup()
 </pre>
 </div>
-<div class="section">
-<h2><a id="logging-messages" name="logging-messages">Logging Messages</a></h2>
-<pre class="doctest-block">&gt;&gt;&gt; from twiggy import *
+<div class="section" id="logging-messages">
+<h2>Logging Messages</h2>
+<pre class="doctest-block">
+&gt;&gt;&gt; from twiggy import *
 </pre>
 <p>Main interface is the the magic <strong>log</strong>:</p>
-<pre class="doctest-block">&gt;&gt;&gt; log #doctest:+ELLIPSIS
+<pre class="doctest-block">
+&gt;&gt;&gt; log #doctest:+ELLIPSIS
 &lt;twiggy.Logger.Logger object at 0x...&gt;
 </pre>
 <p>It works out of the box, using standard levels:</p>
-<pre class="doctest-block">&gt;&gt;&gt; log.debug('You may not care')
+<pre class="doctest-block">
+&gt;&gt;&gt; log.debug('You may not care')
 DEBUG:You may not care
 &gt;&gt;&gt; log.error('OMFG! Pants on fire!')
 ERROR:OMFG! Pants on fire!
 </pre>
-<p>It supports format strings:</p>
-<pre class="doctest-block">&gt;&gt;&gt; log.info('I like %s', "bikes")
-INFO:I like bikes
-</pre>
-<p>But prefers new style:</p>
-<pre class="doctest-block">&gt;&gt;&gt; log.info('I wear {0} on my {where}', 'pants', where='legs')
+<p>It supports a variety of format strings, defaulting to new-style:</p>
+<pre class="doctest-block">
+&gt;&gt;&gt; log.info('I wear {0} on my {where}', 'pants', where='legs')
 INFO:I wear pants on my legs
 </pre>
+<p>Old style works fine though:</p>
+<pre class="doctest-block">
+&gt;&gt;&gt; log.options(style='percent').info('I like %s', &quot;bikes&quot;)
+INFO:I like bikes
+</pre>
+<p>As do templates:</p>
+<pre class="doctest-block">
+&gt;&gt;&gt; log.options(style='dollar').info('$what kill', what='Cars')
+INFO:Cars kill
+</pre>
 <p>You can name your loggers:</p>
-<pre class="doctest-block">&gt;&gt;&gt; mylog = log.name('alfredo')
+<pre class="doctest-block">
+&gt;&gt;&gt; mylog = log.name('alfredo')
 &gt;&gt;&gt; mylog.debug('hello')
 DEBUG:alfredo:hello
 </pre>
 <p>But the name has no relation to the object; it's just for human use:</p>
-<pre class="doctest-block">&gt;&gt;&gt; mylog is log.name('alfredo')
+<pre class="doctest-block">
+&gt;&gt;&gt; mylog is log.name('alfredo')
 False
 </pre>
 </div>
-<div class="section">
-<h2><a id="emitting-messages" name="emitting-messages">Emitting Messages</a></h2>
+<div class="section" id="emitting-messages">
+<h2>Emitting Messages</h2>
 <p>Emitters are loosely coupled:</p>
-<pre class="doctest-block">&gt;&gt;&gt; twiggy.emitters #doctest:+ELLIPSIS
+<pre class="doctest-block">
+&gt;&gt;&gt; twiggy.emitters #doctest:+ELLIPSIS
 {'*': &lt;twiggy.Emitter.Emitter object at 0x...&gt;}
 </pre>
 <p>You can set a min_level on Emitters:</p>
-<pre class="doctest-block">&gt;&gt;&gt; twiggy.emitters['*'].min_level = twiggy.Levels.INFO
-&gt;&gt;&gt; log.debug("Help, help I'm being suppressed")
-&gt;&gt;&gt; log.info("I'm not quite dead yet")
+<pre class="doctest-block">
+&gt;&gt;&gt; twiggy.emitters['*'].min_level = twiggy.Levels.INFO
+&gt;&gt;&gt; log.debug(&quot;Help, help I'm being suppressed&quot;)
+&gt;&gt;&gt; log.info(&quot;I'm not quite dead yet&quot;)
 INFO:I'm not quite dead yet
 </pre>
 <p>You can filter on regexes, or with arbitrary functions:</p>
-<pre class="doctest-block">&gt;&gt;&gt; twiggy.emitters['*'].filter = ".*pants.*"
-&gt;&gt;&gt; log.info("Got my {0} on", "pants")
+<pre class="doctest-block">
+&gt;&gt;&gt; twiggy.emitters['*'].filter = &quot;.*pants.*&quot;
+&gt;&gt;&gt; log.info(&quot;Got my {0} on&quot;, &quot;pants&quot;)
 INFO:Got my pants on
-&gt;&gt;&gt; log.info("Got my {0} on", "shirt")
+&gt;&gt;&gt; log.info(&quot;Got my {0} on&quot;, &quot;shirt&quot;)
 </pre>
 <p>Let's reset all that:</p>
-<pre class="doctest-block">&gt;&gt;&gt; twiggy.emitters['*'].filter = True
+<pre class="doctest-block">
+&gt;&gt;&gt; twiggy.emitters['*'].filter = True
 &gt;&gt;&gt; twiggy.emitters['*'].min_level = twiggy.Levels.DEBUG
 </pre>
 </div>
-<div class="section">
-<h2><a id="better-output" name="better-output">Better output</a></h2>
+<div class="section" id="better-output">
+<h2>Better output</h2>
 <p>Newlines are suppressed by default; that can be turned off per-message:</p>
-<pre class="doctest-block">&gt;&gt;&gt; log.info('user\ninput\nannoys\nus')
+<pre class="doctest-block">
+&gt;&gt;&gt; log.info('user\ninput\nannoys\nus')
 INFO:user\ninput\nannoys\nus
 </pre>
-<pre class="doctest-block">&gt;&gt;&gt; log.options(suppress_newlines=False).info('we\ndeal')
+<pre class="doctest-block">
+&gt;&gt;&gt; log.options(suppress_newlines=False).info('we\ndeal')
 INFO:we
 deal
 </pre>
 <p>Exceptions are prefixed. Can also pass exc_info. Use '\n' as a prefix to fold into a single line:</p>
-<pre class="doctest-block">&gt;&gt;&gt; try:
+<pre class="doctest-block">
+&gt;&gt;&gt; try:
 ...     1/0
 ... except:
 ...     log.trace('error').warning('oh noes') #doctest:+ELLIPSIS
 WARNING:oh noes
 TRACE Traceback (most recent call last):
-TRACE   File "&lt;doctest notes.txt[...]&gt;", line 2, in &lt;module&gt;
+TRACE   File &quot;&lt;doctest notes.txt[...]&gt;&quot;, line 2, in &lt;module&gt;
 TRACE     1/0
 TRACE ZeroDivisionError: integer division or modulo by zero
 </pre>
 </div>
-<div class="section">
-<h2><a id="method-chaining" name="method-chaining">Method Chaining</a></h2>
+<div class="section" id="method-chaining">
+<h2>Method Chaining</h2>
 <p>I like this chained style a lot.</p>
-<pre class="doctest-block">&gt;&gt;&gt; log.name('benito').info('hi there')
+<pre class="doctest-block">
+&gt;&gt;&gt; log.name('benito').info('hi there')
 INFO:benito:hi there
 </pre>
 <p>It makes structured logging easy:</p>
-<pre class="doctest-block">&gt;&gt;&gt; log.fields(paths=42).info('Going for a walk')
+<pre class="doctest-block">
+&gt;&gt;&gt; log.fields(paths=42).info('Going for a walk')
 INFO:paths=42:Going for a walk
 </pre>
 <p>Short cut.  Great for runtime statistics gathering.</p>
-<pre class="doctest-block">&gt;&gt;&gt; log.struct(paths=42, dolphins='thankful')
+<pre class="doctest-block">
+&gt;&gt;&gt; log.struct(paths=42, dolphins='thankful')
 INFO:dolphins=thankful:paths=42:
 </pre>
 <p>Partial binding can be useful for webapps:</p>
-<pre class="doctest-block">&gt;&gt;&gt; per_request_log = log.fields(request_id='12345')
+<pre class="doctest-block">
+&gt;&gt;&gt; per_request_log = log.fields(request_id='12345')
 &gt;&gt;&gt; per_request_log.fields(rows=100, user='frank').info('frobnicating database')
 INFO:request_id=12345:rows=100:user=frank:frobnicating database
 &gt;&gt;&gt; per_request_log.fields(bytes=5678).info('sending page over tubes')
 INFO:bytes=5678:request_id=12345:sending page over tubes
 </pre>
 <p>Chained style is awesome:</p>
-<pre class="doctest-block">&gt;&gt;&gt; log.name('donjuan').fields(pants='sexy').info("hello, {who} want to {what}?", who='ladies', what='dance')
+<pre class="doctest-block">
+&gt;&gt;&gt; log.name('donjuan').fields(pants='sexy').info(&quot;hello, {who} want to {what}?&quot;, who='ladies', what='dance')
 INFO:donjuan:pants=sexy:hello, ladies want to dance?
 </pre>
 </div>
-<div class="section">
-<h2><a id="dynamic" name="dynamic">Dynamic!</a></h2>
+<div class="section" id="dynamic">
+<h2>Dynamic!</h2>
 <p>Any functions in args/fields are called and the value substitued:</p>
-<pre class="doctest-block">&gt;&gt;&gt; import os
+<pre class="doctest-block">
+&gt;&gt;&gt; import os
 &gt;&gt;&gt; from twiggy.lib import thread_name
 &gt;&gt;&gt; thread_name()
 'MainThread'
-&gt;&gt;&gt; log.fields(pid=os.getpid).info("I'm in thread {0}", thread_name) #doctest:+ELLIPSIS
+&gt;&gt;&gt; log.fields(pid=os.getpid).info(&quot;I'm in thread {0}&quot;, thread_name) #doctest:+ELLIPSIS
 INFO:pid=1076:I'm in thread MainThread
 </pre>
 <p>This can be useful with partially-bound loggers, which let's us do some cool stuff:</p>
-<pre class="doctest-block">&gt;&gt;&gt; class ThreadTracker(object):
+<pre class="doctest-block">
+&gt;&gt;&gt; class ThreadTracker(object):
 ...     def __init__(self, obj):
 ...         self.__obj = obj
 ...         # a partially bound logger
-...         self.__log = log.name("tracker").fields(obj_id=id(obj), thread=thread_name)
-...         self.__log.debug("started tracking")
+...         self.__log = log.name(&quot;tracker&quot;).fields(obj_id=id(obj), thread=thread_name)
+...         self.__log.debug(&quot;started tracking&quot;)
 ...     def __getattr__(self, attr):
-...         self.__log.debug("accessed {0}", attr)
+...         self.__log.debug(&quot;accessed {0}&quot;, attr)
 ...         return getattr(self.__obj, attr)
 ...
 &gt;&gt;&gt; class Bunch(object):
@@ -388,34 +491,36 @@ DEBUG:tracker:obj_id=14063980:thread=MainThread:started tracking
 DEBUG:tracker:obj_id=14063980:thread=MainThread:accessed bar
 42
 &gt;&gt;&gt; import threading
-&gt;&gt;&gt; t=threading.Thread(target = lambda: tracked.bar * 2, name = "TheDoubler")
+&gt;&gt;&gt; t=threading.Thread(target = lambda: tracked.bar * 2, name = &quot;TheDoubler&quot;)
 &gt;&gt;&gt; t.start()
 DEBUG:tracker:obj_id=14063980:thread=TheDoubler:accessed bar
 </pre>
 <p>If you really want to log a callable, repr() it or wrap it in lambda.</p>
 </div>
-<div class="section">
-<h2><a id="optimizations" name="optimizations">Optimizations</a></h2>
+<div class="section" id="optimizations">
+<h2>Optimizations</h2>
 <p>As an optimization, a min_level can be set on loggers:</p>
-<pre class="doctest-block">&gt;&gt;&gt; mylog.min_level = twiggy.Levels.INFO
-&gt;&gt;&gt; mylog.info("You see this")
+<pre class="doctest-block">
+&gt;&gt;&gt; mylog.min_level = twiggy.Levels.INFO
+&gt;&gt;&gt; mylog.info(&quot;You see this&quot;)
 INFO:alfredo:You see this
-&gt;&gt;&gt; mylog.debug("This is hidden")
+&gt;&gt;&gt; mylog.debug(&quot;This is hidden&quot;)
 </pre>
 <p>They also take a filter that operates on format_spec. The use case is efficiently
 shutting off specific messages in a library which is doing something stupid:</p>
-<pre class="doctest-block">&gt;&gt;&gt; mylog.filter = lambda s: "shenanigans" not in s
-&gt;&gt;&gt; mylog.info("Starting silliness")
+<pre class="doctest-block">
+&gt;&gt;&gt; mylog.filter = lambda s: &quot;shenanigans&quot; not in s
+&gt;&gt;&gt; mylog.info(&quot;Starting silliness&quot;)
 INFO:alfredo:Starting silliness
 &gt;&gt;&gt; for i in xrange(3): # for large values of 3
-...     mylog.info("I call shenanigans!")
-&gt;&gt;&gt; mylog.info("End silliness")
+...     mylog.info(&quot;I call shenanigans!&quot;)
+&gt;&gt;&gt; mylog.info(&quot;End silliness&quot;)
 INFO:alfredo:End silliness
 </pre>
 </div>
 </div>
-<div class="section">
-<h1><a id="questions" name="questions">Questions:</a></h1>
+<div class="section" id="questions">
+<h1>Questions:</h1>
 <p>The only required attributes of message atm are level &amp; format_spec (the text).
 I've thought about making name mandatory (eh). Going the other way, I've
 thought about making level optional (too flexible, and easy enough to
@@ -424,36 +529,30 @@ ignore - see log.struct())</p>
 You can do as many .fields()/.name()/.etc() in any order, as long as the
 .action() is last.</p>
 </div>
-<div class="section">
-<h1><a id="speed" name="speed">Speed</a></h1>
+<div class="section" id="speed">
+<h1>Speed</h1>
 <p>Timing data: In a super-simple smoke test, twiggy was about 40% faster than
 logging. Not rigorous.  sloccount says about 400 lines.</p>
 </div>
-<div class="section">
-<h1><a id="the-future" name="the-future">The future</a></h1>
+<div class="section" id="the-future">
+<h1>The future</h1>
 <p>Needs tests, proper docstrings, etc. obviously, but most of the long-term work is in emitters.</p>
-<p>Sean, we talked about a Couchdb backend- syslog, &amp; some form of
-sql* seems reasonable as well. I'd like to support 'asynchronous'
-emitting, at some point - queueing the message and moving the write out
-of the critical path of user code via multiprocessing/threading. Might
-be interesting to have an emitter/configuration that lets you run
-unittests on your log output too.</p>
-<p>I have some thoughts about HTML output (perhaps served from a child
-process &amp; streamed via AJAX?) but that's getting ahead of
-ourselves. ;-)</p>
-<div class="section">
-<h2><a id="log4j" name="log4j">Log4j</a></h2>
+<p>Sean, we talked about a Couchdb backend- syslog, &amp; some form of sql* seems reasonable as well. I'd like to support 'asynchronous' emitting, at some point - queueing the message and moving the write out of the critical path of user code via multiprocessing/threading. Might be interesting to have an emitter/configuration that lets you run unittests on your log output too.</p>
+<p>I have some thoughts about HTML output (perhaps served from a child process &amp; streamed via AJAX?) but that's getting ahead of ourselves. ;-)</p>
+<div class="section" id="log4j">
+<h2>Log4j</h2>
 <p>I think I can build a decent fascimle of user-side of log4j with this:</p>
 <p>from twiggy import log4j
 log4j.getLogger('oldstyle')  -&gt; log.name()
 &lt;etc&gt;</p>
 </div>
-<div class="section">
-<h2><a id="further-ahead-of-ourself" name="further-ahead-of-ourself">Further Ahead of Ourself</a></h2>
+<div class="section" id="further-ahead-of-ourself">
+<h2>Further Ahead of Ourself</h2>
 <p>Lumberjack: log <em>parsing</em> should be easier, esp for casual/ad-hoc use. construct log parsers from same formats used for emitters?  snazzy</p>
 <p>Any other pet peeves from logging I may have forgotten about?</p>
 <p>YOUR IDEA HERE!</p>
 </div>
 </div>
 </div>
-</body></html>
+</body>
+</html>
