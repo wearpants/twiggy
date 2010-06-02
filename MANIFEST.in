@@ -1,0 +1,4 @@
+include notes.txt thoughts.txt sample.log
+recursive-include twiggy *.py
+recursive-include tests *.py
+include stuffs/time_*.py
