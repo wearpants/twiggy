@@ -1,0 +1,45 @@
+
+Questions:
+==============
+The only required attributes of message atm are level & format_spec (the text).
+I've thought about making name mandatory (eh). Going the other way, I've
+thought about making level optional (too flexible, and easy enough to
+ignore - see log.struct())
+
+Does the method chaining technique make sense? Is it too magic? I <3 it.
+You can do as many .fields()/.name()/.etc() in any order, as long as the
+.action() is last.
+
+Speed
+=====
+Timing data: In a super-simple smoke test, twiggy was about 40% faster than
+logging. Not rigorous.  sloccount says about 400 lines.
+
+The future
+==============
+Needs tests, proper docstrings, etc. obviously, but most of the long-term work is in emitters.
+
+I've talked about a Couchdb backend- syslog, & some form of sql* seems reasonable as well. I'd like to support 'asynchronous' emitting, at some point - queueing the message and moving the write out of the critical path of user code via multiprocessing/threading. Might be interesting to have an emitter/configuration that lets you run unittests on your log output too.
+
+I have some thoughts about HTML output (perhaps served from a child process & streamed via AJAX?) but that's getting ahead of ourselves. ;-)
+
+There should be out of the box support for *basic* logging config in a variety of "styles"
+- argparse, optparse, getopt (shudder), os.environ, ConfigParser, etc. Config would be
+minimal - paths, levels, location of longer config file. Different profiles for
+commandline apps vs. daemons, too perhaps.
+
+Log4j
++++++++++++++++++
+I think I can build a decent fascimle of user-side of log4j with this:
+
+from twiggy import log4j
+log4j.getLogger('oldstyle')  -> log.name()
+<etc>
+
+Further Ahead of Ourself
+++++++++++++++++++++++++
+Lumberjack: log *parsing* should be easier, esp for casual/ad-hoc use. construct log parsers from same formats used for emitters?  snazzy
+
+Any other pet peeves from logging I may have forgotten about?
+
+YOUR IDEA HERE!
