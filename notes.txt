@@ -222,9 +222,14 @@ The future
 ==============
 Needs tests, proper docstrings, etc. obviously, but most of the long-term work is in emitters.
 
-Sean, we talked about a Couchdb backend- syslog, & some form of sql* seems reasonable as well. I'd like to support 'asynchronous' emitting, at some point - queueing the message and moving the write out of the critical path of user code via multiprocessing/threading. Might be interesting to have an emitter/configuration that lets you run unittests on your log output too.
+I've talked about a Couchdb backend- syslog, & some form of sql* seems reasonable as well. I'd like to support 'asynchronous' emitting, at some point - queueing the message and moving the write out of the critical path of user code via multiprocessing/threading. Might be interesting to have an emitter/configuration that lets you run unittests on your log output too.
 
 I have some thoughts about HTML output (perhaps served from a child process & streamed via AJAX?) but that's getting ahead of ourselves. ;-)
+
+There should be out of the box support for *basic* logging config in a variety of "styles"
+- argparse, optparse, getopt (shudder), os.environ, ConfigParser, etc. Config would be
+minimal - paths, levels, location of longer config file. Different profiles for
+commandline apps vs. daemons, too perhaps.
 
 Log4j
 +++++++++++++++++

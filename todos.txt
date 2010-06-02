@@ -1,5 +1,0 @@
-out of the box support for *basic* logging config in a variety of 
-"styles" - argparse, optparse, getopt (shudder), os.environ, 
-ConfigParser, etc.  Config would be minimal - paths, levels, location of 
-longer config file. Different profiles for commandline apps vs. daemons, 
-too perhaps
