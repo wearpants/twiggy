@@ -9,7 +9,7 @@
 
 /*
 :Author: David Goodger (goodger@python.org)
-:Id: $Id: html4css1.css 5951 2009-05-18 18:03:10Z milde $
+:Id: $Id: html4css1.css 5631 2008-08-24 13:01:23Z goodger $
 :Copyright: This stylesheet has been placed in the public domain.
 
 Default cascading style sheet for the HTML output of Docutils.
@@ -157,32 +157,11 @@ h2.subtitle {
 hr.docutils {
   width: 75% }
 
-img.align-left, .figure.align-left{
-  clear: left ;
-  float: left ;
-  margin-right: 1em }
+img.align-left {
+  clear: left }
 
-img.align-right, .figure.align-right {
-  clear: right ;
-  float: right ;
-  margin-left: 1em }
-
-.align-left {
-  text-align: left }
-
-.align-center {
-  clear: both ;
-  text-align: center }
-
-.align-right {
-  text-align: right }
-
-/* reset inner alignment in figures */
-div.align-right {
-  text-align: left }
-
-/* div.align-center * { */
-/*   text-align: left } */
+img.align-right {
+  clear: right }
 
 ol.simple, ul.simple {
   margin-bottom: 1em }
@@ -517,40 +496,6 @@ INFO:alfredo:Starting silliness
 &gt;&gt;&gt; mylog.info(&quot;End silliness&quot;)
 INFO:alfredo:End silliness
 </pre>
-</div>
-</div>
-<div class="section" id="questions">
-<h1>Questions:</h1>
-<p>The only required attributes of message atm are level &amp; format_spec (the text).
-I've thought about making name mandatory (eh). Going the other way, I've
-thought about making level optional (too flexible, and easy enough to
-ignore - see log.struct())</p>
-<p>Does the method chaining technique make sense? Is it too magic? I &lt;3 it.
-You can do as many .fields()/.name()/.etc() in any order, as long as the
-.action() is last.</p>
-</div>
-<div class="section" id="speed">
-<h1>Speed</h1>
-<p>Timing data: In a super-simple smoke test, twiggy was about 40% faster than
-logging. Not rigorous.  sloccount says about 400 lines.</p>
-</div>
-<div class="section" id="the-future">
-<h1>The future</h1>
-<p>Needs tests, proper docstrings, etc. obviously, but most of the long-term work is in emitters.</p>
-<p>Sean, we talked about a Couchdb backend- syslog, &amp; some form of sql* seems reasonable as well. I'd like to support 'asynchronous' emitting, at some point - queueing the message and moving the write out of the critical path of user code via multiprocessing/threading. Might be interesting to have an emitter/configuration that lets you run unittests on your log output too.</p>
-<p>I have some thoughts about HTML output (perhaps served from a child process &amp; streamed via AJAX?) but that's getting ahead of ourselves. ;-)</p>
-<div class="section" id="log4j">
-<h2>Log4j</h2>
-<p>I think I can build a decent fascimle of user-side of log4j with this:</p>
-<p>from twiggy import log4j
-log4j.getLogger('oldstyle')  -&gt; log.name()
-&lt;etc&gt;</p>
-</div>
-<div class="section" id="further-ahead-of-ourself">
-<h2>Further Ahead of Ourself</h2>
-<p>Lumberjack: log <em>parsing</em> should be easier, esp for casual/ad-hoc use. construct log parsers from same formats used for emitters?  snazzy</p>
-<p>Any other pet peeves from logging I may have forgotten about?</p>
-<p>YOUR IDEA HERE!</p>
 </div>
 </div>
 </div>
