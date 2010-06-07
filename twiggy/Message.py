@@ -44,7 +44,7 @@ class Message(object):
         style = options['style']
         ## XXX maybe allow '%', '$', and '{}' as aliases?
         if style not in ('braces', 'percent', 'dollar'):
-            raise ValueError("Bad format_style {0!r}".format(style))
+            raise ValueError("Bad format spec style {0!r}".format(style))
         else:
             self.style = style
 
