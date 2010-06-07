@@ -26,9 +26,16 @@ class Converter(object):
 class ConversionTable(list):
     """Converts dictionaries using Converters
     
-    For each item, one or more corresponding Converters *c* are found by matching key. A list is built by calling c.convertItem(item_key, c.convertValue(item_value)) in the same order as converters are supplied. Any values for which no Converter is found are sorted by key, passed to genericValue/genericItem and appended. If any required items are missing, ValueError is raised. The resulting list is passed to aggregate, and its return value is returned as the result of the conversion.
+    For each item, one or more corresponding Converters *c* are found by
+    matching key. A list is built by calling c.convertItem(item_key,
+    c.convertValue(item_value)) in the same order as converters are supplied.
+    Any values for which no Converter is found are sorted by key, passed to
+    genericValue/genericItem and appended. If any required items are missing,
+    ValueError is raised. The resulting list is passed to aggregate, and its
+    return value is returned as the result of the conversion.
     
-    Users may override genericValue/genericItem/aggregate by subclassing or assigning a new function on a ConversionTable instance.
+    Users may override genericValue/genericItem/aggregate by subclassing or
+    assigning a new function on a ConversionTable instance.
     
     Really, it's pretty intuitive.
     
@@ -44,7 +51,8 @@ class ConversionTable(list):
 
     def __init__(self, seq):
         """
-        :arg seq: a sequence of Converters, arg tuples or kwarg dicts (which will be used to create Converters)
+        :arg seq: a sequence of Converters, arg tuples or kwarg dicts (which
+        will be used to create Converters)
         """
         
         l = []
