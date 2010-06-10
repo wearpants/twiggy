@@ -177,7 +177,7 @@ DEBUG:tracker:obj_id=...:thread=MainThread:accessed bar
 42
 >>> import threading
 >>> t=threading.Thread(target = lambda: tracked.bar * 2, name = "TheDoubler")
->>> t.start() #doctest:+ELLIPSIS
+>>> t.start(); t.join() #doctest:+ELLIPSIS
 DEBUG:tracker:obj_id=...:thread=TheDoubler:accessed bar
 
 If you really want to log a callable, repr() it or wrap it in lambda.
