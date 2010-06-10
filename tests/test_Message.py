@@ -3,14 +3,7 @@ import unittest2
 import twiggy.Levels
 from twiggy.Message import Message
 
-def make_mesg():
-    return Message(twiggy.Levels.DEBUG,
-                   "Hello {0} {who}",
-                   {'shirt':42, 'name': 'jose'},
-                   Message._default_options,
-                   "Mister",
-                   who="Funnypants",
-                   )
+from . import make_mesg
 
 class MessageTestCase(unittest2.TestCase):
     
