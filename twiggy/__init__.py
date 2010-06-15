@@ -10,7 +10,7 @@ import Outputter
 log = Logger.Logger({'time':time.gmtime})
 emitters = log.emitters
 
-def quick_setup(min_level=Levels.DEBUG, file = None, async = False):
+def quick_setup(min_level=Levels.DEBUG, file = None, msgBuffer = 0):
     if file is None:
         file = sys.stderr
 
@@ -19,6 +19,6 @@ def quick_setup(min_level=Levels.DEBUG, file = None, async = False):
         outputter = Outputter.StreamOutputter(format, stream=file)
     else:
         format = Formatter.LineFormatter(conversion=Formatter.line_conversion)
-        outputter = Outputter.FileOutputter(format, async=async, name=file, mode='a')
+        outputter = Outputter.FileOutputter(format, msgBuffer=msgBuffer, name=file, mode='a')
 
     emitters['*'] = Emitter.Emitter(min_level, True, outputter)

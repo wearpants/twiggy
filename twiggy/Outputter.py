@@ -8,12 +8,25 @@ class Outputter(object):
     Does the work of formatting and writing a message.
 
     Multiple implementations are expected.
+
+    Outputters transparently support asynchronous logging using the
+    multiprocessing module. This is off by default, as it can cause log
+    messages to be dropped. See the msgBuffer argument.
+    
+    :arg msgBuffer: number of messages to buffer in memory when using
+    asynchronous logging. `0` turns asynchronous output off, a negative
+    integer means an unlimited buffer, a positive integer is the size
+    of the buffer.
+
+    :arg format: a callable (probably a Formatter) taking a Message and
+    formatting it for output.
+    
     """
 
-    def __init__(self, format, async = False):
+    def __init__(self, format, msgBuffer=0):
         self._format = format
 
-        if not async:
+        if msgBuffer == 0: # synchronous
             self._lock = threading.Lock()
             self.output = self.__sync_output
             self.close = self._close
@@ -21,7 +34,7 @@ class Outputter(object):
         else:
             self.output = self.__async_output
             self.close = self.__async_close
-            self.__queue = multiprocessing.JoinableQueue(100)
+            self.__queue = multiprocessing.JoinableQueue(msgBuffer)
             self.__child = multiprocessing.Process(target=self.__child_main, args=(self,))
             self.__child.start() # XXX s.b. daemon=True? don't think so, b/c atexit instead
 
@@ -32,6 +45,7 @@ class Outputter(object):
     def __child_main(self):
         self._open()
         while True:
+            # XXX should _close() be in a finally: ?
             msg = self.__queue.get()
             if msg != "SHUTDOWN":
                 x = self._format(msg)
@@ -67,11 +81,15 @@ class Outputter(object):
         self.__queue.join()
 
 class FileOutputter(Outputter):
-    def __init__(self, format, name, mode='a', buffering=1, async=False):
+    """Output to file
+    
+    `name`, `mode`, `buffering` are passed to `open(..)`
+    """
+    def __init__(self, format, name, mode='a', buffering=1, msgBuffer=0):
         self.filename = name
         self.mode = mode
         self.buffering = buffering
-        super(FileOutputter, self).__init__(format, async)
+        super(FileOutputter, self).__init__(format, msgBuffer)
 
     def _open(self):
         self.file = open(self.filename, self.mode, self.buffering)
@@ -83,7 +101,7 @@ class FileOutputter(Outputter):
         self.file.write(x)
 
 class StreamOutputter(Outputter):
-
+    """Output to an externally-managed stream."""
     def __init__(self, format, stream=sys.stderr):
         self.stream = stream
         super(StreamOutputter, self).__init__(format)
