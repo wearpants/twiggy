@@ -21,13 +21,18 @@ class Outputter(object):
     :arg format: a callable (probably a Formatter) taking a Message and
     formatting it for output.
     
+    :cvar use_locks: use locks when running in a synchronous,
+    multithreaded environment. Threadsafe subclasses may disable locking
+    for higher throughput. Defaults to true.
     """
+
+    use_locks = True
 
     def __init__(self, format, msgBuffer=0):
         self._format = format
 
         if msgBuffer == 0: # synchronous
-            self._lock = threading.Lock()
+            self._lock = threading.Lock() if self.use_locks else None
             self.output = self.__sync_output
             self.close = self._close
             self._open()
@@ -69,7 +74,10 @@ class Outputter(object):
 
     def __sync_output(self, msg):
         x = self._format(msg)
-        with self._lock:
+        if self.use_locks:
+            with self._lock:
+                self._write(x)
+        else:
             self._write(x)
 
     def __async_output(self, msg):
