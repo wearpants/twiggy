@@ -11,8 +11,7 @@ def chainmethod(f):
     @wraps(f)
     def wrapper(self, **kwargs):
         # self is a Logger
-        self = self.__class__(self._fields.copy(), self._options.copy(),
-                              self.emitters, self.min_level, self.filter)
+        self = self.clone()
         f(self, **kwargs)
         return self
     return wrapper
@@ -36,6 +35,12 @@ class Logger(object):
         self.emitters = emitters if emitters is not None else {}
         self.min_level = min_level
         self.filter = filter if filter is not None else lambda format_spec: True
+
+    def clone(self):
+        """return a new Logger instance with copied attributes"""
+        return self.__class__(self._fields.copy(), self._options.copy(),
+                              self.emitters, self.min_level, self.filter)
+
 
     @chainmethod
     def fields(self, **kwargs):
