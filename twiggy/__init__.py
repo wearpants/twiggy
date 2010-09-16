@@ -8,8 +8,8 @@ import Formatter
 import Outputter
 
 log = Logger.Logger({'time':time.gmtime})
-internal_log = Logger.InternalLogger({'time':time.gmtime}).trace('error').name('twiggy.internal')
 emitters = log.emitters
+internal_log = Logger.InternalLogger({'time':time.gmtime}).trace('error').name('twiggy.internal')
 
 def quick_setup(min_level=Levels.DEBUG, file = None, msgBuffer = 0):
     if file is None:

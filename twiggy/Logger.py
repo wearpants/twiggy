@@ -1,5 +1,6 @@
 from .Message import Message
 from .lib import iso8601time
+import twiggy as _twiggy
 import Levels
 import Outputter
 import Formatter
@@ -160,6 +161,7 @@ class Logger(BaseLogger):
 
     ## Boring stuff
     def _emit(self, level, format_spec = '',  *args, **kwargs):
+        # XXX don't trap errors in per-logger filter - if you're using this, you deserve the explosions you may get.
         if (level < self.min_level or not self.filter(format_spec)): return
 
         potential_emitters = [(name, emitter) for name, emitter in self.emitters.iteritems()
@@ -167,10 +169,26 @@ class Logger(BaseLogger):
 
         if not potential_emitters: return
 
-        msg = Message(level, format_spec, self._fields.copy(), self._options, *args, **kwargs)
+        try:
+            msg = Message(level, format_spec, self._fields.copy(), self._options, *args, **kwargs)
+        except StandardError:
+            _twiggy.internal_log.info("Error formatting message level: {0!r}, format: {1!r}, fields: {2!r}, "\
+                                      "options: {3!r}, args: {4!r}, kwargs: {5!r}",
+                                      level, format_spec, self._fields.copy(), self._options.copy(), args, kwargs)
+            return
 
-        # XXX add appropriate error trapping & logging; watch for recursion
-        # don't forget to trap errors from filter!
-        for o in set(e._outputter for n, e in potential_emitters if e.filter(msg)):
-            o.output(msg)
+        outputters = set()
+        for name, emitter in potential_emitters:
+            try:
+                include = emitter.filter(msg)
+            except StandardError:
+                _twiggy.internal_log.info("Error filtering with emitter {0}. Message: {1!r}", name, msg)
+            else:
+                if include: outputters.add(emitter._outputter)
+
+        for o in outputters:
+            try:
+                o.output(msg)
+            except StandardError:
+                _twiggy.internal_log.warning("Error outputting with {0!r}. Message: {1!r}", o, msg)
 
