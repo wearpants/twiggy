@@ -48,6 +48,15 @@ class Logger(object):
 
     __valid_options = set(Message._default_options)
 
+    @classmethod
+    def addFeature(cls, func, name=None):
+        name = name if name is not None else func.__name__
+        setattr(cls, name, func)
+
+    @classmethod
+    def delFeature(cls, name):
+        delattr(cls, name)
+
     def __init__(self, fields = None, options = None, emitters = None,
                  min_level = Levels.DEBUG, filter = None):
         """Constructor for internal module use only, basically."""
@@ -64,7 +73,6 @@ class Logger(object):
         """
         return self.__class__(self._fields.copy(), self._options.copy(),
                               self.emitters, self.min_level, self.filter)
-
 
     def no_op(*args, **kwargs):
         return self
