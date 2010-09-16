@@ -54,6 +54,11 @@ class Logger(object):
         setattr(cls, name, func)
 
     @classmethod
+    def disableFeature(cls, name):
+        # get func directly from class dict - we don't want an unbound method.
+        setattr(cls, name, cls.__dict__['no_op'])
+
+    @classmethod
     def delFeature(cls, name):
         delattr(cls, name)
 
@@ -74,7 +79,7 @@ class Logger(object):
         return self.__class__(self._fields.copy(), self._options.copy(),
                               self.emitters, self.min_level, self.filter)
 
-    def no_op(*args, **kwargs):
+    def no_op(self, *args, **kwargs):
         return self
 
     @chainmethod
