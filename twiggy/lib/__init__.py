@@ -5,16 +5,15 @@ def thread_name():
     """return the name of the current thread"""
     return threading.currentThread().getName()
 
-
 class Converter(object):
     """Holder for ConversionTable items
-    
+
     :ivar key: the key to apply the conversion to
     :ivar convertValue: one-argument function to convert the value
-    :ivar convertItem: two-argument function converting the key & converted value 
+    :ivar convertItem: two-argument function converting the key & converted value
     :ivar required: is the item required to present
     """
-    
+
     __slots__ = ['key', 'convertValue', 'convertItem', 'required']
 
     def __init__(self, key, convertValue, convertItem, required = False):
@@ -25,7 +24,7 @@ class Converter(object):
 
 class ConversionTable(list):
     """Converts dictionaries using Converters
-    
+
     For each item, one or more corresponding Converters *c* are found by
     matching key. A list is built by calling c.convertItem(item_key,
     c.convertValue(item_value)) in the same order as converters are supplied.
@@ -33,20 +32,20 @@ class ConversionTable(list):
     genericValue/genericItem and appended. If any required items are missing,
     ValueError is raised. The resulting list is passed to aggregate, and its
     return value is returned as the result of the conversion.
-    
+
     Users may override genericValue/genericItem/aggregate by subclassing or
     assigning a new function on a ConversionTable instance.
-    
+
     Really, it's pretty intuitive.
-    
+
     >>> 8*8
     64
-    
+
     Math is hard:
-    
+
     >>> 2+2
     4
-    
+
     """
 
     def __init__(self, seq):
@@ -54,7 +53,7 @@ class ConversionTable(list):
         :arg seq: a sequence of Converters, arg tuples or kwarg dicts (which
         will be used to create Converters)
         """
-        
+
         l = []
         for i in seq:
             if isinstance(i, Converter):
