@@ -23,16 +23,68 @@ emit.warning = emit(Levels.WARNING)
 emit.error = emit(Levels.ERROR)
 emit.critical = emit(Levels.CRITICAL)
 
-class Logger(object):
+class BaseLogger(object):
+    __slots__ = ['_fields', '_options', ]
+
+    __valid_options = set(Message._default_options)
+
+    def __init__(self, fields = None, options = None):
+        """Constructor for internal module use only, basically."""
+        self._fields = fields if fields is not None else {}
+        self._options = options if options is not None else Message._default_options.copy()
+
+    def _clone(self):
+        return self.__class__(self._fields.copy(), self._options.copy())
+
+    def _emit(self):
+        raise NotImplementedError
+
+    ## The Magic
+    def fields(self, **kwargs):
+        clone = self._clone()
+        clone._fields.update(kwargs)
+        return clone
+
+    def options(self, **kwargs):
+        bad_options = set(kwargs) - self.__valid_options
+        if bad_options:
+            raise ValueError("Invalid options {0!r}".format(tuple(bad_options)))
+        clone = self._clone()
+        clone._options.update(kwargs)
+        return clone
+
+    ##  Convenience
+    def trace(self, trace='error'):
+        return self.options(trace=trace)
+
+    def name(self, name):
+        return self.fields(name=name)
+
+    ## Do something
+    def debug(self, *args, **kwargs):
+        self._emit(Levels.DEBUG, *args, **kwargs)
+
+    def info(self, *args, **kwargs):
+        self._emit(Levels.INFO, *args, **kwargs)
+
+    def warning(self, *args, **kwargs):
+        self._emit(Levels.WARNING, *args, **kwargs)
+
+    def error(self, *args, **kwargs):
+        self._emit(Levels.ERROR, *args, **kwargs)
+
+    def critical(self, *args, **kwargs):
+        self._emit(Levels.CRITICAL, *args, **kwargs)
+
+class Logger(BaseLogger):
     """
     :ivar min_level: only emit if message level is above this
     :type min_level: Levels.LogLevel
 
     :ivar filter: ..function:: filter(msg) -> bool
     """
-    __slots__ = ['_fields', '_options', 'emitters', 'min_level', 'filter']
 
-    __valid_options = set(Message._default_options)
+    __slots__ = ['emitters', 'min_level', 'filter']
 
     @classmethod
     def addFeature(cls, func, name=None):
@@ -50,14 +102,12 @@ class Logger(object):
 
     def __init__(self, fields = None, options = None, emitters = None,
                  min_level = Levels.DEBUG, filter = None):
-        """Constructor for internal module use only, basically."""
-        self._fields = fields if fields is not None else {}
-        self._options = options if options is not None else Message._default_options.copy()
+        super(Logger, self).__init__(fields, options)
         self.emitters = emitters if emitters is not None else {}
         self.min_level = min_level
         self.filter = filter if filter is not None else lambda format_spec: True
 
-    def clone(self):
+    def _clone(self):
         """return a new Logger instance with copied attributes
 
         Probably only for internal use.
@@ -65,33 +115,11 @@ class Logger(object):
         return self.__class__(self._fields.copy(), self._options.copy(),
                               self.emitters, self.min_level, self.filter)
 
-    def fields(self, **kwargs):
-        clone = self.clone()
-        clone._fields.update(kwargs)
-        return clone
-
-    def options(self, **kwargs):
-        bad_options = set(kwargs) - self.__valid_options
-        if bad_options:
-            raise ValueError("Invalid options {0!r}".format(tuple(bad_options)))
-        clone = self.clone()
-        clone._options.update(kwargs)
-        return clone
-
-    ##  Convenience
-    def trace(self, trace='error'):
-        return self.options(trace=trace)
-
-    def name(self, name):
-        return self.fields(name=name)
-
     @emit.info
     def struct(self, **kwargs):
         return self.fields(**kwargs)
 
-
     ## Boring stuff
-
     def _emit(self, level, format_spec = '',  *args, **kwargs):
         if (level < self.min_level or not self.filter(format_spec)): return
 
@@ -107,17 +135,3 @@ class Logger(object):
         for o in set(e._outputter for n, e in potential_emitters if e.filter(msg)):
             o.output(msg)
 
-    def debug(self, *args, **kwargs):
-        self._emit(Levels.DEBUG, *args, **kwargs)
-
-    def info(self, *args, **kwargs):
-        self._emit(Levels.INFO, *args, **kwargs)
-
-    def warning(self, *args, **kwargs):
-        self._emit(Levels.WARNING, *args, **kwargs)
-
-    def error(self, *args, **kwargs):
-        self._emit(Levels.ERROR, *args, **kwargs)
-
-    def critical(self, *args, **kwargs):
-        self._emit(Levels.CRITICAL, *args, **kwargs)
