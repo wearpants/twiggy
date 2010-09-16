@@ -42,7 +42,7 @@ class Logger(object):
     @classmethod
     def disableFeature(cls, name):
         # get func directly from class dict - we don't want an unbound method.
-        setattr(cls, name, cls.__dict__['no_op'])
+        setattr(cls, name, cls.__dict__['clone'])
 
     @classmethod
     def delFeature(cls, name):
@@ -64,10 +64,6 @@ class Logger(object):
         """
         return self.__class__(self._fields.copy(), self._options.copy(),
                               self.emitters, self.min_level, self.filter)
-
-    def no_op(self, *args, **kwargs):
-        return self
-
 
     def fields(self, **kwargs):
         clone = self.clone()
