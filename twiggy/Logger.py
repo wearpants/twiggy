@@ -161,8 +161,13 @@ class Logger(BaseLogger):
 
     ## Boring stuff
     def _emit(self, level, format_spec = '',  *args, **kwargs):
-        # XXX don't trap errors in per-logger filter - if you're using this, you deserve the explosions you may get.
-        if (level < self.min_level or not self.filter(format_spec)): return
+        if level < self.min_level: return
+
+        try:
+            if not self.filter(format_spec): return
+        except StandardError:
+            _twiggy.internal_log.info("Error in Logger filtering with {0!r} on {1}", self.filter, format_spec)
+            # just continue
 
         potential_emitters = [(name, emitter) for name, emitter in self.emitters.iteritems()
                               if level >= emitter.min_level]
