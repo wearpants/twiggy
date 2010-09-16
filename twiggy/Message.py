@@ -11,6 +11,8 @@ class Message(object):
                         'trace' : None,
                         'style': 'braces'}
 
+    # XXX I need a __repr__!
+
     def __init__(self, level, format_spec, fields, options,
                  *args, **kwargs):
 

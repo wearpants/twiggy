@@ -1,9 +1,12 @@
 from .Message import Message
+from .lib import iso8601time
 import Levels
 import Outputter
 import Formatter
 
 import sys
+import time
+import traceback
 from functools import wraps
 
 def emit(level):
@@ -99,11 +102,18 @@ class InternalLogger(BaseLogger):
         return self.__class__(self._fields.copy(), self._options.copy(), self.outputter)
 
     def _emit(self, level, format_spec = '',  *args, **kwargs):
-        msg = Message(level, format_spec, self._fields.copy(), self._options, *args, **kwargs)
-
-        # XXX add appropriate error trapping & logging; watch for recursion
-        # don't forget to trap errors from filter!
-        self.outputter.output(msg)
+        try:
+            try:
+                msg = Message(level, format_spec, self._fields.copy(), self._options, *args, **kwargs)
+            except StandardError:
+                msg = None
+                raise
+            else:
+                self.outputter.output(msg)
+        except StandardError:
+            print>>sys.stderr, iso8601time(), "Error in twiggy internal log! Something is serioulsy broken."
+            print>>sys.stderr, "Offending message:", repr(msg)
+            traceback.print_exc(file = sys.stderr)
 
 class Logger(BaseLogger):
     """
