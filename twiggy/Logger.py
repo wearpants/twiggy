@@ -23,20 +23,6 @@ emit.warning = emit(Levels.WARNING)
 emit.error = emit(Levels.ERROR)
 emit.critical = emit(Levels.CRITICAL)
 
-def chainmethod(f):
-    """a decorator that implements method chaining for Loggers.
-
-    Creates a new, *cloned* Logger instance. This instance is passed to `f`
-    for modification, and then returned.
-    """
-    @wraps(f)
-    def wrapper(self, **kwargs):
-        # self is a Logger
-        self = self.clone()
-        f(self, **kwargs)
-        return self
-    return wrapper
-
 class Logger(object):
     """
     :ivar min_level: only emit if message level is above this
@@ -82,16 +68,19 @@ class Logger(object):
     def no_op(self, *args, **kwargs):
         return self
 
-    @chainmethod
-    def fields(self, **kwargs):
-        self._fields.update(kwargs)
 
-    @chainmethod
+    def fields(self, **kwargs):
+        clone = self.clone()
+        clone._fields.update(kwargs)
+        return clone
+
     def options(self, **kwargs):
         bad_options = set(kwargs) - self.__valid_options
         if bad_options:
             raise ValueError("Invalid options {0!r}".format(tuple(bad_options)))
-        self._options.update(kwargs)
+        clone = self.clone()
+        clone._options.update(kwargs)
+        return clone
 
     ##  Convenience
     def trace(self, trace='error'):
