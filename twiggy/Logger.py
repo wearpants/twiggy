@@ -1,5 +1,21 @@
 from Message import Message
 import Levels
+from functools import wraps
+
+def chainmethod(f):
+    """a decorator that implements method chaining for Loggers.
+
+    Creates a new, *cloned* Logger instance. This instance is passed to `f`
+    for modification, and then returned.
+    """
+    @wraps(f)
+    def wrapper(self, **kwargs):
+        # self is a Logger
+        self = self.__class__(self._fields.copy(), self._options.copy(),
+                              self.emitters, self.min_level, self.filter)
+        f(self, **kwargs)
+        return self
+    return wrapper
 
 class Logger(object):
     """
@@ -21,20 +37,16 @@ class Logger(object):
         self.min_level = min_level
         self.filter = filter if filter is not None else lambda format_spec: True
 
+    @chainmethod
     def fields(self, **kwargs):
-        new_fields = self._fields.copy()
-        new_fields.update(**kwargs)
-        return self.__class__(new_fields, self._options.copy(),
-                              self.emitters, self.min_level, self.filter)
+        self._fields.update(kwargs)
 
+    @chainmethod
     def options(self, **kwargs):
-        new_options = self._options.copy()
-        new_options.update(**kwargs)
         bad_options = set(kwargs) - self.__valid_options
         if bad_options:
             raise ValueError("Invalid options {0!r}".format(tuple(bad_options)))
-        return self.__class__(self._fields.copy(), new_options,
-                              self.emitters, self.min_level, self.filter)
+        self._options.update(kwargs)
 
     ##  Convenience
     def trace(self, trace='error'):
