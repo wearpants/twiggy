@@ -1,5 +1,9 @@
-from Message import Message
+from .Message import Message
 import Levels
+import Outputter
+import Formatter
+
+import sys
 from functools import wraps
 
 def emit(level):
@@ -75,6 +79,31 @@ class BaseLogger(object):
 
     def critical(self, *args, **kwargs):
         self._emit(Levels.CRITICAL, *args, **kwargs)
+
+class InternalLogger(BaseLogger):
+    """
+    :ivar outputter: an outputtter to write to
+    :type outputter: Outputter
+    """
+
+    __slots__ = ['outputter']
+
+    __default_format = Formatter.LineFormatter(conversion=Formatter.line_conversion)
+    __default_outputter = Outputter.StreamOutputter(__default_format, stream=sys.stderr)
+
+    def __init__(self, fields = None, options = None, outputter = None):
+        super(InternalLogger, self).__init__(fields, options)
+        self.outputter = outputter if outputter is not None else self.__default_outputter
+
+    def _clone(self):
+        return self.__class__(self._fields.copy(), self._options.copy(), self.outputter)
+
+    def _emit(self, level, format_spec = '',  *args, **kwargs):
+        msg = Message(level, format_spec, self._fields.copy(), self._options, *args, **kwargs)
+
+        # XXX add appropriate error trapping & logging; watch for recursion
+        # don't forget to trap errors from filter!
+        self.outputter.output(msg)
 
 class Logger(BaseLogger):
     """
