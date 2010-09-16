@@ -66,6 +66,9 @@ class Logger(object):
                               self.emitters, self.min_level, self.filter)
 
 
+    def no_op(*args, **kwargs):
+        return self
+
     @chainmethod
     def fields(self, **kwargs):
         self._fields.update(kwargs)
