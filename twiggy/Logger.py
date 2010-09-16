@@ -2,6 +2,27 @@ from Message import Message
 import Levels
 from functools import wraps
 
+def emit(level):
+    """a decorator that emits at `level` after calling the method. The method
+    should return a Logger instance.
+
+    For convenience, decorators for the various levels are available as
+    `emit.debug`, `emit.info`, etc..
+
+    """
+    def decorator(f):
+        @wraps(f)
+        def wrapper(self, *args, **kwargs):
+            f(self, *args, **kwargs)._emit(level)
+        return wrapper
+    return decorator
+
+emit.debug = emit(Levels.DEBUG)
+emit.info = emit(Levels.INFO)
+emit.warning = emit(Levels.WARNING)
+emit.error = emit(Levels.ERROR)
+emit.critical = emit(Levels.CRITICAL)
+
 def chainmethod(f):
     """a decorator that implements method chaining for Loggers.
 
@@ -37,7 +58,10 @@ class Logger(object):
         self.filter = filter if filter is not None else lambda format_spec: True
 
     def clone(self):
-        """return a new Logger instance with copied attributes"""
+        """return a new Logger instance with copied attributes
+
+        Probably only for internal use.
+        """
         return self.__class__(self._fields.copy(), self._options.copy(),
                               self.emitters, self.min_level, self.filter)
 
@@ -60,8 +84,10 @@ class Logger(object):
     def name(self, name):
         return self.fields(name=name)
 
+    @emit.info
     def struct(self, **kwargs):
-        self.fields(**kwargs).info()
+        return self.fields(**kwargs)
+
 
     ## Boring stuff
 
