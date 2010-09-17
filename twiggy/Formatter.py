@@ -1,12 +1,10 @@
-import time
-
-from .lib import ConversionTable, Converter
+from .lib import ConversionTable, Converter, iso8601time
 
 # a default converter
 line_conversion = ConversionTable([
     Converter(key='time',
               # ISO 8601 - it sucks less!
-              convertValue=lambda gmtime: time.strftime("%Y-%m-%dT%H:%M:%S", gmtime),
+              convertValue=iso8601time,
               convertItem='{1}'.format,
               required=True),
     ('level', str, '{1}'.format, True),
