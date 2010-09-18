@@ -92,12 +92,12 @@ class InternalLogger(BaseLogger):
 
     __slots__ = ['outputter']
 
-    __default_format = Formatter.LineFormatter(conversion=Formatter.line_conversion)
-    __default_outputter = Outputter.StreamOutputter(__default_format, stream=sys.stderr)
 
     def __init__(self, fields = None, options = None, outputter = None):
         super(InternalLogger, self).__init__(fields, options)
-        self.outputter = outputter if outputter is not None else self.__default_outputter
+        # XXX clobber this assert and make outputter mandatory?
+        assert outputter is not None
+        self.outputter = outputter
 
     def _clone(self):
         return self.__class__(self._fields.copy(), self._options.copy(), self.outputter)
@@ -161,14 +161,16 @@ class Logger(BaseLogger):
 
     ## Boring stuff
     def _emit(self, level, format_spec = '',  *args, **kwargs):
+        # XXX should these traps be collapsed?
         if level < self.min_level: return
 
         try:
             if not self.filter(format_spec): return
         except StandardError:
-            _twiggy.internal_log.info("Error in Logger filtering with {0!r} on {1}", self.filter, format_spec)
-            # just continue
+            _twiggy.internal_log.trace().info("Error in Logger filtering with {0!r} on {1}", self.filter, format_spec)
+            # just continue emitting in face of filter error
 
+        # XXX should we trap here too b/c of "Dictionary changed size during iteration" (or other rare errors?)
         potential_emitters = [(name, emitter) for name, emitter in self.emitters.iteritems()
                               if level >= emitter.min_level]
 
@@ -177,7 +179,7 @@ class Logger(BaseLogger):
         try:
             msg = Message(level, format_spec, self._fields.copy(), self._options, *args, **kwargs)
         except StandardError:
-            _twiggy.internal_log.info("Error formatting message level: {0!r}, format: {1!r}, fields: {2!r}, "\
+            _twiggy.internal_log.trace().info("Error formatting message level: {0!r}, format: {1!r}, fields: {2!r}, "\
                                       "options: {3!r}, args: {4!r}, kwargs: {5!r}",
                                       level, format_spec, self._fields.copy(), self._options.copy(), args, kwargs)
             return
@@ -187,7 +189,7 @@ class Logger(BaseLogger):
             try:
                 include = emitter.filter(msg)
             except StandardError:
-                _twiggy.internal_log.info("Error filtering with emitter {0}. Message: {1!r}", name, msg)
+                _twiggy.internal_log.trace().info("Error filtering with emitter {0}. Message: {1!r}", name, msg)
             else:
                 if include: outputters.add(emitter._outputter)
 

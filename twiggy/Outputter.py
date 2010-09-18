@@ -12,7 +12,7 @@ class Outputter(object):
     Outputters transparently support asynchronous logging using the
     multiprocessing module. This is off by default, as it can cause log
     messages to be dropped. See the msgBuffer argument.
-    
+
     :arg msgBuffer: number of messages to buffer in memory when using
     asynchronous logging. `0` turns asynchronous output off, a negative
     integer means an unlimited buffer, a positive integer is the size
@@ -20,7 +20,7 @@ class Outputter(object):
 
     :arg format: a callable (probably a Formatter) taking a Message and
     formatting it for output.
-    
+
     :cvar use_locks: use locks when running in a synchronous,
     multithreaded environment. Threadsafe subclasses may disable locking
     for higher throughput. Defaults to true.
@@ -29,7 +29,7 @@ class Outputter(object):
     use_locks = True
 
     def __init__(self, format, msgBuffer=0):
-        self._format = format
+        self._format = format # XXX should this default to None, meaning use class-level _default_format?
 
         if msgBuffer == 0: # synchronous
             self._lock = threading.Lock() if self.use_locks else None
@@ -88,9 +88,18 @@ class Outputter(object):
         self.__queue.close()
         self.__queue.join()
 
+class NullOutputter(object):
+    """An duck-typed outputter that just discards its messages"""
+
+    def output(self, msg):
+        pass
+
+    def close(self):
+        pass
+
 class FileOutputter(Outputter):
     """Output to file
-    
+
     `name`, `mode`, `buffering` are passed to `open(..)`
     """
     def __init__(self, format, name, mode='a', buffering=1, msgBuffer=0):
