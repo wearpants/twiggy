@@ -36,6 +36,17 @@ def regex_wrapper(regexp):
         return regexp.match(msg.text) is not None
     return wrapped
 
+def names(*names):
+    """returns a filter, which gives True if the messsage's name is in any of those provided
+
+    `names` will be stored as an attribute on the filter.
+    """
+    names_set = set(names)
+    def names_filter(msg):
+        return msg.name in names_set
+    names_filter.names = names
+    return names_filter
+
 class Emitter(object):
     """
     Emits!
