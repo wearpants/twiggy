@@ -37,12 +37,15 @@ class BaseLogger(object):
     __valid_options = set(Message._default_options)
 
     def __init__(self, fields = None, options = None):
-        """Constructor for internal module use only, basically."""
-        self._fields = fields if fields is not None else {}
-        self._options = options if options is not None else Message._default_options.copy()
+        """Constructor for internal module use only, basically.
+
+        `fields` and `options` will be copied.
+        """
+        self._fields = fields.copy() if fields is not None else {}
+        self._options = options.copy() if options is not None else Message._default_options.copy()
 
     def _clone(self):
-        return self.__class__(self._fields.copy(), self._options.copy())
+        return self.__class__(self._fields, self._options)
 
     def _emit(self):
         raise NotImplementedError
@@ -100,12 +103,12 @@ class InternalLogger(BaseLogger):
         self.outputter = outputter
 
     def _clone(self):
-        return self.__class__(self._fields.copy(), self._options.copy(), self.outputter)
+        return self.__class__(self._fields, self._options, self.outputter)
 
     def _emit(self, level, format_spec = '',  *args, **kwargs):
         try:
             try:
-                msg = Message(level, format_spec, self._fields.copy(), self._options, *args, **kwargs)
+                msg = Message(level, format_spec, self._fields.copy(), self._options.copy(), *args, **kwargs)
             except StandardError:
                 msg = None
                 raise
@@ -152,7 +155,7 @@ class Logger(BaseLogger):
 
         Probably only for internal use.
         """
-        return self.__class__(self._fields.copy(), self._options.copy(),
+        return self.__class__(self._fields, self._options,
                               self.emitters, self.min_level, self.filter)
 
     @emit.info
@@ -177,11 +180,11 @@ class Logger(BaseLogger):
         if not potential_emitters: return
 
         try:
-            msg = Message(level, format_spec, self._fields.copy(), self._options, *args, **kwargs)
+            msg = Message(level, format_spec, self._fields.copy(), self._options.copy(), *args, **kwargs)
         except StandardError:
             _twiggy.internal_log.trace().info("Error formatting message level: {0!r}, format: {1!r}, fields: {2!r}, "\
                                       "options: {3!r}, args: {4!r}, kwargs: {5!r}",
-                                      level, format_spec, self._fields.copy(), self._options.copy(), args, kwargs)
+                                      level, format_spec, self._fields, self._options, args, kwargs)
             return
 
         outputters = set()
