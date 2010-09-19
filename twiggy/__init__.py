@@ -7,18 +7,20 @@ import Emitter
 import Formatter
 import Outputter
 
+## a useful default fields
+__fields = {'time':time.gmtime}
+
 ## the magic log object, for end-users
-log = Logger.Logger({'time':time.gmtime})
+log = Logger.Logger(__fields)
 emitters = log.emitters
 
 ## Internal Log - for errors/loging within twiggy
 internal_format = Formatter.LineFormatter(conversion=Formatter.line_conversion)
 internal_outputter = Outputter.StreamOutputter(internal_format, stream=sys.stderr)
-internal_log = Logger.InternalLogger({'time':time.gmtime}, outputter=internal_outputter).name('twiggy.internal')
+internal_log = Logger.InternalLogger(__fields, outputter=internal_outputter).name('twiggy.internal')
 
 ## Twiggy's internal log for use by developers
-devel_log = Logger.InternalLogger({'time':time.gmtime}, outputter = Outputter.NullOutputter()).name('twiggy.devel')
-
+devel_log = Logger.InternalLogger(__fields, outputter = Outputter.NullOutputter()).name('twiggy.devel')
 
 def quick_setup(min_level=Levels.DEBUG, file = None, msgBuffer = 0):
     if file is None:
