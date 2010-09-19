@@ -32,20 +32,21 @@ emit.error = emit(Levels.ERROR)
 emit.critical = emit(Levels.CRITICAL)
 
 class BaseLogger(object):
-    __slots__ = ['_fields', '_options', ]
+    __slots__ = ['_fields', '_options', 'min_level']
 
     __valid_options = set(Message._default_options)
 
-    def __init__(self, fields = None, options = None):
+    def __init__(self, fields = None, options = None, min_level = None):
         """Constructor for internal module use only, basically.
 
         `fields` and `options` will be copied.
         """
         self._fields = fields.copy() if fields is not None else {}
         self._options = options.copy() if options is not None else Message._default_options.copy()
+        self.min_level = min_level if min_level is not None else Levels.DEBUG
 
     def _clone(self):
-        return self.__class__(self._fields, self._options)
+        return self.__class__(self._fields, self._options, self.min_level)
 
     def _emit(self):
         raise NotImplementedError
@@ -96,16 +97,17 @@ class InternalLogger(BaseLogger):
     __slots__ = ['outputter']
 
 
-    def __init__(self, fields = None, options = None, outputter = None):
+    def __init__(self, fields = None, options = None, min_level = None, outputter = None):
         super(InternalLogger, self).__init__(fields, options)
         # XXX clobber this assert and make outputter mandatory?
         assert outputter is not None
         self.outputter = outputter
 
     def _clone(self):
-        return self.__class__(self._fields, self._options, self.outputter)
+        return self.__class__(self._fields, self._options, self.min_level, self.outputter)
 
     def _emit(self, level, format_spec = '',  *args, **kwargs):
+        if level < self.min_level: return
         try:
             try:
                 msg = Message(level, format_spec, self._fields.copy(), self._options.copy(), *args, **kwargs)
@@ -121,13 +123,10 @@ class InternalLogger(BaseLogger):
 
 class Logger(BaseLogger):
     """
-    :ivar min_level: only emit if message level is above this
-    :type min_level: Levels.LogLevel
-
     :ivar filter: ..function:: filter(msg) -> bool
     """
 
-    __slots__ = ['emitters', 'min_level', 'filter']
+    __slots__ = ['emitters', 'filter']
 
     @classmethod
     def addFeature(cls, func, name=None):
@@ -144,10 +143,9 @@ class Logger(BaseLogger):
         delattr(cls, name)
 
     def __init__(self, fields = None, options = None, emitters = None,
-                 min_level = Levels.DEBUG, filter = None):
-        super(Logger, self).__init__(fields, options)
+                 min_level = None, filter = None):
+        super(Logger, self).__init__(fields, options, min_level)
         self.emitters = emitters if emitters is not None else {}
-        self.min_level = min_level
         self.filter = filter if filter is not None else lambda format_spec: True
 
     def _clone(self):
