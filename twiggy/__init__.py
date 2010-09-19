@@ -15,9 +15,9 @@ log = Logger.Logger(__fields)
 emitters = log.emitters
 
 ## Internal Log - for errors/loging within twiggy
-internal_format = Formatter.LineFormatter(conversion=Formatter.line_conversion)
-internal_outputter = Outputter.StreamOutputter(internal_format, stream=sys.stderr)
-internal_log = Logger.InternalLogger(__fields, outputter=internal_outputter).name('twiggy.internal')
+__internal_format = Formatter.LineFormatter(conversion=Formatter.line_conversion)
+__internal_outputter = Outputter.StreamOutputter(__internal_format, stream=sys.stderr)
+internal_log = Logger.InternalLogger(__fields, outputter=__internal_outputter).name('twiggy.internal')
 
 ## Twiggy's internal log for use by developers
 devel_log = Logger.InternalLogger(__fields, outputter = Outputter.NullOutputter()).name('twiggy.devel')
