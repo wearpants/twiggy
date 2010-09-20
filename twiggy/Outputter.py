@@ -14,7 +14,7 @@ class Outputter(object):
     messages to be dropped. See the msgBuffer argument.
 
     :arg msgBuffer: number of messages to buffer in memory when using
-    asynchronous logging. `0` turns asynchronous output off, a negative
+    asynchronous logging. ``0`` turns asynchronous output off, a negative
     integer means an unlimited buffer, a positive integer is the size
     of the buffer.
 
@@ -100,7 +100,7 @@ class NullOutputter(object):
 class FileOutputter(Outputter):
     """Output to file
 
-    `name`, `mode`, `buffering` are passed to `open(..)`
+    ``name``, ``mode``, ``buffering`` are passed to ``open(..)``
     """
     def __init__(self, format, name, mode='a', buffering=1, msgBuffer=0):
         self.filename = name

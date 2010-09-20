@@ -39,7 +39,7 @@ def regex_wrapper(regexp):
 def names(*names):
     """returns a filter, which gives True if the messsage's name is in any of those provided
 
-    `names` will be stored as an attribute on the filter.
+    ``names`` will be stored as an attribute on the filter.
     """
     names_set = set(names)
     def names_filter(msg):

@@ -11,11 +11,11 @@ import traceback
 from functools import wraps
 
 def emit(level):
-    """a decorator that emits at `level` after calling the method. The method
+    """a decorator that emits at ``level`` after calling the method. The method
     should return a Logger instance.
 
     For convenience, decorators for the various levels are available as
-    `emit.debug`, `emit.info`, etc..
+    ``emit.debug``, ``emit.info``, etc..
 
     """
     def decorator(f):
@@ -39,7 +39,7 @@ class BaseLogger(object):
     def __init__(self, fields = None, options = None, min_level = None):
         """Constructor for internal module use only, basically.
 
-        `fields` and `options` will be copied.
+        ``fields`` and ``options`` will be copied.
         """
         self._fields = fields.copy() if fields is not None else {}
         self._options = options.copy() if options is not None else Message._default_options.copy()
