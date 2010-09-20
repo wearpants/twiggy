@@ -5,3 +5,5 @@ MANIFEST
 *.wpr
 
 doc/_build/*
+wingdbstub.py
+.coverage

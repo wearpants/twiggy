@@ -3,8 +3,9 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to Twiggy's documentation!
+The Story of Twiggy!
 ==================================
+Twiggy was born at Pycon 2010.
 
 Contents:
 
@@ -12,15 +13,15 @@ Contents:
     :maxdepth: 2
 
     intro
-    quickstart
-    benefits
-    user_logging
-    logging_setup
-    extensions
-    outputters
+    basic_use
+    configuration
+    technical_details
+    advanced_use
+    extending
+    tips_and_tricks
     thoughts
-    epydoc
     the_future
+    glossary
     
 
 Indices and tables
