@@ -3,3 +3,5 @@ syntax: glob
 dist
 MANIFEST
 *.wpr
+
+doc/_build/*
