@@ -55,6 +55,7 @@ INFO:we
 deal
 
 Exceptions are prefixed. Can also pass exc_info.
+
 .. seealso:: :ref:`How to fold exceptions to a single line<folding-exceptions>`
 
 >>> try:
