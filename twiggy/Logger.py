@@ -123,7 +123,7 @@ class InternalLogger(BaseLogger):
 
 class Logger(BaseLogger):
     """
-    :ivar filter: ..function:: filter(msg) -> bool
+    :ivar filter: .. function:: filter(msg) -> bool
     """
 
     __slots__ = ['emitters', 'filter']

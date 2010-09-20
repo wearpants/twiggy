@@ -9,7 +9,19 @@ Welcome to Twiggy's documentation!
 Contents:
 
 .. toctree::
-   :maxdepth: 2
+    :maxdepth: 2
+
+    intro
+    quickstart
+    benefits
+    user_logging
+    logging_setup
+    extensions
+    outputters
+    thoughts
+    epydoc
+    the_future
+    
 
 Indices and tables
 ==================
