@@ -58,8 +58,10 @@ def glob_names(*names):
 
     :arg strings names: glob patterns.
     """
+    # copied from fnmatch.fnmatchcase - for speed
+    patterns = [re.compile(fnmatch.translate(pat)) for pat in names]
     def glob_names_filter(msg):
-        return any(fnmatch.fnmatchcase(msg.name, n) for n in names)
+        return any(pat.match(msg.name) is not None for pat in patterns)
     glob_names_filter.names = names
     return glob_names_filter
 
