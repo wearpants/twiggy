@@ -2,6 +2,11 @@
 Configuration
 ######################
 
+
+*******************
+Modern design
+*******************
+
 :data:`twiggy.emitters` is the root. Demo :function:`twiggy.addEmitters`.
 
 Modern design (like django!)
