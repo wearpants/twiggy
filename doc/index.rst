@@ -19,7 +19,6 @@ Contents:
     advanced_use
     extending
     tips_and_tricks
-    thoughts
     the_future
     glossary
     

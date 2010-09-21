@@ -25,3 +25,7 @@ INFO:Cars kill
 WSGI Extension
 ==============
 OMG it don't exist yet.
+
+Use Fields
+==========
+use fields instead of "Foo happend. key1:x1, key2:x2" in message

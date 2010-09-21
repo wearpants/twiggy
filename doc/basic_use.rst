@@ -19,7 +19,7 @@ Logging Messages
 
 >>> from twiggy import *
 
-The main interface is the the magic ** :class:`log <Logger>` **:
+The main interface is the the magic **:class:`log <Logger>`**:
 
 >>> log #doctest:+ELLIPSIS
 <twiggy.Logger.Logger object at 0x...>
