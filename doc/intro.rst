@@ -5,7 +5,7 @@ Introduction
 Twiggy is a more Pythonic logger.
 
 ****************************
-What, Who, Where
+What, Who, Where, Why
 ****************************
 
 :author: Peter Fein

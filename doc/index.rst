@@ -7,6 +7,14 @@ The Story of Twiggy!
 ==================================
 Twiggy was born at Pycon 2010.
 
+.. seealso:: :doc:`blog_post_notes`
+
+Why Logging Matters
+*******************
+* your **only** view into a running program
+* your **only** view of past execution
+* your **data** for post-mortem & domain-specific measurement
+
 Contents:
 
 .. toctree::
