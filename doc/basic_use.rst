@@ -3,6 +3,8 @@ Basic Use
 ###############
 This part describes how user code can log messages with twiggy.
 
+:func:`pants`
+
 ***************
 Setup is simple
 ***************
@@ -16,13 +18,13 @@ In your main.py:
 ****************
 Logging Messages
 ****************
-The main interface is the the magic **:class:`log <Logger>`**.
+The main interface is the the magic :class:`log <twiggy.Logger.Logger>`.
 
 >>> from twiggy import log
 >>> log #doctest:+ELLIPSIS
 <twiggy.Logger.Logger object at 0x...>
 
-It works out of the box, using typical :module:`levels <Levels>`. Arbitrary levels are *not* supported.
+It works out of the box, using typical :mod:`levels <Levels>`. Arbitrary levels are *not* supported.
 
 >>> log.debug('You may not care')
 DEBUG:You may not care
@@ -53,7 +55,7 @@ INFO:user\ninput\nannoys\nus
 INFO:we
 deal
 
-Exceptions are prefixed by ``TRACE``. By default, :method:`tracing <Logger.trace>` will use the current exception, but you can also pass an exc_info tuple.
+Exceptions are prefixed by ``TRACE``. By default, :meth:`tracing <Logger.trace>` will use the current exception, but you can also pass an exc_info tuple.
 
 >>> try:
 ...     1/0
@@ -75,12 +77,12 @@ I like this chained style a lot.
 >>> log.name('benito').info('hi there')
 INFO:benito:hi there
 
-It makes :term:`structured logging` easy. Rather than stuffing fielded data in the text of your message, use :method:`~Logger.fields` to add arbitrary key-value pairs.  Output is easily parseable.
+It makes :term:`structured logging` easy. Rather than stuffing fielded data in the text of your message, use :meth:`~Logger.fields` to add arbitrary key-value pairs.  Output is easily parseable.
 
 >>> log.fields(paths=42).info('Going for a walk')
 INFO:paths=42:Going for a walk
 
-The :method:`struct` is a short cut for only logging fields. This is great for runtime statistics gathering.
+The :meth:`struct` is a short cut for only logging fields. This is great for runtime statistics gathering.
 
 >>> log.struct(paths=42, dolphins='thankful')
 INFO:dolphins=thankful:paths=42:

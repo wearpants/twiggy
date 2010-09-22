@@ -16,7 +16,7 @@ Twiggy's output side features modern, loosely coupled design.
 
 By convention, your configuration lives in a file in your application called ``twiggy_setup.py``, in a function called ``setup()``.  See an example. XXX link here! We'll be running through similar commands in a shell to demonstrate.
 
-The :data:`~twiggy.emitters` dictionary is the root of all evil. It's linked to the :data:`~twiggy.log`.::
+The :data:`~twiggy.emitters` dictionary is the root of all evil. It's linked to the :data:`~twiggy.log`.
 
 >>> from twiggy.setup import * # quick_setup, outputs, formats, filters, emitters, levels, addEmitters
 >>> emitters
@@ -28,13 +28,13 @@ You can quickly set up using quick_setup:
 >>> # in the top of your __main__:
 >>> setup()
 
-.. autofunction:: quick_setup
+.. autofunction:: twiggy.quick_setup
 
 Controlling what comes out
 ===========================
 Filters and min_level can be changed during the runnning of an app; outputters & formatters cannot; instead, remove the emitter and create a new one.
 
-You can set a min_level on Emitters::
+You can set a min_level on Emitters.
 
 >>> from twiggy import log
 >>> emitters['*'].min_level = levels.INFO
@@ -54,31 +54,25 @@ Let's reset all that:
 >>> twiggy.emitters['*'].filter = True
 >>> twiggy.emitters['*'].min_level = twiggy.Levels.DEBUG
 
-
-
-Create some outputs::
+Create some outputs
 
 >>> import sys, copy, pprint
 >>> shell_output = outputs.StreamOutputter(formats.shell_format, stream=sys.stderr)
 
 .. seealso: :class:`FileOutputter`, more useful for a real config
 
-You can add emitters easily, using the convenience :function:`addEmitters`::
+You can add emitters easily, using the convenience :func:`addEmitters`
 
 >>> addEmitters( # tuple of: emitter_name, min_level, filter, outputter
                 ("everything", levels.DEBUG, True, shell_output),
                 ("thieves", levels.INFO, filters.names("bonnie", "clyde"), shell_output))
 >>> pprint.pprint(emitters) #doctest:+ELLIPSIS
 {'everything': <twiggy.Emitter.Emitter object at 0x...>,
- 'thieves': <twiggy.Emitter.Emitter object at 0x...>}
+'thieves': <twiggy.Emitter.Emitter object at 0x...>}
 
-.. autofuction:: addEmitters
+.. autofunction:: twiggy.addEmitters
 
-
-
-
-
-:data:`twiggy.emitters` is the root. Demo :function:`twiggy.addEmitters`.
+:data:`twiggy.emitters` is the root. Demo :func:`twiggy.addEmitters`.
 
 Modern design (like django!)
 
@@ -113,14 +107,12 @@ Your app should put it's configuration in a file called ``tiwggy_setup.py`` some
 
     from twiggy.setup import * # outputs, filters, formats, levels, addEmitters
     def setup():
-        addEmitters(
-                    ...
-                    )
+    addEmitters(...)
 
 And then somewhere near the top of your main, do::
 
     import twiggy_setup
-    twiggy_setup.setup()
+    twiggy_setup.setup()    
 
 You could import alternate modules (``twiggy_setup_prod.py``), or use alternate function names (``twiggy_setup.setup_devel()``) whatever your CMS-loving heart desires!
 
@@ -134,7 +126,7 @@ a few
 
 Log-level config
 ================
-:attribute:`Logger.min_level` - for use by libraries - set to Levels.DISABLED.
+:attr:`Logger.min_level` - for use by libraries - set to Levels.DISABLED.
 
 
 Logger.filter, used to turn off stupidness
