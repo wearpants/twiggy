@@ -29,11 +29,9 @@ def quick_setup(min_level=Levels.DEBUG, file = None, msgBuffer = 0):
         file = sys.stderr
 
     if file is sys.stderr or file is sys.stdout:
-        format = Formatter.LineFormatter(conversion=Formatter.shell_conversion)
-        outputter = Outputter.StreamOutputter(format, stream=file)
+        outputter = Outputter.StreamOutputter(Formatter.shell_format, stream=file)
     else:
-        format = Formatter.LineFormatter(conversion=Formatter.line_conversion)
-        outputter = Outputter.FileOutputter(format, msgBuffer=msgBuffer, name=file, mode='a')
+        outputter = Outputter.FileOutputter(Formatter.line_format, msgBuffer=msgBuffer, name=file, mode='a')
 
     emitters['*'] = Emitter.Emitter(min_level, True, outputter)
 

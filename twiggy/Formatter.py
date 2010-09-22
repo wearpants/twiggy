@@ -1,6 +1,8 @@
+import copy
+
 from .lib import ConversionTable, Converter, iso8601time
 
-# a default converter
+#: a default line-oriented converter
 line_conversion = ConversionTable([
     Converter(key='time',
               # ISO 8601 - it sucks less!
@@ -15,15 +17,10 @@ line_conversion.genericValue = str
 line_conversion.genericItem = "{0}={1}".format
 line_conversion.aggregate = ':'.join
 
-# a converter for use in the shell - no timestamp
-shell_conversion = line_conversion.copy()
-shell_conversion.get('time').convertItem = lambda k, v: None
-
 class LineFormatter(object):
     """format a message for text-oriented output"""
 
-    def __init__(self, separator=':', traceback_prefix='\nTRACE ',
-                 conversion=line_conversion, **kwargs):
+    def __init__(self, separator=':', traceback_prefix='\nTRACE ', conversion=line_conversion):
         """
         Interesting trick:
         Setting traceback_prefix to '\\n' rolls it up to a single line.
@@ -35,6 +32,10 @@ class LineFormatter(object):
         self.separator = separator
         self.traceback_prefix = traceback_prefix
         self.conversion = conversion
+
+    # XXX test this!
+    def __copy__(self):
+        return self.__class__(self.separator, self.traceback_prefix, self.conversion.copy())
 
     def __call__(self, msg):
         fields = self.format_fields(msg)
@@ -59,3 +60,12 @@ class LineFormatter(object):
 
     def format_fields(self, msg):
         return self.conversion.convert(msg.fields)
+
+## some useful default objects
+
+#: a decent-looking formatter for line-oriented output
+line_format = LineFormatter(conversion=line_conversion)
+
+#: a format for use in the shell - no timestamp
+shell_format = copy.copy(line_format)
+shell_format.conversion.get('time').convertItem = lambda k, v: None
