@@ -99,4 +99,27 @@ Chained style is awesome:
 >>> log.name('donjuan').fields(pants='sexy').info("hello, {who} want to {what}?", who='ladies', what='dance')
 INFO:donjuan:pants=sexy:hello, ladies want to dance?
 
+*************************
+Sample Log
+*************************
+Routed to a file, the above produces the following::
 
+    2010-03-28T00:23:34:DEBUG:You may not care
+    2010-03-28T00:23:34:ERROR:OMFG! Pants on fire!
+    2010-03-28T00:23:34:INFO:I like bikes
+    2010-03-28T00:23:34:INFO:I wear pants on my legs
+    2010-03-28T00:23:34:DEBUG:alfredo:hello
+    2010-03-28T00:23:34:INFO:user\ninput\nannoys\nus
+    2010-03-28T00:23:34:INFO:we
+    deal
+    2010-03-28T00:23:34:WARNING:oh noes
+    TRACE Traceback (most recent call last):
+    TRACE   File "futz.py", line 35, in <module>
+    TRACE     1/0
+    TRACE ZeroDivisionError: integer division or modulo by zero
+    2010-03-28T00:23:34:INFO:benito:hi there
+    2010-03-28T00:23:34:INFO:paths=42:Going for a walk
+    2010-03-28T00:23:34:INFO:dolphins=thankful:paths=42:
+    2010-03-28T00:23:34:INFO:request_id=12345:rows=100:user=frank:frobnicating database
+    2010-03-28T00:23:34:INFO:bytes=5678:request_id=12345:sending page over tubes
+    2010-03-28T00:23:34:INFO:donjuan:pants=sexy:hello, ladies want to dance?
