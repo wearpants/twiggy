@@ -67,6 +67,10 @@ class BaseLogger(object):
 
     ##  Convenience
     def trace(self, trace='error'):
+        """enable tracing
+
+        XXX write me!
+        """
         return self.options(trace=trace)
 
     def name(self, name):

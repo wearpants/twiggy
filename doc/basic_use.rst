@@ -55,7 +55,7 @@ INFO:user\ninput\nannoys\nus
 INFO:we
 deal
 
-Exceptions are prefixed by ``TRACE``. By default, :meth:`tracing <Logger.trace>` will use the current exception, but you can also pass an exc_info tuple.
+Exceptions are prefixed by ``TRACE``. By default, :meth:`tracing <.Logger.trace>` will use the current exception, but you can also pass an exc_info tuple.
 
 >>> try:
 ...     1/0

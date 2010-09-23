@@ -10,6 +10,7 @@ Internals
 
 .. autoclass:: twiggy.Logger.Logger
     :members:
+    :inherited-members:
 
 *******************
 Writing Features
