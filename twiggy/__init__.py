@@ -10,10 +10,10 @@ import Outputter
 ## a useful default fields
 __fields = {'time':time.gmtime}
 
-#: the magic log object, for end-users
+#: the magic log object
 log = Logger.Logger(__fields)
 
-#: the global emitters
+#: the global emitters dictionary
 emitters = log._emitters
 
 __internal_format = Formatter.LineFormatter(conversion=Formatter.line_conversion)

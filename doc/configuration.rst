@@ -8,6 +8,7 @@ This part discusses how to configure twiggy's output of messages.  You should do
 Quick Setup
 *******************
 
+.. autodata:: twiggy.emitters
 
 *******************
 Modern design
