@@ -90,10 +90,10 @@ INFO:dolphins=thankful:paths=42:
 Each call to ``fields`` or ``options`` creates a new, independent log instance that inherits all of the data of the parent.  This incremental binding can be useful for :ref:`webapps<wsgi-support>`.
 
 >>> webapp_log = log.name("myblog")
->>> per_request_log = webapp_log.fields(request_id='12345')
->>> per_request_log.fields(rows=100, user='frank').info('frobnicating database')
+>>> current_request_log = webapp_log.fields(request_id='12345')
+>>> current_request_log.fields(rows=100, user='frank').info('frobnicating database')
 INFO:myblog:request_id=12345:rows=100:user=frank:frobnicating database
->>> per_request_log.fields(bytes=5678).info('sending page over tubes')
+>>> current_request_log.fields(bytes=5678).info('sending page over tubes')
 INFO:myblog:bytes=5678:request_id=12345:sending page over tubes
 >>> another_log = webapp_log.fields(request_id='67890')
 >>> another_log.debug('Client connected')
@@ -107,7 +107,7 @@ INFO:donjuan:pants=sexy:hello, ladies want to dance?
 *************************
 Sample Log
 *************************
-Routed to a file, the above produces the following::
+Routed to a `file <.FileOutputter>`, the above produces the following::
 
     2010-03-28T14:23:34:DEBUG:You may not care
     2010-03-28T14:23:34:ERROR:OMFG! Pants on fire!
