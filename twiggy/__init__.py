@@ -13,7 +13,8 @@ __fields = {'time':time.gmtime}
 #: the magic log object, for end-users
 log = Logger.Logger(__fields)
 
-emitters = log.emitters
+#: the global emitters
+emitters = log._emitters
 
 __internal_format = Formatter.LineFormatter(conversion=Formatter.line_conversion)
 __internal_outputter = Outputter.StreamOutputter(__internal_format, stream=sys.stderr)

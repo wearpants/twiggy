@@ -130,7 +130,7 @@ class Logger(BaseLogger):
     :ivar filter: .. function:: filter(msg) -> bool
     """
 
-    __slots__ = ['emitters', 'filter']
+    __slots__ = ['_emitters', 'filter']
 
     @classmethod
     def addFeature(cls, func, name=None):
@@ -149,7 +149,7 @@ class Logger(BaseLogger):
     def __init__(self, fields = None, options = None, emitters = None,
                  min_level = None, filter = None):
         super(Logger, self).__init__(fields, options, min_level)
-        self.emitters = emitters if emitters is not None else {}
+        self._emitters = emitters if emitters is not None else {}
         self.filter = filter if filter is not None else lambda format_spec: True
 
     def _clone(self):
@@ -158,7 +158,7 @@ class Logger(BaseLogger):
         Probably only for internal use.
         """
         return self.__class__(self._fields, self._options,
-                              self.emitters, self.min_level, self.filter)
+                              self._emitters, self.min_level, self.filter)
 
     @emit.info
     def struct(self, **kwargs):
@@ -176,7 +176,7 @@ class Logger(BaseLogger):
             # just continue emitting in face of filter error
 
         # XXX should we trap here too b/c of "Dictionary changed size during iteration" (or other rare errors?)
-        potential_emitters = [(name, emitter) for name, emitter in self.emitters.iteritems()
+        potential_emitters = [(name, emitter) for name, emitter in self._emitters.iteritems()
                               if level >= emitter.min_level]
 
         if not potential_emitters: return
