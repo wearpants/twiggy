@@ -25,6 +25,13 @@ internal_log = Logger.InternalLogger(__fields, outputter=__internal_outputter).n
 devel_log = Logger.InternalLogger(__fields, outputter = Outputter.NullOutputter()).name('twiggy.devel')
 
 def quick_setup(min_level=Levels.DEBUG, file = None, msgBuffer = 0):
+    """Quickly set up `emitters`.
+
+    :arg `levels.Level` min_level: lowest message level to cause output
+    :arg string file: filename to log to, or ``sys.stdout``, or ``sys.stderr``
+    :arg int msgBuffer: number of messages to buffer, see `outputter.Outputter.msgBuffer`
+    """
+
     if file is None:
         file = sys.stderr
 
