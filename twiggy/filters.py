@@ -93,7 +93,3 @@ class Emitter(object):
     @filter.setter
     def filter(self, f):
         self._filter = msgFilter(f)
-
-    @filter.deleter
-    def filter(self):
-        del self._filter

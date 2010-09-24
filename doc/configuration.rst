@@ -127,7 +127,8 @@ a few
 
 Log-level config
 ================
-:attr:`Logger.min_level` - for use by libraries - set to Levels.DISABLED.
+Library should be silent by default - set :attr:`Logger.min_level` to `Levels.Disabled`
+ 
 
 
 Logger.filter, used to turn off stupidness

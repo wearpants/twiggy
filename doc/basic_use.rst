@@ -24,7 +24,7 @@ The main interface is the the magic :class:`log <twiggy.logger.Logger>`.
 >>> log #doctest:+ELLIPSIS
 <twiggy.logger.Logger object at 0x...>
 
-It works out of the box, using typical :mod:`levels <Levels>`. Arbitrary levels are *not* supported.
+It works out of the box, using typical :mod:`levels <Levels>`. Arbitrary levels are *not* supported. Note that when logging, you never need to refer to any level object; just use the methods on the log.
 
 >>> log.debug('You may not care')
 DEBUG:You may not care
