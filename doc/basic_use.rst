@@ -18,11 +18,11 @@ In your main.py:
 ****************
 Logging Messages
 ****************
-The main interface is the the magic :class:`log <twiggy.Logger.Logger>`.
+The main interface is the the magic :class:`log <twiggy.logger.Logger>`.
 
 >>> from twiggy import log
 >>> log #doctest:+ELLIPSIS
-<twiggy.Logger.Logger object at 0x...>
+<twiggy.logger.Logger object at 0x...>
 
 It works out of the box, using typical :mod:`levels <Levels>`. Arbitrary levels are *not* supported.
 

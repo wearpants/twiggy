@@ -27,7 +27,7 @@ Logging Messages
 Main interface is the the magic **log**:
 
 >>> log #doctest:+ELLIPSIS
-<twiggy.Logger.Logger object at 0x...>
+<twiggy.logger.Logger object at 0x...>
 
 It works out of the box, using standard levels:
 

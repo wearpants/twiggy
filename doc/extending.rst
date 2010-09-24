@@ -8,7 +8,7 @@ the :data:`~twiggy.devel_log`
 Internals
 *******************
 
-.. autoclass:: twiggy.Logger.Logger
+.. autoclass:: twiggy.logger.Logger
     :members:
     :inherited-members:
 
