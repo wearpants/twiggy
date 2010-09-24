@@ -8,7 +8,7 @@ from .Message import Message
 from .lib import iso8601time
 import twiggy as _twiggy
 import Levels
-import Outputter
+import outputs
 import Formatter
 
 import sys
