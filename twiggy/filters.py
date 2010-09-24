@@ -78,13 +78,13 @@ class Emitter(object):
     .. function:: filter(msg) -> bool should_emit
     """
 
-    def __init__(self, min_level, filter, outputter):
+    def __init__(self, min_level, filter, output):
         if not isinstance(min_level, Levels.LogLevel):
             raise ValueError("Unknown min_level: {0}".format(min_level))
 
         self.min_level = min_level
         self.filter = filter
-        self._outputter = outputter
+        self._output = output
 
     @property
     def filter(self):

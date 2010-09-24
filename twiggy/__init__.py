@@ -17,13 +17,13 @@ log = logger.Logger(__fields)
 emitters = log._emitters
 
 __internal_format = Formatter.LineFormatter(conversion=Formatter.line_conversion)
-__internal_outputter = outputs.StreamOutputter(__internal_format, stream=sys.stderr)
+__internal_output = outputs.StreamOutputter(__internal_format, stream=sys.stderr)
 
 #: Internal Log - for errors/loging within twiggy
-internal_log = logger.InternalLogger(__fields, outputter=__internal_outputter).name('twiggy.internal')
+internal_log = logger.InternalLogger(__fields, output=__internal_output).name('twiggy.internal')
 
 #: Twiggy's internal log for use by developers
-devel_log = logger.InternalLogger(__fields, outputter = outputs.NullOutputter()).name('twiggy.devel')
+devel_log = logger.InternalLogger(__fields, output = outputs.NullOutputter()).name('twiggy.devel')
 
 def quick_setup(min_level=Levels.DEBUG, file = None, msgBuffer = 0):
     """Quickly set up `emitters`.
@@ -37,17 +37,17 @@ def quick_setup(min_level=Levels.DEBUG, file = None, msgBuffer = 0):
         file = sys.stderr
 
     if file is sys.stderr or file is sys.stdout:
-        outputter = outputs.StreamOutputter(Formatter.shell_format, stream=file)
+        output = outputs.StreamOutputter(Formatter.shell_format, stream=file)
     else:
-        outputter = outputs.FileOutputter(Formatter.line_format, msgBuffer=msgBuffer, name=file, mode='a')
+        output = outputs.FileOutputter(Formatter.line_format, msgBuffer=msgBuffer, name=file, mode='a')
 
-    emitters['*'] = Emitter.Emitter(min_level, True, outputter)
+    emitters['*'] = Emitter.Emitter(min_level, True, output)
 
 def addEmitters(*tuples):
     """add multiple emitters
 
-    ``tuples`` should be (name, min_level, filter, outputter). See
+    ``tuples`` should be (name, min_level, filter, output). See
     :class:`Emitter` for description.
     """
-    for name, min_level, filter, outputter in tuples:
-        emitters[name] = Emitter.Emitter(min_level, filter, outputter)
+    for name, min_level, filter, output in tuples:
+        emitters[name] = Emitter.Emitter(min_level, filter, output)

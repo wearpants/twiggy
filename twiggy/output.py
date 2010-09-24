@@ -89,7 +89,7 @@ class Outputter(object):
         self.__queue.join()
 
 class NullOutputter(object):
-    """An duck-typed outputter that just discards its messages"""
+    """An duck-typed output that just discards its messages"""
 
     def output(self, msg):
         pass

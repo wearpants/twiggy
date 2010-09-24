@@ -15,7 +15,7 @@ False
 
 The internal log
 ================
-:class:`twiggy.logger.InternalLog` just has an outputter, no emitters.  Using async is highly discouraged.
+:class:`twiggy.logger.InternalLog` just has an output, no emitters.  Using async is highly discouraged.
 
 ****************************
 Internal optimizations

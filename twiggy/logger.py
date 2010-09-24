@@ -100,21 +100,21 @@ class BaseLogger(object):
 
 class InternalLogger(BaseLogger):
     """
-    :ivar outputter: an outputtter to write to
-    :type outputter: Outputter
+    :ivar output: an outputtter to write to
+    :type output: Outputter
     """
 
-    __slots__ = ['outputter']
+    __slots__ = ['output']
 
 
-    def __init__(self, fields = None, options = None, min_level = None, outputter = None):
+    def __init__(self, fields = None, options = None, min_level = None, output = None):
         super(InternalLogger, self).__init__(fields, options)
-        # XXX clobber this assert and make outputter mandatory?
-        assert outputter is not None
-        self.outputter = outputter
+        # XXX clobber this assert and make output mandatory?
+        assert output is not None
+        self.output = output
 
     def _clone(self):
-        return self.__class__(self._fields, self._options, self.min_level, self.outputter)
+        return self.__class__(self._fields, self._options, self.min_level, self.output)
 
     def _emit(self, level, format_spec = '',  *args, **kwargs):
         if level < self.min_level: return
@@ -125,7 +125,7 @@ class InternalLogger(BaseLogger):
                 msg = None
                 raise
             else:
-                self.outputter.output(msg)
+                self.output.output(msg)
         except StandardError:
             print>>sys.stderr, iso8601time(), "Error in twiggy internal log! Something is serioulsy broken."
             print>>sys.stderr, "Offending message:", repr(msg)
@@ -195,16 +195,16 @@ class Logger(BaseLogger):
                                       level, format_spec, self._fields, self._options, args, kwargs)
             return
 
-        outputters = set()
+        outputs = set()
         for name, emitter in potential_emitters:
             try:
                 include = emitter.filter(msg)
             except StandardError:
                 _twiggy.internal_log.trace().info("Error filtering with emitter {0}. Message: {1!r}", name, msg)
             else:
-                if include: outputters.add(emitter._outputter)
+                if include: outputs.add(emitter._output)
 
-        for o in outputters:
+        for o in outputs:
             try:
                 o.output(msg)
             except StandardError:
