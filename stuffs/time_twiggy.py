@@ -1,4 +1,4 @@
-import twiggy.Emitter
+import twiggy.filters
 
 import tempfile
 import os

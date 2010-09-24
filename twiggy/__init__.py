@@ -3,7 +3,7 @@ import time
 import sys
 
 import logger
-import Emitter
+import filters
 import formats
 import outputs
 
@@ -41,7 +41,7 @@ def quick_setup(min_level=Levels.DEBUG, file = None, msgBuffer = 0):
     else:
         output = outputs.FileOutput(formats.line_format, msgBuffer=msgBuffer, name=file, mode='a')
 
-    emitters['*'] = Emitter.Emitter(min_level, True, output)
+    emitters['*'] = filters.Emitter(min_level, True, output)
 
 def addEmitters(*tuples):
     """add multiple emitters
@@ -50,4 +50,4 @@ def addEmitters(*tuples):
     :class:`Emitter` for description.
     """
     for name, min_level, filter, output in tuples:
-        emitters[name] = Emitter.Emitter(min_level, filter, output)
+        emitters[name] = filters.Emitter(min_level, filter, output)

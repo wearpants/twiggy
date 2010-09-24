@@ -68,8 +68,8 @@ You can add emitters easily, using the convenience :func:`addEmitters`
                 ("everything", levels.DEBUG, True, shell_output),
                 ("thieves", levels.INFO, filters.names("bonnie", "clyde"), shell_output))
 >>> pprint.pprint(emitters) #doctest:+ELLIPSIS
-{'everything': <twiggy.Emitter.Emitter object at 0x...>,
-'thieves': <twiggy.Emitter.Emitter object at 0x...>}
+{'everything': <twiggy.filters.Emitter object at 0x...>,
+'thieves': <twiggy.filters.Emitter object at 0x...>}
 
 .. autofunction:: twiggy.addEmitters
 

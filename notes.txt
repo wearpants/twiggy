@@ -68,7 +68,7 @@ Emitting Messages
 Emitters are loosely coupled:
 
 >>> twiggy.emitters #doctest:+ELLIPSIS
-{'*': <twiggy.Emitter.Emitter object at 0x...>}
+{'*': <twiggy.filters.Emitter object at 0x...>}
 
 You can set a min_level on Emitters:
 
