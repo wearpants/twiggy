@@ -18,7 +18,7 @@ class Output(object):
     integer means an unlimited buffer, a positive integer is the size
     of the buffer.
 
-    :arg format: a callable (probably a Formatter) taking a Message and
+    :arg format: a callable (probably a Format) taking a Message and
     formatting it for output.
 
     :cvar use_locks: use locks when running in a synchronous,

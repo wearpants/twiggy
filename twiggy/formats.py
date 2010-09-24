@@ -17,7 +17,7 @@ line_conversion.genericValue = str
 line_conversion.genericItem = "{0}={1}".format
 line_conversion.aggregate = ':'.join
 
-class LineFormatter(object):
+class LineFormat(object):
     """format a message for text-oriented output"""
 
     def __init__(self, separator=':', traceback_prefix='\nTRACE ', conversion=line_conversion):
@@ -64,7 +64,7 @@ class LineFormatter(object):
 ## some useful default objects
 
 #: a decent-looking formatter for line-oriented output
-line_format = LineFormatter(conversion=line_conversion)
+line_format = LineFormat(conversion=line_conversion)
 
 #: a format for use in the shell - no timestamp
 shell_format = copy.copy(line_format)

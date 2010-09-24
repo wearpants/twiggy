@@ -16,7 +16,7 @@ log = logger.Logger(__fields)
 #: the global emitters dictionary
 emitters = log._emitters
 
-__internal_format = formats.LineFormatter(conversion=formats.line_conversion)
+__internal_format = formats.LineFormat(conversion=formats.line_conversion)
 __internal_output = outputs.StreamOutput(__internal_format, stream=sys.stderr)
 
 #: Internal Log - for errors/loging within twiggy
