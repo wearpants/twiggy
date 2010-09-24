@@ -107,7 +107,7 @@ INFO:donjuan:pants=sexy:hello, ladies want to dance?
 *************************
 Sample Log
 *************************
-Routed to a `file <.FileOutputter>`, the above produces the following::
+Routed to a `file <.FileOutput>`, the above produces the following::
 
     2010-03-28T14:23:34:DEBUG:You may not care
     2010-03-28T14:23:34:ERROR:OMFG! Pants on fire!

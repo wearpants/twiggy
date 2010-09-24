@@ -18,7 +18,7 @@ Writing Features
 How to do that
 
 *******************
-Writing Outputters
+Writing Outputs
 *******************
 How to do that
 

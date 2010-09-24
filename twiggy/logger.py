@@ -101,7 +101,7 @@ class BaseLogger(object):
 class InternalLogger(BaseLogger):
     """
     :ivar output: an outputtter to write to
-    :type output: Outputter
+    :type output: Output
     """
 
     __slots__ = ['output']

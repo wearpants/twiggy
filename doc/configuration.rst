@@ -58,9 +58,9 @@ Let's reset all that:
 Create some outputs
 
 >>> import sys, copy, pprint
->>> shell_output = outputs.StreamOutputter(formats.shell_format, stream=sys.stderr)
+>>> shell_output = outputs.StreamOutput(formats.shell_format, stream=sys.stderr)
 
-.. seealso: :class:`FileOutputter`, more useful for a real config
+.. seealso: :class:`FileOutput`, more useful for a real config
 
 You can add emitters easily, using the convenience :func:`addEmitters`
 
@@ -89,7 +89,7 @@ Filters
 =======
 take mesg, return bool. names, glob_names
 
-Outputters
+Outputs
 ==========
 paired with a formatter, do work of writing
 
