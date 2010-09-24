@@ -9,7 +9,7 @@ from .lib import iso8601time
 import twiggy as _twiggy
 import Levels
 import outputs
-import Formatter
+import formats
 
 import sys
 import time

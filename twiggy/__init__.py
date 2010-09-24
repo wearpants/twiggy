@@ -4,7 +4,7 @@ import sys
 
 import logger
 import Emitter
-import Formatter
+import formats
 import outputs
 
 ## a useful default fields
@@ -16,7 +16,7 @@ log = logger.Logger(__fields)
 #: the global emitters dictionary
 emitters = log._emitters
 
-__internal_format = Formatter.LineFormatter(conversion=Formatter.line_conversion)
+__internal_format = formats.LineFormatter(conversion=formats.line_conversion)
 __internal_output = outputs.StreamOutput(__internal_format, stream=sys.stderr)
 
 #: Internal Log - for errors/loging within twiggy
@@ -37,9 +37,9 @@ def quick_setup(min_level=Levels.DEBUG, file = None, msgBuffer = 0):
         file = sys.stderr
 
     if file is sys.stderr or file is sys.stdout:
-        output = outputs.StreamOutput(Formatter.shell_format, stream=file)
+        output = outputs.StreamOutput(formats.shell_format, stream=file)
     else:
-        output = outputs.FileOutput(Formatter.line_format, msgBuffer=msgBuffer, name=file, mode='a')
+        output = outputs.FileOutput(formats.line_format, msgBuffer=msgBuffer, name=file, mode='a')
 
     emitters['*'] = Emitter.Emitter(min_level, True, output)
 
