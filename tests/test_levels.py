@@ -1,15 +1,15 @@
 import unittest2
-from twiggy import Levels
+from twiggy import levels
 
 class LevelTestCase(unittest2.TestCase):
-    
+
     def test_name2level(self):
-        assert Levels.name2level('debug') is Levels.DEBUG
-        assert Levels.name2level('Debug') is Levels.DEBUG
-    
+        assert levels.name2level('debug') is levels.DEBUG
+        assert levels.name2level('Debug') is levels.DEBUG
+
     def test_ordering(self):
-        assert Levels.DEBUG < Levels.INFO
-        assert Levels.INFO < Levels.WARNING
-        assert Levels.WARNING < Levels.ERROR
-        assert Levels.ERROR < Levels.CRITICAL
-        assert Levels.CRITICAL < Levels.DISABLED
+        assert levels.DEBUG < levels.INFO
+        assert levels.INFO < levels.WARNING
+        assert levels.WARNING < levels.ERROR
+        assert levels.ERROR < levels.CRITICAL
+        assert levels.CRITICAL < levels.DISABLED

@@ -72,7 +72,7 @@ Emitters are loosely coupled:
 
 You can set a min_level on Emitters:
 
->>> twiggy.emitters['*'].min_level = twiggy.Levels.INFO
+>>> twiggy.emitters['*'].min_level = twiggy.levels.INFO
 >>> log.debug("Help, help I'm being suppressed")
 >>> log.info("I'm not quite dead yet")
 INFO:I'm not quite dead yet
@@ -87,7 +87,7 @@ INFO:Got my pants on
 Let's reset all that:
 
 >>> twiggy.emitters['*'].filter = True
->>> twiggy.emitters['*'].min_level = twiggy.Levels.DEBUG
+>>> twiggy.emitters['*'].min_level = twiggy.levels.DEBUG
 
 Better output
 +++++++++++++
@@ -186,7 +186,7 @@ Optimizations
 +++++++++++++
 As an optimization, a min_level can be set on loggers:
 
->>> mylog.min_level = twiggy.Levels.INFO
+>>> mylog.min_level = twiggy.levels.INFO
 >>> mylog.info("You see this")
 INFO:alfredo:You see this
 >>> mylog.debug("This is hidden")

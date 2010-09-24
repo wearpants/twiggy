@@ -74,7 +74,7 @@ log.fields(pid=os.getpid).info("I'm in thread {0}", thread_name)
 
 ## Optimizations
 # loggers can take a min_level
-mylog.min_level = twiggy.Levels.INFO
+mylog.min_level = twiggy.levels.INFO
 mylog.info("You see this")
 mylog.debug("This is hidden")
 

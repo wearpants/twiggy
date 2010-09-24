@@ -7,7 +7,7 @@ Loggers!
 from .Message import Message
 from .lib import iso8601time
 import twiggy as _twiggy
-import Levels
+import levels
 import outputs
 import formats
 
@@ -31,11 +31,11 @@ def emit(level):
         return wrapper
     return decorator
 
-emit.debug = emit(Levels.DEBUG)
-emit.info = emit(Levels.INFO)
-emit.warning = emit(Levels.WARNING)
-emit.error = emit(Levels.ERROR)
-emit.critical = emit(Levels.CRITICAL)
+emit.debug = emit(levels.DEBUG)
+emit.info = emit(levels.INFO)
+emit.warning = emit(levels.WARNING)
+emit.error = emit(levels.ERROR)
+emit.critical = emit(levels.CRITICAL)
 
 class BaseLogger(object):
     __slots__ = ['_fields', '_options', 'min_level']
@@ -49,7 +49,7 @@ class BaseLogger(object):
         """
         self._fields = fields.copy() if fields is not None else {}
         self._options = options.copy() if options is not None else Message._default_options.copy()
-        self.min_level = min_level if min_level is not None else Levels.DEBUG
+        self.min_level = min_level if min_level is not None else levels.DEBUG
 
     def _clone(self):
         return self.__class__(self._fields, self._options, self.min_level)
@@ -84,19 +84,19 @@ class BaseLogger(object):
 
     ## Do something
     def debug(self, *args, **kwargs):
-        self._emit(Levels.DEBUG, *args, **kwargs)
+        self._emit(levels.DEBUG, *args, **kwargs)
 
     def info(self, *args, **kwargs):
-        self._emit(Levels.INFO, *args, **kwargs)
+        self._emit(levels.INFO, *args, **kwargs)
 
     def warning(self, *args, **kwargs):
-        self._emit(Levels.WARNING, *args, **kwargs)
+        self._emit(levels.WARNING, *args, **kwargs)
 
     def error(self, *args, **kwargs):
-        self._emit(Levels.ERROR, *args, **kwargs)
+        self._emit(levels.ERROR, *args, **kwargs)
 
     def critical(self, *args, **kwargs):
-        self._emit(Levels.CRITICAL, *args, **kwargs)
+        self._emit(levels.CRITICAL, *args, **kwargs)
 
 class InternalLogger(BaseLogger):
     """

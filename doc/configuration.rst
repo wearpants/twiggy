@@ -53,7 +53,7 @@ INFO:Got my pants on
 Let's reset all that:
 
 >>> twiggy.emitters['*'].filter = True
->>> twiggy.emitters['*'].min_level = twiggy.Levels.DEBUG
+>>> twiggy.emitters['*'].min_level = twiggy.levels.DEBUG
 
 Create some outputs
 
@@ -127,7 +127,7 @@ a few
 
 Log-level config
 ================
-Library should be silent by default - set :attr:`Logger.min_level` to `Levels.Disabled`
+Library should be silent by default - set :attr:`Logger.min_level` to `levels.DISABLED`
 
 
 

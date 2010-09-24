@@ -1,4 +1,4 @@
-"""Logging Levels
+"""Logging levels
 
 Levels include (increasing severity): DEBUG, INFO, WARNING, ERROR, CRITICAL
 """

@@ -13,6 +13,6 @@ API Reference
     :show-inheritance:
 
 
-.. automodule:: twiggy.Levels
+.. automodule:: twiggy.levels
     :members:
     :show-inheritance:
