@@ -1,6 +1,6 @@
 import unittest2
 
-from twiggy import filters, Message
+from twiggy import filters, message
 
 from . import make_mesg
 

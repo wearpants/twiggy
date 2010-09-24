@@ -4,7 +4,7 @@ Loggers!
 
 """
 
-from .Message import Message
+from .message import Message
 from .lib import iso8601time
 import twiggy as _twiggy
 import levels

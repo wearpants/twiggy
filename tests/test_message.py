@@ -1,7 +1,7 @@
 import unittest2
 
 import twiggy.levels
-from twiggy.Message import Message
+from twiggy.message import Message
 
 from . import make_mesg
 

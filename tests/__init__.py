@@ -1,4 +1,4 @@
-from twiggy.Message import Message
+from twiggy.message import Message
 import twiggy
 
 def make_mesg():
