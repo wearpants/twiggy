@@ -23,7 +23,7 @@ Writing Outputs
 How to do that
 
 *******************
-Writing Formatters
+Writing formats
 *******************
 How to do that, including :class:`~twiggy.lib.ConversionTable`
 

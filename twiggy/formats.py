@@ -63,7 +63,7 @@ class LineFormat(object):
 
 ## some useful default objects
 
-#: a decent-looking formatter for line-oriented output
+#: a decent-looking format for line-oriented output
 line_format = LineFormat(conversion=line_conversion)
 
 #: a format for use in the shell - no timestamp

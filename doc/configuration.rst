@@ -33,7 +33,7 @@ You can quickly set up using quick_setup:
 
 Controlling what comes out
 ===========================
-Filters and min_level can be changed during the runnning of an app; outputs & formatters cannot; instead, remove the emitter and create a new one.
+Filters and min_level can be changed during the runnning of an app; outputs & formats cannot; instead, remove the emitter and create a new one.
 
 You can set a min_level on Emitters.
 
@@ -91,9 +91,9 @@ take mesg, return bool. names, glob_names
 
 Outputs
 ==========
-paired with a formatter, do work of writing
+paired with a format, do work of writing
 
-Formatter
+format
 ==========
 <mumble>
 
