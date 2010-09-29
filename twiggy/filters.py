@@ -14,8 +14,10 @@ def msgFilter(x):
     :string: compiled into a regex
     :regex: match()ed against the message text
     :callable: returned as is
+    :list: apply `msgFilter` to each element, and ``all()`` the results
 
     """
+    # XXX replace lambdas with nicely-named functions, for debugging
     if x is None:
         return lambda msg: True
     elif isinstance(x, bool):
@@ -26,6 +28,8 @@ def msgFilter(x):
         return regex_wrapper(x)
     elif callable(x): # XXX test w/ inspect.getargs here?
         return x
+    elif isinstance(x, (list, tuple)):
+        raise NotImplementedError # XXX write me!
     else:
         # XXX a dict could be used to filter on fields (w/ callables?)
         raise ValueError("Unknown filter: {0!r}".format(x))
@@ -35,6 +39,7 @@ def regex_wrapper(regexp):
     def wrapped(msg):
         return regexp.match(msg.text) is not None
     return wrapped
+
 
 def names(*names):
     """returns a filter, which gives True if the messsage's name equals any of those provided
