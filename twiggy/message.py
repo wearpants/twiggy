@@ -6,6 +6,8 @@ from string import Template
 
 class Message(object):
 
+    __slots__ = ['format_spec', 'args', 'kwargs', 'fields', 'suppress_newlines', 'traceback', 'style', 'text']
+
     # don't change these!
     _default_options = {'suppress_newlines' : True,
                         'trace' : None,
