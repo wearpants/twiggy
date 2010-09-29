@@ -5,6 +5,26 @@ import traceback
 from string import Template
 
 class Message(object):
+    """A log message.  All attributes are read-only.
+
+    :ivar string format_spec: the human-readable message template. Should match the ``style`` in options.
+    :ivar tuple args: substitution arguments for ``format_spec``.
+    :ivar tuple kwargs: substitution keyword arguments for ``format_spec``.
+    :ivar dict fields: structured logging fields.  Keys are string, values are arbitrary. A ``level`` item is required.
+    :ivar bool suppress_newlines: should newlines be escaped in output
+    :ivar traceback traceback: a traceback object to log, or None.
+    :ivar string style: the style of template used for ``format_spec``. One of ``braces``, ``percent``, ``dollar``.
+    :ivar string text: the filled-in template
+
+
+    .. _message-options:
+    The constructor takes a dict ``options`` to control message creation.  In addition to `style` and `suppress_newlines`, this class recognizes the following options:
+
+        :trace: control traceback inclusion.  Either a traceback tuple, or one of the strings ``always``, ``error``, in which case a traceback will be extracted from the current stack frame.
+    
+    """
+
+
 
     __slots__ = ['format_spec', 'args', 'kwargs', 'fields', 'suppress_newlines', 'traceback', 'style', 'text']
 
@@ -17,6 +37,10 @@ class Message(object):
 
     def __init__(self, level, format_spec, fields, options,
                  *args, **kwargs):
+        """
+        :arg dict options: a dictionary of options to control message creation. See `message-options`.
+        """
+
 
         self.format_spec = format_spec
         self.args = args
@@ -37,7 +61,7 @@ class Message(object):
             else:
                 self.traceback = traceback.format_exc()
         elif trace == "always":
-            pass
+            raise NotImplementedError
             # XXX build a traceback using getframe
             # XXX maybe an option to just provide current frame info instead of full stack?
         elif trace is not None:

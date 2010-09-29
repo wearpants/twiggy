@@ -16,3 +16,8 @@ API Reference
 .. automodule:: twiggy.levels
     :members:
     :show-inheritance:
+
+
+.. automodule:: twiggy.message
+    :members:
+    :show-inheritance:
