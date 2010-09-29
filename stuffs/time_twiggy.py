@@ -1,6 +1,5 @@
 #! /usr/bin/env python
 import twiggy
-print twiggy.__file__
 
 import tempfile
 import os
