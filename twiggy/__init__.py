@@ -6,6 +6,7 @@ import logger
 import filters
 import formats
 import outputs
+import levels
 
 ## a useful default fields
 __fields = {'time':time.gmtime}
