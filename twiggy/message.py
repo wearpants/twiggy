@@ -16,12 +16,14 @@ class Message(object):
     :ivar string style: the style of template used for ``format_spec``. One of ``braces``, ``percent``, ``dollar``.
     :ivar string text: the filled-in template
 
+    .. _dynamic-messages:
+    Any callables passed in fields, args or kwargs will be called and the returned value used instead.
 
     .. _message-options:
     The constructor takes a dict ``options`` to control message creation.  In addition to `style` and `suppress_newlines`, this class recognizes the following options:
 
         :trace: control traceback inclusion.  Either a traceback tuple, or one of the strings ``always``, ``error``, in which case a traceback will be extracted from the current stack frame.
-    
+
     """
 
 
@@ -80,6 +82,9 @@ class Message(object):
         self.substitute() # XXX it'd be nice to do this only if we're going to emit
 
     def substitute(self):
+        """Populate `text` by calling callables in `fields`, `args` and `kwargs`, and substituting into `format_spec`.
+        """
+    
         ## call any callables
         for k, v in self.fields.iteritems():
             if callable(v):
@@ -115,8 +120,10 @@ class Message(object):
 
     @property
     def name(self):
+        """Shortcut for ``fields['name']``. Empty string if no name."""
         return self.fields.get('name', '')
 
     @property
     def level(self):
+        """Shortcut for ``fields['level']``"""
         return self.fields['level']
