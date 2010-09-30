@@ -6,7 +6,7 @@ import os
 
 fname = tempfile.mktemp()
 
-twiggy.quick_setup(twiggy.levels.DEBUG, fname)
+twiggy.quickSetup(twiggy.levels.DEBUG, fname)
 import timeit
 
 loops = 100000

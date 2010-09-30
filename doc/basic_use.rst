@@ -11,7 +11,7 @@ Setup is simple
 In your main.py:
 
 >>> import twiggy
->>> twiggy.quick_setup()
+>>> twiggy.quickSetup()
 
 .. seealso:: Full :doc:`configuration` details.
 

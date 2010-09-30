@@ -1,4 +1,4 @@
-__all__=['log', 'emitters', 'addEmitters', 'devel_log', 'filters', 'formats', 'outputs', 'levels', 'quick_setup']
+__all__=['log', 'emitters', 'addEmitters', 'devel_log', 'filters', 'formats', 'outputs', 'levels', 'quickSetup']
 import time
 import sys
 
@@ -26,7 +26,7 @@ internal_log = logger.InternalLogger(__fields, output=__internal_output).name('t
 #: Twiggy's internal log for use by developers
 devel_log = logger.InternalLogger(__fields, output = outputs.NullOutput()).name('twiggy.devel')
 
-def quick_setup(min_level=levels.DEBUG, file = None, msg_buffer = 0):
+def quickSetup(min_level=levels.DEBUG, file = None, msg_buffer = 0):
     """Quickly set up `emitters`.
 
     :arg `levels.Level` min_level: lowest message level to cause output

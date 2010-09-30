@@ -19,17 +19,17 @@ By convention, your configuration lives in a file in your application called ``t
 
 The :data:`~twiggy.emitters` dictionary is the root of all evil. It's linked to the :data:`~twiggy.log`.
 
->>> from twiggy.setup import * # quick_setup, outputs, formats, filters, emitters, levels, addEmitters
+>>> from twiggy.setup import * # quickSetup, outputs, formats, filters, emitters, levels, addEmitters
 >>> emitters
 {}
 
-You can quickly set up using quick_setup:
+You can quickly set up using quickSetup:
 
->>> setup = quick_setup()
+>>> setup = quickSetup()
 >>> # in the top of your __main__:
 >>> setup()
 
-.. autofunction:: twiggy.quick_setup
+.. autofunction:: twiggy.quickSetup
 
 Controlling what comes out
 ===========================
