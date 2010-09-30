@@ -17,20 +17,14 @@ log = logger.Logger(__fields)
 #: the global emitters dictionary
 emitters = log._emitters
 
-__internal_format = formats.LineFormat(conversion=formats.line_conversion)
-__internal_output = outputs.StreamOutput(__internal_format, stream=sys.stderr)
+__internal_format = formats.LineFormat(conversion = formats.line_conversion)
+__internal_output = outputs.StreamOutput(format = __internal_format, stream=sys.stderr)
 
 #: Internal Log - for errors/loging within twiggy
-internal_log = logger.InternalLogger(__fields, output=__internal_output).name('twiggy.internal')
+internal_log = logger.InternalLogger(fields = __fields, output=__internal_output).name('twiggy.internal')
 
 #: Twiggy's internal log for use by developers
-devel_log = logger.InternalLogger(__fields, output = outputs.NullOutput()).name('twiggy.devel')
-
-#: Internal log for unittesting
-test_log = logger.InternalLogger({}, output = outputs.DequeOutput())
-
-#: collected test messages
-test_messages = test_log.output.deque
+devel_log = logger.InternalLogger(fields = __fields, output = outputs.NullOutput()).name('twiggy.devel')
 
 def quickSetup(min_level=levels.DEBUG, file = None, msg_buffer = 0):
     """Quickly set up `emitters`.

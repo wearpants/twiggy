@@ -38,6 +38,15 @@ emit.error = emit(levels.ERROR)
 emit.critical = emit(levels.CRITICAL)
 
 class BaseLogger(object):
+    """Base class for loggers
+
+    :ivar dict _fields: dictionary of bound fields for structured logging
+    :ivar dict _options: dictionary of bound options. See `Message.options`.
+    :ivar levels.Level min_level: minimum level for which to emit. For optimization purposes only.
+
+    """
+
+
     __slots__ = ['_fields', '_options', 'min_level']
 
     __valid_options = set(Message._default_options)
@@ -52,18 +61,20 @@ class BaseLogger(object):
         self.min_level = min_level if min_level is not None else levels.DEBUG
 
     def _clone(self):
-        return self.__class__(self._fields, self._options, self.min_level)
+        return self.__class__(fields = self._fields, options = self._options, min_level = self.min_level)
 
     def _emit(self):
         raise NotImplementedError
 
     ## The Magic
     def fields(self, **kwargs):
+        """bind fields for structured logging"""
         clone = self._clone()
         clone._fields.update(kwargs)
         return clone
 
     def options(self, **kwargs):
+        """bind options for message creation.  See `Message.options`"""
         bad_options = set(kwargs) - self.__valid_options
         if bad_options:
             raise ValueError("Invalid options {0!r}".format(tuple(bad_options)))
@@ -73,13 +84,11 @@ class BaseLogger(object):
 
     ##  Convenience
     def trace(self, trace='error'):
-        """enable tracing
-
-        XXX write me!
-        """
+        """convenience method to enable traceback logging.  See `Message.options`."""
         return self.options(trace=trace)
 
     def name(self, name):
+        """convenvience method to bind ``name`` field"""
         return self.fields(name=name)
 
     ## Do something
@@ -99,24 +108,25 @@ class BaseLogger(object):
         self._emit(levels.CRITICAL, *args, **kwargs)
 
 class InternalLogger(BaseLogger):
-    """
-    :ivar output: an outputtter to write to
-    :type output: Output
+    """Special-purpose logger for internal uses.
+
+    :ivar `Output` output: an output to write to
     """
 
     __slots__ = ['output']
 
 
-    def __init__(self, fields = None, options = None, min_level = None, output = None):
+    def __init__(self, output, fields = None, options = None, min_level = None):
         super(InternalLogger, self).__init__(fields, options)
-        # XXX clobber this assert and make output mandatory?
-        assert output is not None
         self.output = output
 
     def _clone(self):
-        return self.__class__(self._fields, self._options, self.min_level, self.output)
+        return self.__class__(fields = self._fields, options = self._options,
+                              min_level = self.min_level, output = self.output)
 
     def _emit(self, level, format_spec = '',  *args, **kwargs):
+        """does work of emitting - for internal use"""
+
         if level < self.min_level: return
         try:
             try:
@@ -132,29 +142,47 @@ class InternalLogger(BaseLogger):
             traceback.print_exc(file = sys.stderr)
 
 class Logger(BaseLogger):
-    """
+    """Logger for end-users.  The magic `log <twiggy.log>`
+
     :ivar filter: .. function:: filter(msg) -> bool
     """
 
     __slots__ = ['_emitters', 'filter']
 
+    def _feature_noop(self, *args, **kwargs):
+        return self._clone()
+
     @classmethod
     def addFeature(cls, func, name=None):
+        """add a feature to the class
+
+        :arg func: the function to add
+        :arg string name: the name to add it under. If None, use the function's name.
+        """
         name = name if name is not None else func.__name__
         setattr(cls, name, func)
 
     @classmethod
     def disableFeature(cls, name):
+        """disable a feature.
+
+        :arg string name: the name of the feature to disable.  A method will still exist by this name, but it won't do anything.
+        """
         # get func directly from class dict - we don't want an unbound method.
-        setattr(cls, name, cls.__dict__['clone'])
+        setattr(cls, name, cls.__dict__['_feature_noop'])
 
     @classmethod
     def delFeature(cls, name):
+        """delete a feature entirely
+
+        :arg string name: the name of the feature to remove
+        """
         delattr(cls, name)
 
     def __init__(self, fields = None, options = None, emitters = None,
                  min_level = None, filter = None):
         super(Logger, self).__init__(fields, options, min_level)
+        #: a dict of emitters
         self._emitters = emitters if emitters is not None else {}
         self.filter = filter if filter is not None else lambda format_spec: True
 
@@ -163,15 +191,21 @@ class Logger(BaseLogger):
 
         Probably only for internal use.
         """
-        return self.__class__(self._fields, self._options,
-                              self._emitters, self.min_level, self.filter)
+        return self.__class__(fields = self._fields, options = self._options,
+                              emitters = self._emitters, min_level = self.min_level,
+                              filter = self.filter)
 
     @emit.info
     def struct(self, **kwargs):
+        """convenience method for structured logging
+
+        Sets `fields` and emits at ``info``
+        """
         return self.fields(**kwargs)
 
     ## Boring stuff
     def _emit(self, level, format_spec = '',  *args, **kwargs):
+        """does the work of emitting - for internal use"""
         # XXX should these traps be collapsed?
         if level < self.min_level: return
 
