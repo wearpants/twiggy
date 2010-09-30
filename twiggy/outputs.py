@@ -11,9 +11,9 @@ class Output(object):
 
     Outputs transparently support asynchronous logging using the
     multiprocessing module. This is off by default, as it can cause log
-    messages to be dropped. See the msgBuffer argument.
+    messages to be dropped. See the msg_buffer argument.
 
-    :arg msgBuffer: number of messages to buffer in memory when using
+    :arg msg_buffer: number of messages to buffer in memory when using
     asynchronous logging. ``0`` turns asynchronous output off, a negative
     integer means an unlimited buffer, a positive integer is the size
     of the buffer.
@@ -28,10 +28,10 @@ class Output(object):
 
     use_locks = True
 
-    def __init__(self, format, msgBuffer=0):
+    def __init__(self, format, msg_buffer=0):
         self._format = format # XXX should this default to None, meaning use class-level _default_format?
 
-        if msgBuffer == 0: # synchronous
+        if msg_buffer == 0: # synchronous
             self._lock = threading.Lock() if self.use_locks else None
             self.output = self.__sync_output
             self.close = self._close
@@ -39,7 +39,7 @@ class Output(object):
         else:
             self.output = self.__async_output
             self.close = self.__async_close
-            self.__queue = multiprocessing.JoinableQueue(msgBuffer)
+            self.__queue = multiprocessing.JoinableQueue(msg_buffer)
             self.__child = multiprocessing.Process(target=self.__child_main, args=(self,))
             self.__child.start() # XXX s.b. daemon=True? don't think so, b/c atexit instead
 
@@ -102,11 +102,11 @@ class FileOutput(Output):
 
     ``name``, ``mode``, ``buffering`` are passed to ``open(..)``
     """
-    def __init__(self, format, name, mode='a', buffering=1, msgBuffer=0):
+    def __init__(self, format, name, mode='a', buffering=1, msg_buffer=0):
         self.filename = name
         self.mode = mode
         self.buffering = buffering
-        super(FileOutput, self).__init__(format, msgBuffer)
+        super(FileOutput, self).__init__(format, msg_buffer)
 
     def _open(self):
         self.file = open(self.filename, self.mode, self.buffering)

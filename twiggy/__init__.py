@@ -26,12 +26,12 @@ internal_log = logger.InternalLogger(__fields, output=__internal_output).name('t
 #: Twiggy's internal log for use by developers
 devel_log = logger.InternalLogger(__fields, output = outputs.NullOutput()).name('twiggy.devel')
 
-def quick_setup(min_level=levels.DEBUG, file = None, msgBuffer = 0):
+def quick_setup(min_level=levels.DEBUG, file = None, msg_buffer = 0):
     """Quickly set up `emitters`.
 
     :arg `levels.Level` min_level: lowest message level to cause output
     :arg string file: filename to log to, or ``sys.stdout``, or ``sys.stderr``
-    :arg int msgBuffer: number of messages to buffer, see `outputs.Output.msgBuffer`
+    :arg int msg_buffer: number of messages to buffer, see `outputs.Output.msg_buffer`
     """
 
     if file is None:
@@ -40,7 +40,7 @@ def quick_setup(min_level=levels.DEBUG, file = None, msgBuffer = 0):
     if file is sys.stderr or file is sys.stdout:
         output = outputs.StreamOutput(formats.shell_format, stream=file)
     else:
-        output = outputs.FileOutput(formats.line_format, msgBuffer=msgBuffer, name=file, mode='a')
+        output = outputs.FileOutput(formats.line_format, msg_buffer=msg_buffer, name=file, mode='a')
 
     emitters['*'] = filters.Emitter(min_level, True, output)
 
