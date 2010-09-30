@@ -9,41 +9,81 @@ class Output(object):
 
     Multiple implementations are expected.
 
-    Outputs transparently support asynchronous logging using the
-    multiprocessing module. This is off by default, as it can cause log
-    messages to be dropped. See the msg_buffer argument.
+    :arg format: a callable taking a `Message` and formatting it for output. `None` means return the message unchanged.
 
-    :arg msg_buffer: number of messages to buffer in memory when using
-    asynchronous logging. ``0`` turns asynchronous output off, a negative
-    integer means an unlimited buffer, a positive integer is the size
-    of the buffer.
-
-    :arg format: a callable (probably a Format) taking a Message and
-    formatting it for output.
-
-    :cvar use_locks: use locks when running in a synchronous,
+    :cvar bool use_locks: use locks when running in a synchronous,
     multithreaded environment. Threadsafe subclasses may disable locking
     for higher throughput. Defaults to true.
     """
 
     use_locks = True
 
-    def __init__(self, format, msg_buffer=0):
-        self._format = format # XXX should this default to None, meaning use class-level _default_format?
+    @staticmethod
+    def _noop_format(msg):
+        """a format that that just returns the message unchanged - for internal use"""
+        return msg
 
-        if msg_buffer == 0: # synchronous
-            self._lock = threading.Lock() if self.use_locks else None
-            self.output = self.__sync_output
-            self.close = self._close
-            self._open()
-        else:
-            self.output = self.__async_output
-            self.close = self.__async_close
-            self.__queue = multiprocessing.JoinableQueue(msg_buffer)
-            self.__child = multiprocessing.Process(target=self.__child_main, args=(self,))
-            self.__child.start() # XXX s.b. daemon=True? don't think so, b/c atexit instead
-
+    def __init__(self, format=None):
+        self._format = format if format is not None else self._noop_format
+        self._sync_init()
         atexit.register(self.close)
+
+    def _sync_init(self):
+        """the guts of init - for internal use"""
+        if self.use_locks:
+            self._lock = threading.Lock()
+            self.output = self.__sync_output_locked
+        else:
+            self.output = self.__sync_output_unlocked
+
+        self.close = self._close
+        self._open()
+
+    def _open(self):
+        raise NotImplementedError
+
+    def _close(self):
+        raise NotImplementedError
+
+    def _write(self, x):
+        raise NotImplementedError
+
+    def __sync_output_locked(self, msg):
+        x = self._format(msg)
+        with self._lock:
+            self._write(x)
+
+    def __sync_output_unlocked(self, msg):
+            self._write(x)
+
+class AsyncOutput(Output):
+    """An Output with support for asynchronous logging
+
+    Mixing in this Output transparently adds support for asynchronous logging
+    using the multiprocessing module. This is off by default, as it can cause
+    log messages to be dropped. See the msg_buffer argument.
+
+    :arg int msg_buffer: number of messages to buffer in memory when using
+    asynchronous logging. ``0`` turns asynchronous output off, a negative
+    integer means an unlimited buffer, a positive integer is the size
+    of the buffer.
+    """
+
+    def __init__(self, format=None, msg_buffer=0):
+        self._format = format if format is not None else self._noop_format
+        if msg_buffer == 0:
+            self._sync_init()
+        else:
+            self._async_init(msg_buffer)
+        atexit.register(self.close)
+
+    def _async_init(self, msg_buffer):
+        """the guts of init - for internal use"""
+        self.output = self.__async_output
+        self.close = self.__async_close
+        self.__queue = multiprocessing.JoinableQueue(msg_buffer)
+        self.__child = multiprocessing.Process(target=self.__child_main, args=(self,))
+        self.__child.start() # XXX s.b. daemon=True? don't think so, b/c atexit instead
 
     # use a plain function so Windows is cool
     @staticmethod
@@ -63,23 +103,6 @@ class Output(object):
                 self.__queue.task_done()
                 break
 
-    def _open(self):
-        raise NotImplementedError
-
-    def _close(self):
-        raise NotImplementedError
-
-    def _write(self, x):
-        raise NotImplementedError
-
-    def __sync_output(self, msg):
-        x = self._format(msg)
-        if self.use_locks:
-            with self._lock:
-                self._write(x)
-        else:
-            self._write(x)
-
     def __async_output(self, msg):
         self.__queue.put_nowait(msg)
 
@@ -88,16 +111,22 @@ class Output(object):
         self.__queue.close()
         self.__queue.join()
 
-class NullOutput(object):
-    """An duck-typed output that just discards its messages"""
 
-    def output(self, msg):
+class NullOutput(Output):
+    """An output that just discards its messages"""
+
+    use_locks = False
+
+    def _open(self):
         pass
 
-    def close(self):
+    def _output(self, msg):
         pass
 
-class FileOutput(Output):
+    def _close(self):
+        pass
+
+class FileOutput(AsyncOutput):
     """Output to file
 
     ``name``, ``mode``, ``buffering`` are passed to ``open(..)``
@@ -118,7 +147,10 @@ class FileOutput(Output):
         self.file.write(x)
 
 class StreamOutput(Output):
-    """Output to an externally-managed stream."""
+    """Output to an externally-managed stream.
+
+    The stream will be written to, but otherwise left alone (i.e., it will *not* be closed).
+    """
     def __init__(self, format, stream=sys.stderr):
         self.stream = stream
         super(StreamOutput, self).__init__(format)
