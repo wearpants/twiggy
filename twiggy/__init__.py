@@ -26,6 +26,12 @@ internal_log = logger.InternalLogger(__fields, output=__internal_output).name('t
 #: Twiggy's internal log for use by developers
 devel_log = logger.InternalLogger(__fields, output = outputs.NullOutput()).name('twiggy.devel')
 
+#: Internal log for unittesting
+test_log = logger.InternalLogger({}, output = outputs.DequeOutput())
+
+#: collected test messages
+test_messages = test_log.output.deque
+
 def quickSetup(min_level=levels.DEBUG, file = None, msg_buffer = 0):
     """Quickly set up `emitters`.
 

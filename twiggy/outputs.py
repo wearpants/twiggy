@@ -2,6 +2,7 @@ import multiprocessing
 import threading
 import sys
 import atexit
+from collections import deque
 
 class Output(object):
     """
@@ -54,7 +55,8 @@ class Output(object):
             self._write(x)
 
     def __sync_output_unlocked(self, msg):
-            self._write(x)
+        x = self._format(msg)
+        self._write(x)
 
 class AsyncOutput(Output):
     """An Output with support for asynchronous logging
@@ -120,11 +122,26 @@ class NullOutput(Output):
     def _open(self):
         pass
 
-    def _output(self, msg):
+    def _write(self, msg):
         pass
 
     def _close(self):
         pass
+
+class DequeOutput(Output):
+    """an output that stuffs messages in a deque"""
+
+    use_locks = False
+
+    def _open(self):
+        self.deque = deque([])
+
+    def _write(self, msg):
+        self.deque.append(msg)
+
+    def _close(self):
+        self.deque.clear()
+
 
 class FileOutput(AsyncOutput):
     """Output to file
