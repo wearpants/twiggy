@@ -40,7 +40,7 @@ def quickSetup(min_level=levels.DEBUG, file = None, msg_buffer = 0):
     if file is sys.stderr or file is sys.stdout:
         output = outputs.StreamOutput(formats.shell_format, stream=file)
     else:
-        output = outputs.FileOutput(formats.line_format, msg_buffer=msg_buffer, name=file, mode='a')
+        output = outputs.FileOutput(file, format=formats.line_format, msg_buffer=msg_buffer, mode='a')
 
     emitters['*'] = filters.Emitter(min_level, True, output)
 

@@ -1,5 +1,5 @@
 ######################
-Configuration
+Configuring Output
 ######################
 
 This part discusses how to configure twiggy's output of messages.  You should do this once, near the start of your application's ``__main__``.
@@ -7,29 +7,78 @@ This part discusses how to configure twiggy's output of messages.  You should do
 *******************
 Quick Setup
 *******************
+To quickly configure output, use the `quickSetup` function.  Quick setup is limited to sending all messages to a file or ``sys.stderr``.  A timestamp will be prefixed when logging to a file.
 
-.. autodata:: twiggy.emitters
+.. autofunction:: twiggy.quickSetup
 
 *******************
-Modern design
+twiggy_setup.py
 *******************
 Twiggy's output side features modern, loosely coupled design.
 
-By convention, your configuration lives in a file in your application called ``twiggy_setup.py``, in a function called ``setup()``.  See an example. XXX link here! We'll be running through similar commands in a shell to demonstrate.
+By convention, your configuration lives in a file in your application called ``twiggy_setup.py``, in a function called ``twiggy_setup()``. You can of course put your configuration elsewhere, but using a separate module makes integration with configuration management systems easy.  You should import and run twiggy setup near the top of your application.  It's particularly important to set up twiggy *before spawning new processes*.
 
-The :data:`~twiggy.emitters` dictionary is the root of all evil. It's linked to the :data:`~twiggy.log`.
+A ``twiggy_setup`` function should create ouputs and use the :func:`addEmitters` convenience function to link those outputs to the log:
 
->>> from twiggy.setup import * # quickSetup, outputs, formats, filters, emitters, levels, addEmitters
->>> emitters
-{}
+.. testcode::
 
-You can quickly set up using quickSetup:
+    from twiggy import *
+    def twiggy_setup():
+        alice_output = outputs.FileOutput("alice.log", format=formats.line_format)
+        bob_output = outputs.FileOutput("bob.log", format=formats.line_format)
 
->>> setup = quickSetup()
->>> # in the top of your __main__:
->>> setup()
+        addEmitters(
+            # (name, min_level, filter, output),
+            ("alice", levels.DEBUG, None, alice_output),
+            ("betty", levels.INFO, filters.names("betty"), bob_output),
+            ("brian.*", levels.DEBUG, filters.glob_names("brian.*"), bob_output),
+            )
 
-.. autofunction:: twiggy.quickSetup
+    # near the top of your __main__
+    twiggy_setup()
+
+
+In this example, we create two log destinations: ``alice.log`` and ``bob.log``.  alice will recieve all messages, and bob will receive two sets of messages:
+
+* messages with the name field equal to ``betty`` and level >= ``INFO``
+* messages with the name field glob-matching ``brian.*``
+
+``addEmitters`` populates the `twiggy.emitters` dictionary:
+
+.. doctest::
+
+    >>> emitters.keys()
+    ['alice', 'betty', 'brian.*']
+
+:class:`Emitters <Emitter>` can be removed by deleting them from this dict. The filters and min_level may be modified during the running of the application, but outputs can *not* be changed.  Instead, remove the emitter and re-add it.
+
+.. doctest::
+
+    >>> # bump level
+    ... emitters['alice'].min_level = levels.WARNING
+    >>> # change filter
+    ... emitters['alice'].filter = filters.names('alice', 'andy')
+    >>> # remove entirely
+    ... del emitters['alice']
+
+We'll be examining the various parts in more detail.
+
+**************************
+Outputs
+**************************
+Outputs are the destinations to which log messages are written (files, databases, etc.). :mod:`Several implementations <outputs>` are provided. Once created, outputs cannot be modified.  Each output has an associated ``format``, described below.
+
+.. _async-logging
+Asynchronous Logging
+====================
+Many outputs can be configured to use a separate, dedicated process to log messages. This is known as :term:`asynchronous logging` and is enabled with the ``msg_buffer`` argument:
+
+.. autoclass:: twiggy.outputs.AsyncOutput
+
+Asynchronous mode dramatically reduces the cost of logging, as expensive formatting and writing operations are moved out of the main thread of control.
+
+.. warning: There is a slight, but non-zero, chance that messages may be lost if something goes awry with the child process.
+
 
 Controlling what comes out
 ===========================
@@ -132,5 +181,3 @@ Library should be silent by default - set :attr:`Logger.min_level` to `levels.DI
 
 
 Logger.filter, used to turn off stupidness
-
-

@@ -8,8 +8,6 @@ class Output(object):
     """
     Does the work of formatting and writing a message.
 
-    Multiple implementations are expected.
-
     :arg format: a callable taking a `Message` and formatting it for output. `None` means return the message unchanged.
 
     :cvar bool use_locks: use locks when running in a synchronous,
@@ -148,7 +146,7 @@ class FileOutput(AsyncOutput):
 
     ``name``, ``mode``, ``buffering`` are passed to ``open(..)``
     """
-    def __init__(self, format, name, mode='a', buffering=1, msg_buffer=0):
+    def __init__(self, name, format, mode='a', buffering=1, msg_buffer=0):
         self.filename = name
         self.mode = mode
         self.buffering = buffering
