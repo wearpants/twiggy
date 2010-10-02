@@ -107,81 +107,37 @@ LineFormat uses a `ConversionTable` to stringify the arbitrary fields in a messa
                              convertItem = lambda k, v: (k, v) , # gets (key, converted_value),
                              required = True)
 
+    # output messages with name 'memory' to stderr
+    addEmitters(('memory', levels.DEBUG, filters.names('memory'),
+                 outputs.StreamOutput(format = my_format))
+
 For more, refer to the documentation for :class:`ConversionTable`.
 
+***************************
+Filtering Output
+***************************
+The messages output by an emitter are determined by its ``min_level`` and ``filter``. These attributes may be changed while the application is running. The filter attribute of emitters is intelligent; you may assign strings, bools or functions and it will magically do the right thing.  Assigning a list indicates that *all* of the filters must pass for the message to be output.
 
-Controlling what comes out
-===========================
-Filters and min_level can be changed during the runnning of an app; outputs & formats cannot; instead, remove the emitter and create a new one.
+.. testcode::
 
-You can set a min_level on Emitters.
+    e = emitters['memory']
+    e.min_level = levels.WARNING
+    # True allows all messages through (None works as well)
+    e.fitler = True
+    # False blocks all messages
+    e.filter = False
+    # Strings are interpreted as regexes (regex objects ok too)
+    e.filter = "^mem.*y$"
+    # functions are passed the message; return True to emit
+    e.filter = lambda msg: msg.fields['address'] > 0xDECAF
+    # lists are all()'d
+    e.filter = ["^mem.y$", lambda msg: msg.fields['address'] > 0xDECAF]
 
->>> from twiggy import log
->>> emitters['*'].min_level = levels.INFO
->>> log.debug("Help, help I'm being suppressed")
->>> log.info("I'm not quite dead yet")
-INFO:I'm not quite dead yet
-
-You can filter on regexes, or with arbitrary functions:
-
->>> emitters['*'].filter = ".*pants.*"
->>> log.info("Got my {0} on", "pants")
-INFO:Got my pants on
->>> log.info("Got my {0} on", "shirt")
-
-Let's reset all that:
-
->>> twiggy.emitters['*'].filter = True
->>> twiggy.emitters['*'].min_level = twiggy.levels.DEBUG
-
-Create some outputs
-
->>> import sys, copy, pprint
->>> shell_output = outputs.StreamOutput(formats.shell_format, stream=sys.stderr)
-
-.. seealso: :class:`FileOutput`, more useful for a real config
-
-You can add emitters easily, using the convenience :func:`addEmitters`
-
->>> addEmitters( # tuple of: emitter_name, min_level, filter, output
-                ("everything", levels.DEBUG, True, shell_output),
-                ("thieves", levels.INFO, filters.names("bonnie", "clyde"), shell_output))
->>> pprint.pprint(emitters) #doctest:+ELLIPSIS
-{'everything': <twiggy.filters.Emitter object at 0x...>,
-'thieves': <twiggy.filters.Emitter object at 0x...>}
-
-.. autofunction:: twiggy.addEmitters
-
-:data:`twiggy.emitters` is the root. Demo :func:`twiggy.addEmitters`.
-
-Modern design (like django!)
-
-**********************
-Emitter Objects
-**********************
-
-Emitters
-========
-filter + output
-
-Filters
-=======
-take mesg, return bool. names, glob_names
-
-Outputs
-==========
-paired with a format, do work of writing
-
-format
-==========
-<mumble>
-
+For more see :mod:`~twiggy.filters`
 
 
 Log-level config
 ================
 Library should be silent by default - set :attr:`Logger.min_level` to `levels.DISABLED`
-
-
 
 Logger.filter, used to turn off stupidness
