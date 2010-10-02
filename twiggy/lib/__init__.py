@@ -59,18 +59,17 @@ class ConversionTable(list):
         will be used to create Converters)
         """
 
-        l = []
+        super(ConversionTable, self).__init__([])
         for i in seq:
             if isinstance(i, Converter):
-                l.append(i)
+                self.append(i)
             elif isinstance(i, (tuple, list)) and len(i) in (3, 4):
-                l.append(Converter(*i))
+                self.add(*i)
             elif isinstance(i, dict):
-                l.append(Converter(**i))
+                self.add(**i)
             else:
                 raise ValueError("Bad converter: {0!r}".format(i))
 
-        super(ConversionTable, self).__init__(l)
         # XXX cache converts & requireds below
 
     @staticmethod
@@ -127,3 +126,13 @@ class ConversionTable(list):
     def getAll(self, key):
         """return a list of all Converters for key"""
         return [c for c in self if c.key == key]
+
+    def add(self, *args, **kwargs):
+        """Append a `Converter`. Args & kwargs will be passed through"""
+        self.append(Converter(*args, **kwargs))
+
+    def delete(self, key):
+        """delete the *all* converters for key"""
+        for i, c in enumerate(self):
+            if c.key == key:
+                del self[i]
