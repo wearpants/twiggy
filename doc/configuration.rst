@@ -107,16 +107,7 @@ LineFormat uses a `ConversionTable` to stringify the arbitrary fields in a messa
                              convertItem = lambda k, v: (k, v) , # gets (key, converted_value),
                              required = True)
 
-Adding a second converter with the same key will cause that field to appear twice in the output:
-
-.. doctest::
-    >>> my_format.conversion.add('address', oct, lambda *x:x, True)
-    >>> my_format.conversion.getAll('address')
-    [<Converter('address', <built-in function hex>, <function <lambda> at 0x1e12eb0>, False)>, <Converter('address', <built-in function oct>, <function <lambda> at 0x1e12db0>, False)>]
-
 For more, refer to the documentation for :class:`ConversionTable`.
-
-
 
 
 Controlling what comes out
