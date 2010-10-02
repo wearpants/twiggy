@@ -14,9 +14,9 @@ class Converter(object):
     """Holder for ConversionTable items
 
     :ivar key: the key to apply the conversion to
-    :ivar convertValue: one-argument function to convert the value
-    :ivar convertItem: two-argument function converting the key & converted value
-    :ivar required: is the item required to present
+    :ivar function convertValue: one-argument function to convert the value
+    :ivar function convertItem: two-argument function converting the key & converted value
+    :ivar bool required: is the item required to present
     """
 
     __slots__ = ['key', 'convertValue', 'convertItem', 'required']
@@ -26,6 +26,11 @@ class Converter(object):
         self.convertValue = convertValue
         self.convertItem = convertItem
         self.required = required
+
+    def __repr__(self):
+        # XXX perhaps poke around in convertValue/convertItem to see if we can extract a meaningul
+        # `"some_string".format`? eh.
+        return "<Converter('{}', {}, {}, {})>".format(self.key, self.convertValue, self.convertItem, self.required)
 
 class ConversionTable(list):
     """Converts dictionaries using Converters

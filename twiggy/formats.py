@@ -18,7 +18,12 @@ line_conversion.genericItem = "{0}={1}".format
 line_conversion.aggregate = ':'.join
 
 class LineFormat(object):
-    """format a message for text-oriented output"""
+    """format a message for text-oriented output
+
+    :ivar string separator: separator between different fields
+    :ivar string traceback_prefix: prepended to traceback lines
+    :ivar ConverterTable conversion: does the work of formatting :attr:`~Message.fields`
+    """
 
     def __init__(self, separator=':', traceback_prefix='\nTRACE ', conversion=line_conversion):
         """

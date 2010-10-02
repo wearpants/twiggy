@@ -61,14 +61,15 @@ In this example, we create two log destinations: ``alice.log`` and ``bob.log``. 
     >>> # remove entirely
     ... del emitters['alice']
 
-We'll be examining the various parts in more detail.
+We'll examine the various parts in more detail.
 
 **************************
 Outputs
 **************************
-Outputs are the destinations to which log messages are written (files, databases, etc.). :mod:`Several implementations <outputs>` are provided. Once created, outputs cannot be modified.  Each output has an associated ``format``, described below.
+Outputs are the destinations to which log messages are written (files, databases, etc.). :mod:`Several implementations <outputs>` are provided. Once created, outputs cannot be modified.  Each output has an associated ``format``.
 
-.. _async-logging
+.. _async-logging:
+
 Asynchronous Logging
 ====================
 Many outputs can be configured to use a separate, dedicated process to log messages. This is known as :term:`asynchronous logging` and is enabled with the ``msg_buffer`` argument:
@@ -78,6 +79,44 @@ Many outputs can be configured to use a separate, dedicated process to log messa
 Asynchronous mode dramatically reduces the cost of logging, as expensive formatting and writing operations are moved out of the main thread of control.
 
 .. warning: There is a slight, but non-zero, chance that messages may be lost if something goes awry with the child process.
+
+*********************
+Formats
+*********************
+:mod:`Formats <twiggy.formats>` transform a log message into a form that can be written by an output. The result of formatting is output-dependent - for example, an output that posts to an HTTP server may take a format that provides JSON, whereas an output that writes to a file may produce text.
+
+Line-oriented formatting
+========================
+:class:`~twiggy.formats.LineFormat` is formats messages for text-oriented outputs such as a file or stdandard error.
+
+.. autoclass:: twiggy.formats.LineFormat
+
+.. _folding-exceptions:
+
+Using ``'\\n'`` as a traceback prefix will fold exceptions into a single line.
+
+LineFormat uses a `ConversionTable` to stringify the arbitrary fields in a message. To customize, copy the default :data:`~twiggy.formats.line_format` and modify:
+
+.. testcode::
+
+    # in your twiggy_setup
+    import copy
+    my_format = copy.copy(formats.line_format)
+    my_format.conversion.add(key = 'address', # name of the field
+                             convertValue = hex, # gets original value
+                             convertItem = lambda k, v: (k, v) , # gets (key, converted_value),
+                             required = True)
+
+Adding a second converter with the same key will cause that field to appear twice in the output:
+
+.. doctest::
+    >>> my_format.conversion.add('address', oct, lambda *x:x, True)
+    >>> my_format.conversion.getAll('address')
+    [<Converter('address', <built-in function hex>, <function <lambda> at 0x1e12eb0>, False)>, <Converter('address', <built-in function oct>, <function <lambda> at 0x1e12db0>, False)>]
+
+For more, refer to the documentation for :class:`ConversionTable`.
+
+
 
 
 Controlling what comes out
@@ -146,33 +185,7 @@ format
 ==========
 <mumble>
 
-.. _folding-exceptions:
 
-You can fold exceptions by usin '\\n' as a prefix to fold into a single line.
-
-***********************
-Real config
-***********************
-Your app should put it's configuration in a file called ``tiwggy_setup.py`` somewhere.  It looks like::
-
-    from twiggy.setup import * # outputs, filters, formats, levels, addEmitters
-    def setup():
-    addEmitters(...)
-
-And then somewhere near the top of your main, do::
-
-    import twiggy_setup
-    twiggy_setup.setup()
-
-You could import alternate modules (``twiggy_setup_prod.py``), or use alternate function names (``twiggy_setup.setup_devel()``) whatever your CMS-loving heart desires!
-
-Async Output
-============
-how it goes
-
-Example configs
-===============
-a few
 
 Log-level config
 ================

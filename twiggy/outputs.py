@@ -63,10 +63,8 @@ class AsyncOutput(Output):
     using the multiprocessing module. This is off by default, as it can cause
     log messages to be dropped. See the msg_buffer argument.
 
-    :arg int msg_buffer: number of messages to buffer in memory when using
-    asynchronous logging. ``0`` turns asynchronous output off, a negative
-    integer means an unlimited buffer, a positive integer is the size
-    of the buffer.
+    :arg int msg_buffer: number of messages to buffer in memory when using asynchronous logging. ``0`` turns asynchronous output off, a negative integer means an unlimited buffer, a positive integer is the size of the buffer.
+
     """
 
     def __init__(self, format=None, msg_buffer=0):
