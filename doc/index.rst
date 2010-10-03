@@ -19,6 +19,7 @@ Contents:
 
 .. toctree::
     :maxdepth: 2
+    :glob:
 
     intro
     basic_use
@@ -28,9 +29,9 @@ Contents:
     extending
     tips_and_tricks
     the_future
-    api
+    api/*
     glossary
-    
+
 
 Indices and tables
 ==================
@@ -38,4 +39,3 @@ Indices and tables
 * :ref:`genindex`
 * :ref:`modindex`
 * :ref:`search`
-
