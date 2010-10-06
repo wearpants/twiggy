@@ -4,32 +4,63 @@
    contain the root `toctree` directive.
 
 ##################################
-The Story of Twiggy!
+Twiggy: A Pythonic Logger
 ##################################
-Twiggy was born at Pycon 2010.
-
-.. seealso:: :doc:`blog_post_notes`
-
-Twiggy is awesome::
+Twiggy is a more Pythonic logger.
 
     >>> log.name('frank').fields(number=42).info("hello {who}, it's a {} day", 'sunny', who='world')
     INFO:frank:number=42:hello world, it's a sunny day
 
-*******************
+****************************
+Who, What, When, Where, Why
+****************************
+
+:author: Peter Fein
+:email: pfein@pobox.com
+:homepage: http://python-twiggy.googlecode.com/
+
+Twiggy was born at `Pycon 2010 <http://us.pycon.org/2010/>`_ after I whined about the standard library's `logging <http://docs.python.org/library/logging.html>`_ and Jesse Noller "invited" me to do something about it.
+
+Get it from the `Cheeseshop <http://pypi.python.org/pypi/Twiggy>`_::
+
+    pip install Twiggy
+
+    easy_install -U Twiggy
+
 Why Logging Matters
-*******************
+===================
+Logging is:
+
 * your **only** view into a running program
 * your **only** view of past execution
 * your **data** for post-mortem & domain-specific measurement
 
-Contents:
+Why Twiggy Should Be Your New Logger
+====================================
 
+You should use Twiggy because it is awesome.
+
+* lighter
+* friendlier
+* safer
+* faster
+* cooler
+* more fun
+* not boring
+
+.. warning::
+    Twiggy is beta software; do not use for nuclear power plants, spaceships or mortgage derivatives trading (not that it'd matter).
+
+.. seealso:: :doc:`blog_post_notes`
+
+***********
+Contents
+***********
 .. toctree::
     :maxdepth: 2
     :glob:
 
-    intro
-    basic_use
+    logging
     configuration
     reference_guide
     api
