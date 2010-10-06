@@ -3,17 +3,12 @@ Logging Messages
 #################
 This part describes how user code can log messages with twiggy.
 
-:func:`pants`
-
-***************
-Quick Setup
-***************
-In your main.py:
+To get started quickly, use :func:`~twiggy.quickSetup`:
 
 >>> import twiggy
 >>> twiggy.quickSetup()
 
-.. seealso:: Full :doc:`configuration` details.
+.. seealso:: Full details on :doc:`configuration`.
 
 ****************
 The Magic log

@@ -21,7 +21,7 @@ Who, What, When, Where, Why
 
 Twiggy was born at `Pycon 2010 <http://us.pycon.org/2010/>`_ after I whined about the standard library's `logging <http://docs.python.org/library/logging.html>`_ and Jesse Noller "invited" me to do something about it.
 
-Get it from the `Cheeseshop <http://pypi.python.org/pypi/Twiggy>`_::
+Install straight with distutils from the `Cheeseshop <http://pypi.python.org/pypi/Twiggy>`_ or::
 
     pip install Twiggy
 
