@@ -25,7 +25,6 @@ Contents:
     basic_use
     configuration
     reference_guide
-    extending
     api
     glossary
 

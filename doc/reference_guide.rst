@@ -3,11 +3,8 @@ Reference Guide
 ##############################
 
 ******************
-Advanced Uses
-******************
-
 Dynamic!
-==================
+******************
 
 Any functions in args/fields are called and the value substitued:
 
@@ -47,43 +44,37 @@ DEBUG:tracker:obj_id=...:thread=TheDoubler:accessed bar
 
 If you really want to log a callable, ``repr()`` it or wrap it in lambda.
 
-Features
-===================
+*******************
+Features!
+*******************
 Twiggy supports adding additional functionality to :data:`log` using features.
 
+.. _wsgi-support:
 
-Use in Libraries
-================
-Library should be silent by default - set :attr:`Logger.min_level` to `levels.DISABLED`
+WSGI Extension
+==============
+OMG it don't exist yet.
 
-Logger.filter, used to turn off stupidness
-
-**********************
-Technical Details
-**********************
-
-Independence of logger instances
-================================
-But the name has no relation to the object; it's just for human use:
-
->>> mylog is log.name('alfredo')
-False
+***********************
+Stays Out of Your Way
+***********************
+error handling, safety.  Logging should **never** interrrupt the flow of your main app (ie, cause erorrs).  Reported w/ internal_log
 
 The internal log
 ================
 :class:`twiggy.logger.InternalLog` just has an output, no emitters.  Using async is highly discouraged.
 
-Internal optimizations
-========================
-it goes fast!
-
-Stays out of your way
-=========================
-error handling, safety.  Logging should **never** interrrupt the flow of your main app (ie, cause erorrs).  Reported w/ internal_log
-
+****************
 Concurrency
-===============
+****************
 what's threadsafe, what's not
+
+*******************
+Use by Libraries
+*******************
+Library should be silent by default - set :attr:`Logger.min_level` to `levels.DISABLED`
+
+Logger.filter, used to turn off stupidness
 
 ********************
 Tips And Tricks
@@ -103,12 +94,39 @@ As do templates:
 >>> log.options(style='dollar').info('$what kill', what='Cars')
 INFO:Cars kill
 
-.. _wsgi-support:
-
-WSGI Extension
-==============
-OMG it don't exist yet.
-
 Use Fields
 ==========
 use fields instead of "Foo happend. key1:x1, key2:x2" in message
+
+**********************
+Technical Details
+**********************
+
+Independence of logger instances
+================================
+But the name has no relation to the object; it's just for human use:
+
+>>> mylog is log.name('alfredo')
+False
+
+Internal optimizations
+========================
+it goes fast!
+
+*******************
+Extending Twiggy
+*******************
+
+the :data:`~twiggy.devel_log`
+
+Writing Features
+===================
+How to do that
+
+Writing Outputs
+===================
+How to do that
+
+Writing Formats
+===================
+How to do that, including :class:`~twiggy.lib.ConversionTable`
