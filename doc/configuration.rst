@@ -12,6 +12,8 @@ To quickly configure output, use the `quickSetup` function.  Quick setup is limi
 .. autofunction:: twiggy.quickSetup
     :noindex:
 
+.. _twiggy-setup:
+
 *******************
 twiggy_setup.py
 *******************

@@ -2,6 +2,9 @@
 Reference Guide
 ##############################
 
+
+.. _dynamic-messages:
+
 ******************
 Dynamic!
 ******************
@@ -54,6 +57,8 @@ Twiggy supports adding additional functionality to :data:`log` using features.
 WSGI Extension
 ==============
 OMG it don't exist yet.
+
+.. _never-raises:
 
 ***********************
 Stays Out of Your Way

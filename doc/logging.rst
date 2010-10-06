@@ -37,6 +37,8 @@ You can name your loggers.
 >>> mylog.debug('hello')
 DEBUG:alfredo:hello
 
+.. _better-output:
+
 **************
 Better output
 **************
@@ -71,6 +73,8 @@ I like this chained style a lot.
 
 >>> log.name('benito').info('hi there')
 INFO:benito:hi there
+
+.. _structured-logging:
 
 It makes :term:`structured logging` easy. In the past, fielded data was stuffed in the text of your message:
 
