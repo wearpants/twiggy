@@ -29,7 +29,7 @@ Contents:
     extending
     tips_and_tricks
     the_future
-    api/*
+    api
     glossary
 
 

@@ -1,2 +1,0 @@
-.. automodule:: twiggy.outputs
-    :members:

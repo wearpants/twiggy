@@ -1,2 +1,0 @@
-.. automodule:: twiggy.formats
-    :members:

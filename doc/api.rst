@@ -2,22 +2,62 @@
 API Reference
 #########################
 
+*************************
+Global Objects
+*************************
 .. automodule:: twiggy
     :members:
-    :show-inheritance:
 
-
-
-.. automodule:: twiggy.logger
+*************************
+Library
+*************************
+.. automodule:: twiggy.lib
     :members:
-    :show-inheritance:
 
+*************************
+Converter
+*************************
+.. automodule:: twiggy.lib.converter
+    :members:
 
+*************************
+Features
+*************************
+.. automodule:: twiggy.features
+    :members:
+
+*************************
+Filters
+*************************
+.. automodule:: twiggy.filters
+    :members:
+
+*************************
+Formats
+*************************
+.. automodule:: twiggy.formats
+    :members:
+
+*************************
+Levels
+*************************
 .. automodule:: twiggy.levels
     :members:
-    :show-inheritance:
 
+*************************
+Logger
+*************************
+.. automodule:: twiggy.logger
+    :members:
 
+*************************
+Message
+*************************
 .. automodule:: twiggy.message
     :members:
-    :show-inheritance:
+
+*************************
+Outputs
+*************************
+.. automodule:: twiggy.outputs
+    :members:
