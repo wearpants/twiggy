@@ -10,6 +10,7 @@ Quick Setup
 To quickly configure output, use the `quickSetup` function.  Quick setup is limited to sending all messages to a file or ``sys.stderr``.  A timestamp will be prefixed when logging to a file.
 
 .. autofunction:: twiggy.quickSetup
+    :noindex:
 
 *******************
 twiggy_setup.py
@@ -75,6 +76,7 @@ Asynchronous Logging
 Many outputs can be configured to use a separate, dedicated process to log messages. This is known as :term:`asynchronous logging` and is enabled with the ``msg_buffer`` argument:
 
 .. autoclass:: twiggy.outputs.AsyncOutput
+    :noindex:
 
 Asynchronous mode dramatically reduces the cost of logging, as expensive formatting and writing operations are moved out of the main thread of control.
 
@@ -90,6 +92,7 @@ Line-oriented formatting
 :class:`~twiggy.formats.LineFormat` is formats messages for text-oriented outputs such as a file or stdandard error.
 
 .. autoclass:: twiggy.formats.LineFormat
+    :noindex:
 
 .. _folding-exceptions:
 
@@ -134,10 +137,3 @@ The messages output by an emitter are determined by its ``min_level`` and ``filt
     e.filter = ["^mem.y$", lambda msg: msg.fields['address'] > 0xDECAF]
 
 For more see :mod:`~twiggy.filters`
-
-
-Log-level config
-================
-Library should be silent by default - set :attr:`Logger.min_level` to `levels.DISABLED`
-
-Logger.filter, used to turn off stupidness

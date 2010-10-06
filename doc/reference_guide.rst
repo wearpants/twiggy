@@ -45,12 +45,18 @@ DEBUG:tracker:obj_id=...:thread=MainThread:accessed bar
 >>> t.start(); t.join() #doctest:+ELLIPSIS
 DEBUG:tracker:obj_id=...:thread=TheDoubler:accessed bar
 
-If you really want to log a callable, repr() it or wrap it in lambda.
+If you really want to log a callable, ``repr()`` it or wrap it in lambda.
 
 Features
 ===================
 Twiggy supports adding additional functionality to :data:`log` using features.
 
+
+Use in Libraries
+================
+Library should be silent by default - set :attr:`Logger.min_level` to `levels.DISABLED`
+
+Logger.filter, used to turn off stupidness
 
 **********************
 Technical Details
