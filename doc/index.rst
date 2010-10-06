@@ -3,12 +3,19 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
+##################################
 The Story of Twiggy!
-==================================
+##################################
 Twiggy was born at Pycon 2010.
 
 .. seealso:: :doc:`blog_post_notes`
 
+Twiggy is awesome::
+
+    >>> log.name('frank').fields(number=42).info("hello {who}, it's a {} day", 'sunny', who='world')
+    INFO:frank:number=42:hello world, it's a sunny day
+
+*******************
 Why Logging Matters
 *******************
 * your **only** view into a running program
