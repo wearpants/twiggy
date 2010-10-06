@@ -59,7 +59,7 @@ def glob_names(*names):
 
     ``names`` will be stored as an attribute on the filter.
 
-    This is probably quite a bit slower than :function:`names`.
+    This is probably quite a bit slower than :func:`names`.
 
     :arg strings names: glob patterns.
     """

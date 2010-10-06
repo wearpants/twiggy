@@ -1,9 +1,3 @@
-"""
-Loggers!
-===========
-
-"""
-
 from .message import Message
 from .lib import iso8601time
 import twiggy as _twiggy
@@ -243,4 +237,3 @@ class Logger(BaseLogger):
                 o.output(msg)
             except StandardError:
                 _twiggy.internal_log.warning("Error outputting with {0!r}. Message: {1!r}", o, msg)
-
