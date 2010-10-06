@@ -1,6 +1,7 @@
 import copy
 
-from .lib import ConversionTable, Converter, iso8601time
+from .lib.converter import ConversionTable, Converter
+from .lib import iso8601time
 
 #: a default line-oriented converter
 line_conversion = ConversionTable([
