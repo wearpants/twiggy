@@ -24,11 +24,8 @@ Contents:
     intro
     basic_use
     configuration
-    technical_details
-    advanced_use
+    reference_guide
     extending
-    tips_and_tricks
-    the_future
     api
     glossary
 

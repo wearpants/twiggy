@@ -5,14 +5,6 @@ Extending Twiggy
 the :data:`~twiggy.devel_log`
 
 *******************
-Internals
-*******************
-
-.. autoclass:: twiggy.logger.Logger
-    :members:
-    :inherited-members:
-
-*******************
 Writing Features
 *******************
 How to do that
@@ -26,8 +18,3 @@ How to do that
 Writing formats
 *******************
 How to do that, including :class:`~twiggy.lib.ConversionTable`
-
-
-
-
-
