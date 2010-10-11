@@ -217,12 +217,29 @@ If the feature should add fields *and* emit in the same step (like :meth:`~twigg
         return self.name('dumpwsgi').fieldsDict(d)
 
 
-
-
 Writing Outputs
 ===================
-How to do that
+Outputs do the work of writing a message to an external resource (file, socket, etc.).  User-defined outputs should inherit from :class:`twiggy.outputs.Output` or :class:`twiggy.outputs.AsyncOutput` if they wish to support :term:`asynchronous logging` (preferred).
+
+An Output subclass's ``__init__`` should take a ``format`` (see below) and any parameters needed to acquire resources (filename, hostname, etc.), but *not the resources themselves*. These are created in ``_open``.  Implementations supporting asynchronous logging should also take a ``msg_buffer`` argument (see :class:`~twiggy.outputs.AsyncOutput`).
+
+
+Outputs should define the following:
+
+.. automethod:: twiggy.outputs.Output._open
+    :noindex:
+
+.. automethod:: twiggy.outputs.Output._close
+    :noindex:
+
+.. automethod:: twiggy.outputs.Output._write
+    :noindex:
+
+If the output requires locking to be thread-safe, set the class attribute :attr:`~twiggy.outputs.Output.use_locks` to True (the default). Turning off may give slightly higher throughput.
 
 Writing Formats
 ===================
+The :attr:`format <twiggy.outputs.Output._format>` callable is Output-specific; it should take a :class:`~twiggy.message.Message` and return an appropriate object (string, database row, etc.) to be written. **Do not modify** the received message - it is shared by all outputs.
+
+
 How to do that, including :class:`~twiggy.lib.ConversionTable`

@@ -8,7 +8,7 @@ class Output(object):
     """
     Does the work of formatting and writing a message.
 
-    :arg format: a callable taking a `Message` and formatting it for output. `None` means return the message unchanged.
+    :ivar _format: a callable taking a `Message` and formatting it for output. `None` means return the message unchanged.
 
     :cvar bool use_locks: use locks when running in a synchronous,
     multithreaded environment. Threadsafe subclasses may disable locking
@@ -39,12 +39,18 @@ class Output(object):
         self._open()
 
     def _open(self):
+        """Acquire any resources needed for writing (files, sockets, etc.)"""
         raise NotImplementedError
 
     def _close(self):
+        """Release any resources acquired in ``_open``"""
         raise NotImplementedError
 
     def _write(self, x):
+        """Do the work of writing
+
+        :arg x: an implementation-dependent object to be written.
+        """
         raise NotImplementedError
 
     def __sync_output_locked(self, msg):
