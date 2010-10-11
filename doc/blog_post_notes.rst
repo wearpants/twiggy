@@ -2,6 +2,15 @@
 Blog post notes
 #######################
 
+* :ref:`modern <twiggy-setup>`
+* :doc:`lighter <configuration>`
+* :ref:`safer <never-raises>`
+* :ref:`faster <async-logging>`
+* :ref:`friendlier <better-output>`
+* :ref:`cooler <dynamic-messages>`
+* :ref:`easier <structured-logging>`
+* :doc:`more fun! <logging>`
+
 ***********************
 Why: Origin Myth
 ***********************

@@ -26,7 +26,7 @@ DEBUG:You may not care
 >>> log.error('OMFG! Pants on fire!')
 ERROR:OMFG! Pants on fire!
 
-The log can handle messages in several styles of :ref:`format strings<alternate-styles>`, defaulting to `new-style <http://docs.python.org/library/string.html#format-string-syntax>`.
+The log can handle messages in several styles of :ref:`format strings<alternate-styles>`, defaulting to `new-style <http://docs.python.org/library/string.html#format-string-syntax>`_.
 
 >>> log.info('I wear {0} on my {where}', 'pants', where='legs')
 INFO:I wear pants on my legs
