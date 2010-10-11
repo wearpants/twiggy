@@ -91,7 +91,7 @@ The :meth:`struct` is a short cut for *only* logging fields. This is great for r
 >>> log.struct(paths=42, dolphins='thankful')
 INFO:dolphins=thankful:paths=42:
 
-Each call to ``fields`` or ``options`` creates a new, independent log instance that inherits all of the data of the parent.  This incremental binding can be useful for :ref:`webapps<wsgi-support>`.
+Each call to ``fields`` or ``options`` creates a new, independent log instance that inherits all of the data of the parent.  This incremental binding can be useful for webapps.
 
 >>> ## an application-level log
 ... webapp_log = log.name("myblog")
