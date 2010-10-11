@@ -63,8 +63,17 @@ class BaseLogger(object):
     ## The Magic
     def fields(self, **kwargs):
         """bind fields for structured logging"""
+        return self.fieldsDict(kwargs)
+
+    def fieldsDict(self, d):
+        """bind fields for structured logging
+
+        Use this instead of ``fields`` if you have keys which are not valid Python identifiers.
+
+        :arg dict d: a dict of fields to bind
+        """
         clone = self._clone()
-        clone._fields.update(kwargs)
+        clone._fields.update(d)
         return clone
 
     def options(self, **kwargs):
