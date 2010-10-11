@@ -6,10 +6,10 @@ Reference Guide
 .. _dynamic-messages:
 
 ******************
-Dynamic!
+Dynamic logging
 ******************
 
-Any functions in args/fields are called and the value substitued:
+Any functions in message args/fields are called and the value substitued:
 
 >>> import os
 >>> from twiggy.lib import thread_name
@@ -21,6 +21,7 @@ INFO:pid=...:I'm in thread MainThread
 This can be useful with partially-bound loggers, which let's us do some cool stuff:
 
 >>> class ThreadTracker(object):
+...     """a proxy that logs attribute access"""
 ...     def __init__(self, obj):
 ...         self.__obj = obj
 ...         # a partially bound logger
@@ -50,7 +51,26 @@ If you really want to log a callable, ``repr()`` it or wrap it in lambda.
 *******************
 Features!
 *******************
-Twiggy supports adding additional functionality to :data:`log` using features.
+Features are optional additons of logging functionality to the magic :data:`log`. They encapsulate common logging patterns. Code can be written using a feature, enhancing what information is logged. The feature can be disabled at :ref:`runtime <twiggy-setup>` if desired.
+
+.. doctest::
+
+    >>> import twiggy.features.socket
+    >>> twiggy.quickSetup()
+    >>> twiggy.log.addFeature(twiggy.features.socket.socket)
+    >>> import socket
+    >>> s = socket.socket(socket.AF_INET, socket.SOCK_STREAM) #doctest:+ELLIPSIS
+    <socket._socketobject object at 0x...>
+    >>> s.connect(('www.python.org', 80))
+    >>> twiggy.log.socket(s).debug("connected")
+    DEBUG:host=dinsdale.python.org:ip_addr=82.94.164.162:port=80:service=http:connected
+    >>> twiggy.log.disableFeature('socket')
+    >>> twiggy.log.socket(s).debug("connected")
+    DEBUG:connected
+    >>> twiggy.log.addFeature(twiggy.features.socket.socket_minimal, 'socket')
+    >>> twiggy.log.socket(s).debug("connected")
+    DEBUG:ip_addr=82.94.164.162:port=80:connected
+
 
 .. _wsgi-support:
 
@@ -63,16 +83,20 @@ OMG it don't exist yet.
 ***********************
 Stays Out of Your Way
 ***********************
-error handling, safety.  Logging should **never** interrrupt the flow of your main app (ie, cause erorrs).  Reported w/ internal_log
+Twiggy tries to stay out of your way.  Specifically, an error in logging should **never** propogate outside the logging subsystem and cause your main application to crash. Instead, errors are trapped and reported by the  :data:`~twiggy.internal_log`.
 
-The internal log
-================
-:class:`twiggy.logger.InternalLog` just has an output, no emitters.  Using async is highly discouraged.
+Instances of :class:`~twiggy.logger.InternalLog` only have a single :class:`~twiggy.outputs.Output` - they do not use emitters. By default, these messages are sent to standard error. You may assign an alternate ouput (such as a file) to ``twiggy.internal_log.output` if desired, with the following conditions:
+
+* the output should be failsafe - any errors that occur during internal logging will *not* be caught and will cause your application to crash.
+* accordingly, networked or asynchronous outputs are not recommended.
+* make sure someone is reading these log messages!
 
 ****************
 Concurrency
 ****************
-what's threadsafe, what's not
+Locking in twiggy is as fine-grained as possible. Each individual output has its own lock (if necessary), and only holds that lock when writing. Using redundant outputs (ie, pointing to the same file) is not supported and will cause logfile corruption.
+
+Asynchronous loggers never lock.
 
 *******************
 Use by Libraries
