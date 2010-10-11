@@ -80,7 +80,7 @@ Stays Out of Your Way
 ***********************
 Twiggy tries to stay out of your way.  Specifically, an error in logging should **never** propogate outside the logging subsystem and cause your main application to crash. Instead, errors are trapped and reported by the  :data:`~twiggy.internal_log`.
 
-Instances of :class:`~twiggy.logger.InternalLog` only have a single :class:`~twiggy.outputs.Output` - they do not use emitters. By default, these messages are sent to standard error. You may assign an alternate ouput (such as a file) to ``twiggy.internal_log.output` if desired, with the following conditions:
+Instances of :class:`~twiggy.logger.InternalLog` only have a single :class:`~twiggy.outputs.Output` - they do not use emitters. By default, these messages are sent to standard error. You may assign an alternate ouput (such as a file) to ``twiggy.internal_log.output`` if desired, with the following conditions:
 
 * the output should be failsafe - any errors that occur during internal logging will *not* be caught and will cause your application to crash.
 * accordingly, networked or asynchronous outputs are not recommended.
@@ -145,6 +145,7 @@ Use Fields
 Use :meth:`~twiggy.logger.Logger.fields` to include key-value data in a message instead of embedding it the human-readable string::
 
 .. testcode::
+
     # do this:
     log.fields(key1='a', key2='b').info("stuff happenend")
 
@@ -193,7 +194,7 @@ Features can also emit messages as usual.  Do not return::
         elif lang == 'fr':
             self.info("Bonjour tout le monde")
 
-.. _wsgi-support::
+.. _wsgi-support:
 
 If the feature should add fields *and* emit in the same step (like :meth:`~twiggy.logger.Logger.struct`), use the :func:`~twiggy.logger.emit` decorators.  Here's a prototype feature that dumps information about a `WSGI environ <http://www.python.org/dev/peps/pep-0333/#environ-variables>`_.
 
