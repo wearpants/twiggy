@@ -38,7 +38,7 @@ Logging is:
 Why Twiggy Should Be Your New Logger
 ====================================
 
-You should use Twiggy because it is awesome. For more information, `see this blog post <http://blog.wearpants.org/meet-twiggy>_.
+You should use Twiggy because it is awesome. For more information, `see this blog post <http://blog.wearpants.org/meet-twiggy>`_.
 
 .. warning::
     Twiggy is beta software; do not use for nuclear power plants, spaceships or mortgage derivatives trading (not that it'd matter).

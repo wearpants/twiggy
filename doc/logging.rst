@@ -66,15 +66,15 @@ TRACE ZeroDivisionError: integer division or modulo by zero
 
 .. seealso:: :ref:`How to fold exceptions to a single line<folding-exceptions>`
 
-******************
-Method Chaining
-******************
-I like this chained style a lot.
+.. _structured-logging:
+
+**********************
+Structured Logging
+**********************
+I like this method chaining style a lot.
 
 >>> log.name('benito').info('hi there')
 INFO:benito:hi there
-
-.. _structured-logging:
 
 It makes :term:`structured logging` easy. In the past, fielded data was stuffed in the text of your message:
 
@@ -90,6 +90,10 @@ The :meth:`struct` is a short cut for *only* logging fields. This is great for r
 
 >>> log.struct(paths=42, dolphins='thankful')
 INFO:dolphins=thankful:paths=42:
+
+****************************
+Partial Binding
+****************************
 
 Each call to ``fields`` or ``options`` creates a new, independent log instance that inherits all of the data of the parent.  This incremental binding can be useful for webapps.
 

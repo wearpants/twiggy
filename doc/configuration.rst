@@ -19,7 +19,7 @@ twiggy_setup.py
 *******************
 Twiggy's output side features modern, loosely coupled design.
 
-By convention, your configuration lives in a file in your application called ``twiggy_setup.py``, in a function called ``twiggy_setup()``. You can of course put your configuration elsewhere, but using a separate module makes integration with configuration management systems easy.  You should import and run twiggy setup near the top of your application.  It's particularly important to set up twiggy *before spawning new processes*.
+By convention, your configuration lives in a file in your application called ``twiggy_setup.py``, in a function called ``twiggy_setup()``. You can of course put your configuration elsewhere, but using a separate module makes integration with configuration management systems easy.  You should import and run ``twiggy_setup`` near the top of your application.  It's particularly important to set up twiggy *before spawning new processes*.
 
 A ``twiggy_setup`` function should create ouputs and use the :func:`addEmitters` convenience function to link those outputs to the log:
 
@@ -53,7 +53,7 @@ In this example, we create two log destinations: ``alice.log`` and ``bob.log``. 
     >>> emitters.keys()
     ['alice', 'betty', 'brian.*']
 
-:class:`Emitters <Emitter>` can be removed by deleting them from this dict. The filters and min_level may be modified during the running of the application, but outputs can *not* be changed.  Instead, remove the emitter and re-add it.
+:class:`Emitters <Emitter>` can be removed by deleting them from this dict. The filters and min_level may be modified during the running of the application, but outputs *cannot* be changed.  Instead, remove the emitter and re-add it.
 
 .. doctest::
 
@@ -91,7 +91,7 @@ Formats
 
 Line-oriented formatting
 ========================
-:class:`~twiggy.formats.LineFormat` is formats messages for text-oriented outputs such as a file or stdandard error.
+:class:`~twiggy.formats.LineFormat` formats messages for text-oriented outputs such as a file or standard error.
 
 .. autoclass:: twiggy.formats.LineFormat
     :noindex:
@@ -109,7 +109,7 @@ LineFormat uses a `ConversionTable` to stringify the arbitrary fields in a messa
     my_format = copy.copy(formats.line_format)
     my_format.conversion.add(key = 'address', # name of the field
                              convertValue = hex, # gets original value
-                             convertItem = lambda k, v: (k, v) , # gets (key, converted_value),
+                             convertItem = "{0}={1}".format, # gets called with: key, converted_value
                              required = True)
 
     # output messages with name 'memory' to stderr

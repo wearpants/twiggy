@@ -59,7 +59,7 @@ class Output(object):
 class AsyncOutput(Output):
     """An Output with support for asynchronous logging
 
-    Mixing in this Output transparently adds support for asynchronous logging
+    Inheriting from this Output transparently adds support for asynchronous logging
     using the multiprocessing module. This is off by default, as it can cause
     log messages to be dropped. See the msg_buffer argument.
 

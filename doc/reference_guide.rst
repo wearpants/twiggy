@@ -6,7 +6,7 @@ Reference Guide
 .. _dynamic-messages:
 
 ******************
-Dynamic logging
+Dynamic Logging
 ******************
 
 Any functions in message args/fields are called and the value substitued:
