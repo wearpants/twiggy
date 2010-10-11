@@ -101,9 +101,32 @@ Asynchronous loggers never lock.
 *******************
 Use by Libraries
 *******************
-Library should be silent by default - set :attr:`Logger.min_level` to `levels.DISABLED`
+Libraries require special care to be polite and usable by application code.  The library should have a single bound in its top-level package that's used by modules. Library logging should generally be silent by default::
 
-Logger.filter, used to turn off stupidness
+    # in mylib/__init__.py
+    log = twiggy.log.name('mylib')
+    log.min_level = twiggy.levels.DISABLED
+
+    # in mylib/some_module.py
+    from . import log
+    log.debug("hi there")
+
+This allows application code to enable/disable all of library's logging as needed::
+
+    # in twiggy_setup
+    import mylib
+    mylib.log.min_level = twiggy.levels.INFO
+
+In addition to min_level, loggers also have a :attr:`~twiggy.logger.Logger.filter`. This filter operates *only on the format string*, and is intended to allow users to selectively disable individual messages in a poorly-written library::
+
+    # in mylib:
+    for i in xrange(1000000):
+        log.warning("blah blah {}", 42)
+
+    # in twiggy_setup: turn off stupidness
+    mylib.log.filter = lambda format_spec: format_spec != "blah blah {}"
+
+Note that using a filter this way is an optimization - in general, application code should use :data:`~twiggy.emitters` instead.
 
 ********************
 Tips And Tricks
@@ -113,19 +136,26 @@ Tips And Tricks
 
 Alternate Styles
 ================
-Old style works fine though:
+In addition to the default new-style (braces) format specs, twiggy also supports old-style (percent, aka printf) and templates (dollar):
 
->>> log.options(style='percent').info('I like %s', "bikes")
-INFO:I like bikes
+.. doctest::
 
-As do templates:
-
->>> log.options(style='dollar').info('$what kill', what='Cars')
-INFO:Cars kill
+    >>> log.options(style='percent').info('I like %s', "bikes")
+    INFO:I like bikes
+    >>> log.options(style='dollar').info('$what kill', what='Cars')
+    INFO:Cars kill
 
 Use Fields
 ==========
-use fields instead of "Foo happend. key1:x1, key2:x2" in message
+Use :meth:`~twiggy.logger.Logger.fields` to include key-value data in a message instead of embedding it the human-readable string::
+
+.. testcode::
+    # do this:
+    log.fields(key1='a', key2='b').info("stuff happenend")
+
+    # not this:
+    log.info("stuff happened. key1: {} key2: {}", 'a', 'b')
+
 
 **********************
 Technical Details
@@ -133,14 +163,16 @@ Technical Details
 
 Independence of logger instances
 ================================
-But the name has no relation to the object; it's just for human use:
+Each log instance created by partial binding is independent from each other. In particular, a logger's :meth:`~twiggy.logger.Logger.name` has no relation to the object; it's just for human use:
 
->>> mylog is log.name('alfredo')
-False
+.. doctest::
+
+    >>> log.name('bob') is log.name('bob')
+    False
 
 Internal optimizations
 ========================
-it goes fast!
+Twiggy has been written to be fast, minimizing the performance impact on the main execution path. In particular, messages that will cause no output are handled as quickly as possible.  Users are therefore encouraged to add lots of logging for development/debugging purposes and then turn them off in production.
 
 *******************
 Extending Twiggy
