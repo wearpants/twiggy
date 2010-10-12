@@ -2,6 +2,15 @@
 Blog post notes
 #######################
 
+Why Logging Matters
+===================
+Logging is:
+
+* your **only** view into a running program
+* your **only** view of past execution
+* your **data** for post-mortem & domain-specific measurement
+
+
 * :ref:`modern <twiggy-setup>`
 * :doc:`lighter <configuration>`
 * :ref:`safer <never-raises>`

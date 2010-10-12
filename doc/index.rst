@@ -6,14 +6,17 @@
 ##################################
 Twiggy: A Pythonic Logger
 ##################################
+
+****************************
+Who, What, When, Where
+****************************
+
 Twiggy is a more Pythonic logger.
+
+.. doctest::
 
     >>> log.name('frank').fields(number=42).info("hello {who}, it's a {} day", 'sunny', who='world')
     INFO:frank:number=42:hello world, it's a sunny day
-
-****************************
-Who, What, When, Where, Why
-****************************
 
 :author: `Peter Fein <http://i.wearpants.org>`_
 :email: pfein@pobox.com
@@ -32,27 +35,20 @@ Get the latest version::
 
     hg clone https://python-twiggy.googlecode.com/hg/ python-twiggy
 
-Why Logging Matters
-===================
-Logging is:
-
-* your **only** view into a running program
-* your **only** view of past execution
-* your **data** for post-mortem & domain-specific measurement
-
+*************************************
 Why Twiggy Should Be Your New Logger
-====================================
+*************************************
 
 You should use Twiggy because it is awesome. For more information, `see this blog post <http://blog.wearpants.org/meet-twiggy>`_.
 
 .. warning::
-    Twiggy is beta software; do not use for nuclear power plants, spaceships or mortgage derivatives trading (not that it'd matter).
+    Twiggy works great, but is not rock solid; do not use for nuclear power plants, spaceships or mortgage derivatives trading (not that it'd matter).
 
 .. seealso:: :doc:`blog_post_notes`
 
-***********
-Contents
-***********
+**************
+Documentation
+**************
 .. toctree::
     :maxdepth: 2
     :glob:
@@ -62,11 +58,3 @@ Contents
     reference_guide
     api
     glossary
-
-
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
