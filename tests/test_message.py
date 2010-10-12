@@ -10,10 +10,7 @@ class MessageTestCase(unittest2.TestCase):
     def test_basic(self):
         m = make_mesg()
 
-        assert m.format_spec == "Hello {0} {who}"
         assert m.fields == {'shirt':42, 'name': 'jose', 'level':twiggy.levels.DEBUG}
-        assert m.args == ('Mister',)
-        assert m.kwargs == {'who': "Funnypants"}
         assert m.traceback is None
 
         assert m.text == "Hello Mister Funnypants"
@@ -64,10 +61,7 @@ and shirt'''
                     who="Funnypants",
                     )
 
-        assert m.format_spec == "Hello {who}"
         assert m.fields == {'shirt':42, 'name': 'jose', 'level':twiggy.levels.DEBUG}
-        assert m.args == ()
-        assert m.kwargs == {'who': "Funnypants"}
         assert m.traceback is None
 
         assert m.text == "Hello Funnypants"
@@ -80,10 +74,7 @@ and shirt'''
                     'Mister'
                     )
 
-        assert m.format_spec == "Hello {0}"
         assert m.fields == {'shirt':42, 'name': 'jose', 'level':twiggy.levels.DEBUG}
-        assert m.args == ('Mister',)
-        assert m.kwargs == {}
         assert m.traceback is None
 
         assert m.text == "Hello Mister"
@@ -95,10 +86,7 @@ and shirt'''
                     Message._default_options,
                     )
 
-        assert m.format_spec == "Hello"
         assert m.fields == {'shirt':42, 'name': 'jose', 'level':twiggy.levels.DEBUG}
-        assert m.args == ()
-        assert m.kwargs == {}
         assert m.traceback is None
 
         assert m.text == "Hello"
@@ -177,11 +165,7 @@ and shirt'''
                     who=lambda: "Funnypants",
                     )
 
-        assert m.format_spec == "Hello {0} {who}"
         assert m.fields == {'shirt':42, 'name': 'jose', 'level':twiggy.levels.DEBUG}
-        assert m.args == ('Mister',)
-        assert m.kwargs == {'who': "Funnypants"}
         assert m.traceback is None
 
         assert m.text == "Hello Mister Funnypants"
-
