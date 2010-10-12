@@ -1,11 +1,13 @@
-"""Logging levels
-
-Levels include (increasing severity): DEBUG, INFO, WARNING, ERROR, CRITICAL
+"""
+Levels include (increasing severity): ``DEBUG``, ``INFO``, ``WARNING``, ``ERROR``, ``CRITICAL``, ``DISABLED``
 """
 
-__all__ = ['DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL']
-
 class LogLevel(object):
+    """A log level. Do not create instances.
+
+    Levels are opaque; they may be compared to each other, but nothing else.
+    """
+
     __slots__ = ['__name', '__value']
     _name2levels = {}
 
@@ -27,7 +29,7 @@ class LogLevel(object):
             return cmp(self.__value, other.__value)
 
 def name2level(name):
-    """return a LogLevel from a case-insensitve string"""
+    """return a `LogLevel` from a case-insensitve string"""
     return LogLevel._name2levels[name.upper()]
 
 DEBUG = LogLevel('DEBUG', 1)
