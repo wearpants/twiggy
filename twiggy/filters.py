@@ -76,11 +76,11 @@ class Emitter(object):
     """
     Emits!
 
-    :ivar min_level: only emit if greater than this
-    :type min_level: levels.LogLevel
-
+    :ivar LogLevel min_level: only emit if greater than this
+    :ivar function filter: arbitrary test on message contents
 
     .. function:: filter(msg) -> bool should_emit
+
     """
 
     def __init__(self, min_level, filter, output):

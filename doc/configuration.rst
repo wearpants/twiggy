@@ -2,6 +2,8 @@
 Configuring Output
 ######################
 
+.. currentmodule:: twiggy
+
 This part discusses how to configure twiggy's output of messages.  You should do this once, near the start of your application's ``__main__``.
 
 *******************
@@ -9,7 +11,7 @@ Quick Setup
 *******************
 To quickly configure output, use the `quickSetup` function.  Quick setup is limited to sending all messages to a file or ``sys.stderr``.  A timestamp will be prefixed when logging to a file.
 
-.. autofunction:: twiggy.quickSetup
+.. autofunction:: quickSetup
     :noindex:
 
 .. _twiggy-setup:
@@ -46,14 +48,14 @@ In this example, we create two log destinations: ``alice.log`` and ``bob.log``. 
 * messages with the name field equal to ``betty`` and level >= ``INFO``
 * messages with the name field glob-matching ``brian.*``
 
-``addEmitters`` populates the `twiggy.emitters` dictionary:
+:func:`addEmitters` populates the :data:`emitters` dictionary:
 
 .. doctest::
 
     >>> emitters.keys()
     ['alice', 'betty', 'brian.*']
 
-:class:`Emitters <Emitter>` can be removed by deleting them from this dict. The filters and min_level may be modified during the running of the application, but outputs *cannot* be changed.  Instead, remove the emitter and re-add it.
+:class:`Emitters <.Emitter>` can be removed by deleting them from this dict. The filters and min_level may be modified during the running of the application, but outputs *cannot* be changed.  Instead, remove the emitter and re-add it.
 
 .. doctest::
 
@@ -69,7 +71,7 @@ We'll examine the various parts in more detail.
 **************************
 Outputs
 **************************
-Outputs are the destinations to which log messages are written (files, databases, etc.). :mod:`Several implementations <outputs>` are provided. Once created, outputs cannot be modified.  Each output has an associated ``format``.
+Outputs are the destinations to which log messages are written (files, databases, etc.). Several :mod:`implementations <.outputs>` are provided. Once created, outputs cannot be modified.  Each output has an associated :mod:`.formats`.
 
 .. _async-logging:
 
@@ -87,20 +89,20 @@ Asynchronous mode dramatically reduces the cost of logging, as expensive formatt
 *********************
 Formats
 *********************
-:mod:`Formats <twiggy.formats>` transform a log message into a form that can be written by an output. The result of formatting is output-dependent - for example, an output that posts to an HTTP server may take a format that provides JSON, whereas an output that writes to a file may produce text.
+:mod:`Formats <.formats>` transform a log message into a form that can be written by an output. The result of formatting is output-dependent - for example, an output that posts to an HTTP server may take a format that provides JSON, whereas an output that writes to a file may produce text.
 
 Line-oriented formatting
 ========================
-:class:`~twiggy.formats.LineFormat` formats messages for text-oriented outputs such as a file or standard error.
+:class:`.LineFormat` formats messages for text-oriented outputs such as a file or standard error.
 
 .. autoclass:: twiggy.formats.LineFormat
     :noindex:
 
 .. _folding-exceptions:
 
-Using ``'\\n'`` as a traceback prefix will fold exceptions into a single line.
+Use ``'\\n'`` as a traceback prefix to fold exceptions into a single line.
 
-LineFormat uses a `ConversionTable` to stringify the arbitrary fields in a message. To customize, copy the default :data:`~twiggy.formats.line_format` and modify:
+LineFormat uses a `.ConversionTable` to stringify the arbitrary fields in a message. To customize, copy the default :data:`.line_format` and modify:
 
 .. testcode::
 
@@ -116,12 +118,12 @@ LineFormat uses a `ConversionTable` to stringify the arbitrary fields in a messa
     addEmitters(('memory', levels.DEBUG, filters.names('memory'),
                  outputs.StreamOutput(format = my_format))
 
-For more, refer to the documentation for :class:`ConversionTable`.
+.. seealso: For details, see :class:`.ConversionTable`.
 
 ***************************
 Filtering Output
 ***************************
-The messages output by an emitter are determined by its ``min_level`` and ``filter``. These attributes may be changed while the application is running. The filter attribute of emitters is intelligent; you may assign strings, bools or functions and it will magically do the right thing.  Assigning a list indicates that *all* of the filters must pass for the message to be output.
+The messages output by an emitter are determined by its :attr:`~.Emitter.min_level` and :attr:`~.Emitter.filter`. These attributes may be changed while the application is running. The filter attribute of emitters is intelligent; you may assign strings, bools or functions and it will magically do the right thing.  Assigning a list indicates that *all* of the filters must pass for the message to be output.
 
 .. testcode::
 
@@ -138,4 +140,4 @@ The messages output by an emitter are determined by its ``min_level`` and ``filt
     # lists are all()'d
     e.filter = ["^mem.y$", lambda msg: msg.fields['address'] > 0xDECAF]
 
-For more see :mod:`~twiggy.filters`
+For more see :mod:`.filters`
