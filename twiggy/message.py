@@ -12,8 +12,6 @@ class Message(object):
     :ivar string traceback: a stringified traceback, or None.
     :ivar string text: the filled-in template
 
-    .. _dynamic-messages:
-
     Any callables passed in fields, args or kwargs will be called and the returned value used instead.
 
     .. _message-options:
