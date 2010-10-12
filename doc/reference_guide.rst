@@ -2,6 +2,7 @@
 Reference Guide
 ##############################
 
+.. currentmodule:: twiggy
 
 .. _dynamic-messages:
 
@@ -11,40 +12,44 @@ Dynamic Logging
 
 Any functions in message args/fields are called and the value substitued:
 
->>> import os
->>> from twiggy.lib import thread_name
->>> thread_name()
-'MainThread'
->>> log.fields(pid=os.getpid).info("I'm in thread {0}", thread_name) #doctest:+ELLIPSIS
-INFO:pid=...:I'm in thread MainThread
+.. doctest::
+
+    >>> import os
+    >>> from twiggy.lib import thread_name
+    >>> thread_name()
+    'MainThread'
+    >>> log.fields(pid=os.getpid).info("I'm in thread {0}", thread_name) #doctest:+ELLIPSIS
+    INFO:pid=...:I'm in thread MainThread
 
 This can be useful with partially-bound loggers, which let's us do some cool stuff:
 
->>> class ThreadTracker(object):
-...     """a proxy that logs attribute access"""
-...     def __init__(self, obj):
-...         self.__obj = obj
-...         # a partially bound logger
-...         self.__log = log.name("tracker").fields(obj_id=id(obj), thread=thread_name)
-...         self.__log.debug("started tracking")
-...     def __getattr__(self, attr):
-...         self.__log.debug("accessed {0}", attr)
-...         return getattr(self.__obj, attr)
-...
->>> class Bunch(object):
-...     pass
-...
->>> foo = Bunch()
->>> foo.bar = 42
->>> tracked = ThreadTracker(foo) #doctest:+ELLIPSIS
-DEBUG:tracker:obj_id=...:thread=MainThread:started tracking
->>> tracked.bar #doctest:+ELLIPSIS
-DEBUG:tracker:obj_id=...:thread=MainThread:accessed bar
-42
->>> import threading
->>> t=threading.Thread(target = lambda: tracked.bar * 2, name = "TheDoubler")
->>> t.start(); t.join() #doctest:+ELLIPSIS
-DEBUG:tracker:obj_id=...:thread=TheDoubler:accessed bar
+.. doctest::
+
+    >>> class ThreadTracker(object):
+    ...     """a proxy that logs attribute access"""
+    ...     def __init__(self, obj):
+    ...         self.__obj = obj
+    ...         # a partially bound logger
+    ...         self.__log = log.name("tracker").fields(obj_id=id(obj), thread=thread_name)
+    ...         self.__log.debug("started tracking")
+    ...     def __getattr__(self, attr):
+    ...         self.__log.debug("accessed {0}", attr)
+    ...         return getattr(self.__obj, attr)
+    ...
+    >>> class Bunch(object):
+    ...     pass
+    ...
+    >>> foo = Bunch()
+    >>> foo.bar = 42
+    >>> tracked = ThreadTracker(foo) #doctest:+ELLIPSIS
+    DEBUG:tracker:obj_id=...:thread=MainThread:started tracking
+    >>> tracked.bar #doctest:+ELLIPSIS
+    DEBUG:tracker:obj_id=...:thread=MainThread:accessed bar
+    42
+    >>> import threading
+    >>> t=threading.Thread(target = lambda: tracked.bar * 2, name = "TheDoubler")
+    >>> t.start(); t.join() #doctest:+ELLIPSIS
+    DEBUG:tracker:obj_id=...:thread=TheDoubler:accessed bar
 
 If you really want to log a callable, ``repr()`` it or wrap it in lambda.
 
@@ -80,9 +85,9 @@ Stays Out of Your Way
 ***********************
 Twiggy tries to stay out of your way.  Specifically, an error in logging should **never** propogate outside the logging subsystem and cause your main application to crash. Instead, errors are trapped and reported by the  :data:`~twiggy.internal_log`.
 
-Instances of :class:`~twiggy.logger.InternalLog` only have a single :class:`~twiggy.outputs.Output` - they do not use emitters. By default, these messages are sent to standard error. You may assign an alternate ouput (such as a file) to ``twiggy.internal_log.output`` if desired, with the following conditions:
+Instances of :class:`.InternalLogger` only have a single :class:`.Output` - they do not use emitters. By default, these messages are sent to standard error. You may assign an alternate ouput (such as a file) to ``twiggy.internal_log.output`` if desired, with the following conditions:
 
-* the output should be failsafe - any errors that occur during internal logging will *not* be caught and will cause your application to crash.
+* the output should be failsafe - any errors that occur during internal logging will be dumped to standard error, and suppressed, causing the original message to be discarded.
 * accordingly, networked or asynchronous outputs are not recommended.
 * make sure someone is reading these log messages!
 
@@ -96,7 +101,9 @@ Asynchronous loggers never lock.
 *******************
 Use by Libraries
 *******************
-Libraries require special care to be polite and usable by application code.  The library should have a single bound in its top-level package that's used by modules. Library logging should generally be silent by default::
+Libraries require special care to be polite and usable by application code.  The library should have a single bound in its top-level package that's used by modules. Library logging should generally be silent by default.
+
+.. testcode::
 
     # in mylib/__init__.py
     log = twiggy.log.name('mylib')
@@ -106,13 +113,17 @@ Libraries require special care to be polite and usable by application code.  The
     from . import log
     log.debug("hi there")
 
-This allows application code to enable/disable all of library's logging as needed::
+This allows application code to enable/disable all of library's logging as needed.
+
+.. testcode::
 
     # in twiggy_setup
     import mylib
     mylib.log.min_level = twiggy.levels.INFO
 
-In addition to min_level, loggers also have a :attr:`~twiggy.logger.Logger.filter`. This filter operates *only on the format string*, and is intended to allow users to selectively disable individual messages in a poorly-written library::
+In addition to min_level, loggers also have a :attr:`~.Logger.filter`. This filter operates *only on the format string*, and is intended to allow users to selectively disable individual messages in a poorly-written library.
+
+.. testcode::
 
     # in mylib:
     for i in xrange(1000000):
@@ -121,7 +132,7 @@ In addition to min_level, loggers also have a :attr:`~twiggy.logger.Logger.filte
     # in twiggy_setup: turn off stupidness
     mylib.log.filter = lambda format_spec: format_spec != "blah blah {}"
 
-Note that using a filter this way is an optimization - in general, application code should use :data:`~twiggy.emitters` instead.
+Note that using a filter this way is an optimization - in general, application code should use :data:`emitters` instead.
 
 ********************
 Tips And Tricks
@@ -142,7 +153,7 @@ In addition to the default new-style (braces) format specs, twiggy also supports
 
 Use Fields
 ==========
-Use :meth:`~twiggy.logger.Logger.fields` to include key-value data in a message instead of embedding it the human-readable string::
+Use :meth:`.fields` to include key-value data in a message instead of embedding it the human-readable string.
 
 .. testcode::
 
@@ -159,7 +170,7 @@ Technical Details
 
 Independence of logger instances
 ================================
-Each log instance created by partial binding is independent from each other. In particular, a logger's :meth:`~twiggy.logger.Logger.name` has no relation to the object; it's just for human use:
+Each log instance created by partial binding is independent from each other. In particular, a logger's :meth:`.name` has no relation to the object; it's just for human use:
 
 .. doctest::
 
@@ -173,20 +184,24 @@ Twiggy has been written to be fast, minimizing the performance impact on the mai
 *******************
 Extending Twiggy
 *******************
-When developing extensions to twiggy, use the :data:`~twiggy.devel_log`. An :class:`~twiggy.logger.InternalLogger`, the devel_log is completely separate from the main :data:`~twiggy.log`.  By default, messages logged to the devel_log are discarded; assigning an appropriate :class:`~twiggy.outputs.Ouput` to its ``output`` attribute before using.
+When developing extensions to twiggy, use the :data:`devel_log`. An :class:`.InternalLogger`, the devel_log is completely separate from the main :data:`log`.  By default, messages logged to the devel_log are discarded; assigning an appropriate :class:`.Ouput` to its ``output`` attribute before using.
 
 Writing Features
 ===================
-Features are used to encapsulate common logging patterns. They are implemented as methods added to the :class:`~twiggy.logger.Logger` class. They receive an instance as the first argument (ie, ``self``). :meth:`~twiggy.logger.Logger.addFeature <Enable the feature>` before using.
+Features are used to encapsulate common logging patterns. They are implemented as methods added to the :class:`.Logger` class. They receive an instance as the first argument (ie, ``self``). :meth:`Enable the feature <.addFeature>` before using.
 
 Features come in two flavors: those that add information to a message's fields or set options, and those that cause output.
 
-Features which only add fields/set options should simply call the appropriate method on ``self`` and return the resultant object::
+Features which only add fields/set options should simply call the appropriate method on ``self`` and return the resultant object.
+
+.. testcode::
 
     def dimensions(self, shape):
         return self.fields(height=shape.height, width=shape.width)
 
-Features can also emit messages as usual.  Do not return::
+Features can also emit messages as usual.  Do not return from these methods.
+
+.. testcode::
 
     def sayhi(self, lang):
         if lang == 'en':
@@ -196,7 +211,7 @@ Features can also emit messages as usual.  Do not return::
 
 .. _wsgi-support:
 
-If the feature should add fields *and* emit in the same step (like :meth:`~twiggy.logger.Logger.struct`), use the :func:`~twiggy.logger.emit` decorators.  Here's a prototype feature that dumps information about a `WSGI environ <http://www.python.org/dev/peps/pep-0333/#environ-variables>`_.
+If the feature should add fields *and* emit in the same step (like :meth:`.struct`), use the :func:`.emit` decorators.  Here's a prototype feature that dumps information about a `WSGI environ <http://www.python.org/dev/peps/pep-0333/#environ-variables>`_.
 
 .. testcode::
 
@@ -214,14 +229,18 @@ If the feature should add fields *and* emit in the same step (like :meth:`~twigg
                 k = k[5:].title().replace('_', '-')
                 d[k] = v
 
-        return self.name('dumpwsgi').fieldsDict(d)
+        # if called on an unnamed logger, add a name
+        if name not in self._fields:
+            self = self.name('dumpwsgi')
+
+        return self.fieldsDict(d)
 
 
 Writing Outputs
 ===================
-Outputs do the work of writing a message to an external resource (file, socket, etc.).  User-defined outputs should inherit from :class:`twiggy.outputs.Output` or :class:`twiggy.outputs.AsyncOutput` if they wish to support :term:`asynchronous logging` (preferred).
+Outputs do the work of writing a message to an external resource (file, socket, etc.).  User-defined outputs should inherit from :class:`.Output` or :class:`.AsyncOutput` if they wish to support :term:`asynchronous logging` (preferred).
 
-An Output subclass's ``__init__`` should take a ``format`` (see below) and any parameters needed to acquire resources (filename, hostname, etc.), but *not the resources themselves*. These are created in ``_open``.  Implementations supporting asynchronous logging should also take a ``msg_buffer`` argument (see :class:`~twiggy.outputs.AsyncOutput`).
+An Output subclass's ``__init__`` should take a ``format`` (see below) and any parameters needed to acquire resources (filename, hostname, etc.), but *not the resources themselves*. These are created in ``_open``.  Implementations supporting asynchronous logging should also take a ``msg_buffer`` argument (see :class:`.AsyncOutput`).
 
 
 Outputs should define the following:
@@ -235,11 +254,11 @@ Outputs should define the following:
 .. automethod:: twiggy.outputs.Output._write
     :noindex:
 
-If the output requires locking to be thread-safe, set the class attribute :attr:`~twiggy.outputs.Output.use_locks` to True (the default). Turning off may give slightly higher throughput.
+If the output requires locking to be thread-safe, set the class attribute :attr:`~.use_locks` to True (the default). Turning off may give slightly higher throughput.
 
 Writing Formats
 ===================
-The :attr:`format <twiggy.outputs.Output._format>` callable is Output-specific; it should take a :class:`~twiggy.message.Message` and return an appropriate object (string, database row, etc.) to be written. **Do not modify** the received message - it is shared by all outputs.
+The :attr:`format <.Output._format>` callable is Output-specific; it should take a :class:`.Message` and return an appropriate object (string, database row, etc.) to be written. **Do not modify** the received message - it is shared by all outputs.
 
 
-How to do that, including :class:`~twiggy.lib.ConversionTable`
+How to do that, including :class:`.ConversionTable`
