@@ -15,9 +15,10 @@ Twiggy is a more Pythonic logger.
 Who, What, When, Where, Why
 ****************************
 
-:author: Peter Fein
+:author: `Peter Fein <http://i.wearpants.org>`_
 :email: pfein@pobox.com
-:homepage: http://python-twiggy.googlecode.com/
+:homepage: http://twiggy.wearpants.org/
+:hosting: http://python-twiggy.googlecode.com/
 
 Twiggy was born at `Pycon 2010 <http://us.pycon.org/2010/>`_ after I whined about the standard library's `logging <http://docs.python.org/library/logging.html>`_ and Jesse Noller "invited" me to do something about it.
 
@@ -26,6 +27,10 @@ Install straight with distutils from the `Cheeseshop <http://pypi.python.org/pyp
     pip install Twiggy
 
     easy_install -U Twiggy
+
+Get the latest version::
+
+    hg clone https://python-twiggy.googlecode.com/hg/ python-twiggy
 
 Why Logging Matters
 ===================
