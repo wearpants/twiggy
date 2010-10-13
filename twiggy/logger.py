@@ -11,7 +11,7 @@ import traceback
 from functools import wraps
 
 def emit(level):
-    """a decorator that emits at ``level`` after calling the method. The method
+    """a decorator that emits at `level <.LogLevel>` after calling the method. The method
     should return a Logger instance.
 
     For convenience, decorators for the various levels are available as
@@ -32,13 +32,7 @@ emit.error = emit(levels.ERROR)
 emit.critical = emit(levels.CRITICAL)
 
 class BaseLogger(object):
-    """Base class for loggers
-
-    :ivar dict _fields: dictionary of bound fields for structured logging
-    :ivar dict _options: dictionary of bound options. See `Message.options`.
-    :ivar levels.Level min_level: minimum level for which to emit. For optimization purposes only.
-
-    """
+    """Base class for loggers"""
 
 
     __slots__ = ['_fields', '_options', 'min_level']
@@ -57,7 +51,7 @@ class BaseLogger(object):
     def _clone(self):
         return self.__class__(fields = self._fields, options = self._options, min_level = self.min_level)
 
-    def _emit(self):
+    def _emit(self, level, format_spec = '', *args, **kwargs):
         raise NotImplementedError
 
     ## The Magic
@@ -66,18 +60,16 @@ class BaseLogger(object):
         return self.fieldsDict(kwargs)
 
     def fieldsDict(self, d):
-        """bind fields for structured logging
-
-        Use this instead of ``fields`` if you have keys which are not valid Python identifiers.
-
-        :arg dict d: a dict of fields to bind
+        """bind fields for structured logging.
+        
+        Use this instead of `.fields` if you have keys which are not valid Python identifiers.
         """
         clone = self._clone()
         clone._fields.update(d)
         return clone
 
     def options(self, **kwargs):
-        """bind options for message creation.  See `Message.options`"""
+        """bind option for message creation."""
         bad_options = set(kwargs) - self.__valid_options
         if bad_options:
             raise ValueError("Invalid options {0!r}".format(tuple(bad_options)))
@@ -87,7 +79,7 @@ class BaseLogger(object):
 
     ##  Convenience
     def trace(self, trace='error'):
-        """convenience method to enable traceback logging.  See `Message.options`."""
+        """convenience method to enable traceback logging"""
         return self.options(trace=trace)
 
     def name(self, name):
@@ -95,20 +87,25 @@ class BaseLogger(object):
         return self.fields(name=name)
 
     ## Do something
-    def debug(self, *args, **kwargs):
-        self._emit(levels.DEBUG, *args, **kwargs)
+    def debug(self, format_spec = '', *args, **kwargs):
+        """Emit at ``DEBUG`` level"""
+        self._emit(levels.DEBUG, format_spec, *args, **kwargs)
 
-    def info(self, *args, **kwargs):
-        self._emit(levels.INFO, *args, **kwargs)
+    def info(self, format_spec = '', *args, **kwargs):
+        """Emit at ``INFO`` level"""
+        self._emit(levels.INFO, format_spec, *args, **kwargs)
 
-    def warning(self, *args, **kwargs):
-        self._emit(levels.WARNING, *args, **kwargs)
+    def warning(self, format_spec = '', *args, **kwargs):
+        """Emit at ``WARNING`` level"""
+        self._emit(levels.WARNING, format_spec, *args, **kwargs)
 
-    def error(self, *args, **kwargs):
-        self._emit(levels.ERROR, *args, **kwargs)
+    def error(self, format_spec = '', *args, **kwargs):
+        """Emit at ``ERROR`` level"""
+        self._emit(levels.ERROR, format_spec, *args, **kwargs)
 
-    def critical(self, *args, **kwargs):
-        self._emit(levels.CRITICAL, *args, **kwargs)
+    def critical(self, format_spec = '', *args, **kwargs):
+        """Emit at ``CRITICAL`` level"""
+        self._emit(levels.CRITICAL, format_spec, *args, **kwargs)
 
 class InternalLogger(BaseLogger):
     """Special-purpose logger for internal uses.
