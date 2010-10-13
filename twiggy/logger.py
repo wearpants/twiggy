@@ -12,7 +12,7 @@ from functools import wraps
 
 def emit(level):
     """a decorator that emits at `level <.LogLevel>` after calling the method. The method
-    should return a Logger instance.
+    should return a `.Logger` instance.
 
     For convenience, decorators for the various levels are available as
     ``emit.debug``, ``emit.info``, etc..
@@ -108,7 +108,7 @@ class BaseLogger(object):
         self._emit(levels.CRITICAL, format_spec, *args, **kwargs)
 
 class InternalLogger(BaseLogger):
-    """Special-purpose logger for internal uses.
+    """Special-purpose logger for internal uses. Sends messages directly to output, bypassing :data:`.emitters`.
 
     :ivar `Output` output: an output to write to
     """
@@ -142,10 +142,7 @@ class InternalLogger(BaseLogger):
             traceback.print_exc(file = sys.stderr)
 
 class Logger(BaseLogger):
-    """Logger for end-users.  The magic `log <twiggy.log>`
-
-    :ivar filter: .. function:: filter(msg) -> bool
-    """
+    """Logger for end-users"""
 
     __slots__ = ['_emitters', 'filter']
 
@@ -166,7 +163,9 @@ class Logger(BaseLogger):
     def disableFeature(cls, name):
         """disable a feature.
 
-        :arg string name: the name of the feature to disable.  A method will still exist by this name, but it won't do anything.
+        A method will still exist by this name, but it won't do anything.
+
+        :arg string name: the name of the feature to disable.
         """
         # get func directly from class dict - we don't want an unbound method.
         setattr(cls, name, cls.__dict__['_feature_noop'])
@@ -199,7 +198,7 @@ class Logger(BaseLogger):
     def struct(self, **kwargs):
         """convenience method for structured logging
 
-        Sets `fields` and emits at ``info``
+        Sets ``fields`` and emits at ``INFO``
         """
         return self.fields(**kwargs)
 

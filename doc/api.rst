@@ -54,11 +54,9 @@ Filters
 *************************
 .. module:: twiggy.filters
 
-.. function:: filter(msg) -> bool
+.. function:: filter(msg : Message) -> bool
 
     A *filter* is any function that takes a :class:`.Message` and returns True if it should be :class:`emitted <Emitter>`.
-    
-    :arg `.Message` msg: the message to test
 
 .. function:: msgFilter(x) -> filter
 
@@ -163,8 +161,21 @@ Loggers should not be created directly by users; use the global :data:`.log` ins
     .. automethod:: critical
 
 
+.. class:: Logger
+    
+    Logger for end-users. The type of the magic :data:`.log`
+    
+    .. attribute:: filter
+    
+        Filter on ``format_spec``. For optimization purposes only. Should have the following signature:
+        
+        .. function:: func(format_spec : string) -> bool
+            :noindex:
+            
+            Should the message be emitted.
+        
 
-
+.. autoclass:: InternalLogger
 
 .. autofunction:: emit
 
