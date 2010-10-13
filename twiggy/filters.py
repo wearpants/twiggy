@@ -5,18 +5,7 @@ import re
 __re_type = type(re.compile('foo')) # XXX is there a canonical place for this?
 
 def msgFilter(x):
-    """return a function suitable for use as a filter with emitters.
-
-    You may pass:
-
-    :None, True: the filter will always return True
-    :False: the filter will always return False
-    :string: compiled into a regex
-    :regex: match()ed against the message text
-    :callable: returned as is
-    :list: apply `msgFilter` to each element, and ``all()`` the results
-
-    """
+    """intelligently create a filter"""
     # XXX replace lambdas with nicely-named functions, for debugging
     if x is None:
         return lambda msg: True
@@ -42,12 +31,7 @@ def regex_wrapper(regexp):
 
 
 def names(*names):
-    """returns a filter, which gives True if the messsage's name equals any of those provided
-
-    ``names`` will be stored as an attribute on the filter.
-
-    :arg strings names: names to match
-    """
+    """returns a filter, which gives True if the messsage's name equals any of those provided"""
     names_set = set(names)
     def set_names_filter(msg):
         return msg.name in names_set
@@ -55,14 +39,7 @@ def names(*names):
     return set_names_filter
 
 def glob_names(*names):
-    """returns a filter, which gives True if the messsage's name globs those provided
-
-    ``names`` will be stored as an attribute on the filter.
-
-    This is probably quite a bit slower than :func:`names`.
-
-    :arg strings names: glob patterns.
-    """
+    """returns a filter, which gives True if the messsage's name globs those provided."""
     # copied from fnmatch.fnmatchcase - for speed
     patterns = [re.compile(fnmatch.translate(pat)) for pat in names]
     def glob_names_filter(msg):
@@ -74,13 +51,11 @@ def glob_names(*names):
 
 class Emitter(object):
     """
-    Emits!
+    Hold and manage an :class:`.Output` and associated :func:`.filter`
 
     :ivar LogLevel min_level: only emit if greater than this
-    :ivar function filter: arbitrary test on message contents
-
-    .. function:: filter(msg) -> bool should_emit
-
+    :ivar filter filter: arbitrary test on message contents
+    :ivar Output _output: where to emit messages to. Do not modify.
     """
 
     def __init__(self, min_level, filter, output):
