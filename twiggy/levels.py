@@ -3,7 +3,7 @@ Levels include (increasing severity): ``DEBUG``, ``INFO``, ``WARNING``, ``ERROR`
 """
 
 class LogLevel(object):
-    """A log level. Do not create instances.
+    """A log level. Users should *not* create new instances.
 
     Levels are opaque; they may be compared to each other, but nothing else.
     """

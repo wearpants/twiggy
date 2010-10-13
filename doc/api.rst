@@ -35,9 +35,8 @@ Library
 .. automodule:: twiggy.lib
     :members:
 
-*************************
 Converter
-*************************
+===============
 .. automodule:: twiggy.lib.converter
     :members:
 
