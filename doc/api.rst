@@ -114,7 +114,7 @@ Loggers should not be created directly by users; use the global :data:`.log` ins
 
 .. module:: twiggy.logger
     
-.. class:: BaseLogger
+.. class:: BaseLogger(fields=None, options=None, min_level=None)
 
     Base class for loggers
 
@@ -161,7 +161,7 @@ Loggers should not be created directly by users; use the global :data:`.log` ins
     .. automethod:: critical
 
 
-.. class:: Logger
+.. class:: Logger(fields=None, options=None, min_level=None)
     
     Logger for end-users. The type of the magic :data:`.log`
     
@@ -183,7 +183,7 @@ Message
 *************************
 .. module:: twiggy.message
 
-.. class:: Message
+.. class:: Message(level, format_spec, fields, options, *args, **kwargs)
 
     A logging message.  Users never create these directly.
 
