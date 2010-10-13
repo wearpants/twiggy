@@ -11,7 +11,6 @@ Global Objects
 
     the magic log object
 
-
 .. data:: internal_log
 
     `.InternalLogger` for reporting errors within Twiggy itself
@@ -98,8 +97,55 @@ Filters
 *************************
 Formats
 *************************
-.. automodule:: twiggy.formats
-    :members:
+
+.. module:: twiggy.formats
+
+.. _format-function:
+
+*Formats* are single-argument callables that take a `.Message` and return an object appropriate for the `.Output` they are assigned to.
+
+.. class:: LineFormat(separator=':', traceback_prefix='\\nTRACE', conversion=line_conversion)
+    
+
+    .. attribute:: separator
+    
+        string to separate line parts. Defaults to ``:``.
+        
+    .. attribute:: traceback_prefix
+        
+        string to prepend to traceback lines. Defaults to ``\nTRACE``.
+
+        Set to ``'\\n'`` (double backslash n) to roll up tracebacks to a single line.
+        
+    .. attribute:: conversion
+    
+        :class:`.ConversionTable` used to format :attr:`.fields`. Defaults to :data:`line_conversion`
+
+.. data:: line_conversion
+
+    a default line-oriented :class:`.ConversionTable`. Produces a nice-looking string from :attr:`.fields`.
+    
+    Fields are separated by a colon (``:``). Resultant string includes:
+        
+        :time: in iso8601 format (required)
+        :level: message level (required)
+        :name: logger name (optional)
+    
+    Remaining fields are sorted alphabetically and formatted as ``key=value``
+    
+.. data:: line_format
+    
+    a default :class:`.LineFormat` for output to a file. :ref:`Sample output <sample-file-output>`.
+
+    Fields are formatted using :data:`.line_conversion` and separated from the message :attr:`.text` by a colon (``:``). Traceback lines are prefixed by ``TRACE``.
+
+.. data:: shell_conversion
+
+    a default line-oriented :class:`.ConversionTable` for use in the shell.  Returns the same string as :data:`.line_conversion` but drops the ``time`` field.
+
+.. data:: shell_format
+
+    a default :class:`.LineFormat` for use in the shell.  Same as :data:`.line_format` but uses :data:`.shell_conversion` for :attr:`.fields`.
 
 *************************
 Levels
@@ -121,6 +167,7 @@ Loggers should not be created directly by users; use the global :data:`.log` ins
     .. attribute:: _fields
     
         dictionary of bound fields for :term:`structured logging`.
+        By default, contains a single field ``time`` with value ``time.gmtime()``.  This function will be called for each message emitted, populating the field with the current ``time.struct_time``.
 
     .. attribute:: _options
 
@@ -226,7 +273,7 @@ Outputs
     
     .. attribute:: _format
 
-        a :ref:`format` taking a `.Message` and formatting it for output. ``None`` means return the message unchanged.
+        a :ref:`callable <format-function>` taking a `.Message` and formatting it for output. ``None`` means return the message unchanged.
         
     .. attribute:: use_locks
     

@@ -147,6 +147,9 @@ Chained style is awesome. It allows you to create complex yet parsable log messa
 *************************
 Sample Output
 *************************
+
+.. _sample-file-output:
+
 Routed to a `file <.FileOutput>`, the above produces the following::
 
     2010-03-28T14:23:34Z:DEBUG:You may not care

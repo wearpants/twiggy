@@ -236,8 +236,8 @@ If the feature should add fields *and* emit in the same step (like :meth:`.struc
         return self.fieldsDict(d)
 
 
-Writing Outputs
-===================
+Writing Outputs and Formats
+==============================
 Outputs do the work of writing a message to an external resource (file, socket, etc.).  User-defined outputs should inherit from :class:`.Output` or :class:`.AsyncOutput` if they wish to support :term:`asynchronous logging` (preferred).
 
 An Output subclass's ``__init__`` should take a ``format`` (see below) and any parameters needed to acquire resources (filename, hostname, etc.), but *not the resources themselves*. These are created in ``_open``.  Implementations supporting asynchronous logging should also take a ``msg_buffer`` argument (see :class:`.AsyncOutput`).
@@ -256,8 +256,6 @@ Outputs should define the following:
 
 If the output requires locking to be thread-safe, set the class attribute :attr:`~.use_locks` to True (the default). Turning off may give slightly higher throughput.
 
-Writing Formats
-===================
 The :attr:`format <.Output._format>` callable is Output-specific; it should take a :class:`.Message` and return an appropriate object (string, database row, etc.) to be written. **Do not modify** the received message - it is shared by all outputs.
 
 

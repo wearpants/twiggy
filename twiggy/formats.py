@@ -19,14 +19,7 @@ line_conversion.genericItem = "{0}={1}".format
 line_conversion.aggregate = ':'.join
 
 class LineFormat(object):
-    """format a message for text-oriented output
-
-    :ivar string separator: separator between different fields
-    :ivar string traceback_prefix: prepended to traceback lines
-    :ivar ConverterTable conversion: does the work of formatting :attr:`~Message.fields`
-
-    Setting traceback_prefix to ``'\\\\n'`` (double backslash n) rolls it up to a single line.
-    """
+    """format a message for text-oriented output. Returns a string."""
 
     def __init__(self, separator=':', traceback_prefix='\nTRACE ', conversion=line_conversion):
         self.separator = separator
@@ -44,12 +37,14 @@ class LineFormat(object):
         return "{fields}{self.separator}{text}{trace}\n".format(**locals()) # XXX gross?
 
     def format_text(self, msg):
+        """format the text part of a message"""
         if msg.suppress_newlines:
             return msg.text.replace('\n', '\\n')
         else:
             return msg.text
 
     def format_traceback(self, msg):
+        """format the traceback part of a message"""
         if msg.traceback is not None:
             # XXX this could be faster
             l = msg.traceback.split('\n')
@@ -59,6 +54,7 @@ class LineFormat(object):
             return ""
 
     def format_fields(self, msg):
+        """format the fields of a message"""
         return self.conversion.convert(msg.fields)
 
 ## some useful default objects
