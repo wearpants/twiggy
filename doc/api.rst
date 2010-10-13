@@ -234,6 +234,14 @@ Outputs
 
     .. automethod:: __init__
 
+    The following methods should be implemented by subclasses.
+    
+    .. automethod:: twiggy.outputs.Output._open
+
+    .. automethod:: twiggy.outputs.Output._close
+
+    .. automethod:: twiggy.outputs.Output._write
+
 .. class:: AsyncOutput(msg_buffer=0)
 
     An `.Output` with support for :term:`asynchronous logging`.

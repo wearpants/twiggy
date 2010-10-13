@@ -38,7 +38,7 @@ class Output(object):
         raise NotImplementedError
 
     def _close(self):
-        """Release any resources acquired in ``_open``"""
+        """Release any resources acquired in `._open`"""
         raise NotImplementedError
 
     def _write(self, x):
