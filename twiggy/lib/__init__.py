@@ -8,8 +8,8 @@ def thread_name():
 def iso8601time(gmtime = None):
     """convert time to ISO 8601 format - it sucks less!
     
-    :arg int gmtime: time in seconds since epoch. If None, use ``time.gmtime()`` (UTC) 
+    :arg time.struct_time gmtime: time tuple. If None, use ``time.gmtime()`` (UTC) 
     
     XXX timezone is not supported
     """
-    return time.strftime("%Y-%m-%dT%H:%M:%S", gmtime if gmtime is not None else time.gmtime())
+    return time.strftime("%Y-%m-%dT%H:%M:%SZ", gmtime if gmtime is not None else time.gmtime())

@@ -149,24 +149,24 @@ Sample Output
 *************************
 Routed to a `file <.FileOutput>`, the above produces the following::
 
-    2010-03-28T14:23:34:DEBUG:You may not care
-    2010-03-28T14:23:34:ERROR:OMFG! Pants on fire!
-    2010-03-28T14:23:34:INFO:I like bikes
-    2010-03-28T14:23:34:INFO:I wear pants on my legs
-    2010-03-28T14:23:34:DEBUG:alfredo:hello
-    2010-03-28T14:23:34:INFO:user\ninput\nannoys\nus
-    2010-03-28T14:23:34:INFO:we
+    2010-03-28T14:23:34Z:DEBUG:You may not care
+    2010-03-28T14:23:34Z:ERROR:OMFG! Pants on fire!
+    2010-03-28T14:23:34Z:INFO:I like bikes
+    2010-03-28T14:23:34Z:INFO:I wear pants on my legs
+    2010-03-28T14:23:34Z:DEBUG:alfredo:hello
+    2010-03-28T14:23:34Z:INFO:user\ninput\nannoys\nus
+    2010-03-28T14:23:34Z:INFO:we
     deal
-    2010-03-28T14:23:34:WARNING:oh noes
+    2010-03-28T14:23:34Z:WARNING:oh noes
     TRACE Traceback (most recent call last):
     TRACE   File "futz.py", line 35, in <module>
     TRACE     1/0
     TRACE ZeroDivisionError: integer division or modulo by zero
-    2010-03-28T14:23:34:INFO:benito:hi there
-    2010-03-28T14:23:34:INFO:Going for a walk. path: less traveled roads: 42
-    2010-03-28T14:23:34:INFO:paths=less traveled:roads=42:Going for a walk
-    2010-03-28T14:23:34:INFO:dolphins=thankful:paths=42:
-    2010-03-28T14:23:34:INFO:myblog:request_id=12345:rows=100:user=frank:frobnicating database
-    2010-03-28T14:23:34:INFO:myblog:bytes=5678:request_id=12345:sending page over tubes
-    2010-03-28T14:23:34:INFO:myblog:request_id=67890:Client connected
-    2010-03-28T14:23:34:INFO:donjuan:pants=sexy:hello, ladies want to dance?
+    2010-03-28T14:23:34Z:INFO:benito:hi there
+    2010-03-28T14:23:34Z:INFO:Going for a walk. path: less traveled roads: 42
+    2010-03-28T14:23:34Z:INFO:paths=less traveled:roads=42:Going for a walk
+    2010-03-28T14:23:34Z:INFO:dolphins=thankful:paths=42:
+    2010-03-28T14:23:34Z:INFO:myblog:request_id=12345:rows=100:user=frank:frobnicating database
+    2010-03-28T14:23:34Z:INFO:myblog:bytes=5678:request_id=12345:sending page over tubes
+    2010-03-28T14:23:34Z:INFO:myblog:request_id=67890:Client connected
+    2010-03-28T14:23:34Z:INFO:donjuan:pants=sexy:hello, ladies want to dance?
