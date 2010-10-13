@@ -220,5 +220,36 @@ Message
 *************************
 Outputs
 *************************
-.. automodule:: twiggy.outputs
-    :members:
+.. module:: twiggy.outputs
+    
+.. class:: Output(format=None)
+    
+    .. attribute:: _format
+
+        a :ref:`format` taking a `.Message` and formatting it for output. ``None`` means return the message unchanged.
+        
+    .. attribute:: use_locks
+    
+        Class variable, indicating that locks should be used when running in a synchronous, multithreaded environment. Threadsafe subclasses may disable locking for higher throughput. Defaults to True.
+
+    .. automethod:: __init__
+
+.. class:: AsyncOutput(msg_buffer=0)
+
+    An `.Output` with support for :term:`asynchronous logging`.
+
+    Inheriting from this class transparently adds support for asynchronous logging using the multiprocessing module. This is off by default, as it can cause log messages to be dropped. See ``the msg_buffer`` argument.
+
+    :arg int msg_buffer: number of messages to buffer in memory when using asynchronous logging. ``0`` turns asynchronous output off, a negative integer means an unlimited buffer, a positive integer is the size of the buffer.
+
+.. autoclass:: FileOutput
+
+.. class:: StreamOutput(format, stream=sys.stderr)
+
+    Output to an externally-managed stream.
+
+    The stream will be written to, but otherwise left alone (i.e., it will *not* be closed).
+
+.. autoclass:: NullOutput
+
+.. autoclass:: DequeOutput

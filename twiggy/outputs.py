@@ -5,13 +5,7 @@ import atexit
 from collections import deque
 
 class Output(object):
-    """
-    Does the work of formatting and writing a message.
-
-    :ivar _format: a callable taking a `Message` and formatting it for output. `None` means return the message unchanged.
-    :cvar bool use_locks: use locks when running in a synchronous, multithreaded environment. Threadsafe subclasses may disable locking for higher throughput. Defaults to true.
-
-    """
+    """Does the work of formatting and writing a message."""
 
     use_locks = True
 
@@ -21,6 +15,9 @@ class Output(object):
         return msg
 
     def __init__(self, format=None):
+        """
+        :arg format format: the format to use. If None, return the message unchanged.
+        """
         self._format = format if format is not None else self._noop_format
         self._sync_init()
         atexit.register(self.close)
@@ -61,15 +58,7 @@ class Output(object):
         self._write(x)
 
 class AsyncOutput(Output):
-    """An Output with support for asynchronous logging
-
-    Inheriting from this Output transparently adds support for asynchronous logging
-    using the multiprocessing module. This is off by default, as it can cause
-    log messages to be dropped. See the msg_buffer argument.
-
-    :arg int msg_buffer: number of messages to buffer in memory when using asynchronous logging. ``0`` turns asynchronous output off, a negative integer means an unlimited buffer, a positive integer is the size of the buffer.
-
-    """
+    """An `.Output` with support for asynchronous logging"""
 
     def __init__(self, format=None, msg_buffer=0):
         self._format = format if format is not None else self._noop_format
@@ -129,7 +118,12 @@ class NullOutput(Output):
         pass
 
 class DequeOutput(Output):
-    """an output that stuffs messages in a deque"""
+    """an output that stuffs messages in a deque
+    
+    Useful for unittesting.
+    
+    :ivar deque deque: messages that have been emitted
+    """
 
     use_locks = False
 
@@ -144,7 +138,7 @@ class DequeOutput(Output):
 
 
 class FileOutput(AsyncOutput):
-    """Output to file
+    """Output messages to a file
 
     ``name``, ``mode``, ``buffering`` are passed to ``open(..)``
     """
@@ -164,10 +158,7 @@ class FileOutput(AsyncOutput):
         self.file.write(x)
 
 class StreamOutput(Output):
-    """Output to an externally-managed stream.
-
-    The stream will be written to, but otherwise left alone (i.e., it will *not* be closed).
-    """
+    """Output to an externally-managed stream."""
     def __init__(self, format, stream=sys.stderr):
         self.stream = stream
         super(StreamOutput, self).__init__(format)
