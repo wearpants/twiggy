@@ -5,22 +5,7 @@ import traceback
 from string import Template
 
 class Message(object):
-    """A log message.  All attributes are read-only.
-
-    :ivar dict fields: structured logging fields.  Keys are string, values are arbitrary. A ``level`` item is required.
-    :ivar bool suppress_newlines: should newlines be escaped in output
-    :ivar string traceback: a stringified traceback, or None.
-    :ivar string text: the filled-in template
-
-    Any callables passed in fields, args or kwargs will be called and the returned value used instead.
-
-    .. _message-options:
-
-    :arg dict options: The constructor takes a dict ``options`` to control message creation.  In addition to `suppress_newlines`, this class recognizes the following options:
-
-        :trace: control traceback inclusion.  Either a traceback tuple, or one of the strings ``always``, ``error``, in which case a traceback will be extracted from the current stack frame.
-        :style: the style of template used for ``format_spec``. One of ``braces``, ``percent``, ``dollar``.
-    """
+    """A log message.  All attributes are read-only."""
 
     __slots__ = ['fields', 'suppress_newlines', 'traceback', 'text']
 
@@ -34,10 +19,11 @@ class Message(object):
     def __init__(self, level, format_spec, fields, options,
                  *args, **kwargs):
         """
+        :arg LogLevel level: the level of the message
         :arg string format_spec: the human-readable message template. Should match the ``style`` in options.
         :arg tuple args: substitution arguments for ``format_spec``.
         :arg tuple kwargs: substitution keyword arguments for ``format_spec``.
-        :arg dict options: a dictionary of options to control message creation. See `message-options`.
+        :arg dict options: a dictionary of :ref:`options <message-options>` to control message creation.
         """
 
         self.fields = fields

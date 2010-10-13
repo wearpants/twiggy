@@ -173,7 +173,6 @@ Loggers should not be created directly by users; use the global :data:`.log` ins
             :noindex:
             
             Should the message be emitted.
-        
 
 .. autoclass:: InternalLogger
 
@@ -182,8 +181,41 @@ Loggers should not be created directly by users; use the global :data:`.log` ins
 *************************
 Message
 *************************
-.. automodule:: twiggy.message
-    :members:
+.. module:: twiggy.message
+
+.. class:: Message
+
+    A logging message.  Users never create these directly.
+
+    .. _message-options:
+
+    The constructor takes a dict of ``options`` to control message creation.  In addition to :attr:`.suppress_newlines`, this class recognizes the following options:
+
+        :trace: control traceback inclusion.  Either a traceback tuple, or one of the strings ``always``, ``error``, in which case a traceback will be extracted from the current stack frame.
+        :style: the style of template used for ``format_spec``. One of ``braces``, ``percent``, ``dollar``.
+
+    Any callables passed in ``fields``, ``args`` or ``kwargs`` will be called and the returned value used instead. See :ref:`dynamic messages <dynamic-messages>`.
+
+    All attributes are read-only.
+
+    .. attribute:: fields
+
+        dictionary of :term:`structured logging` fields.  Keys are string, values are arbitrary. A ``level`` item is required.
+
+    .. attribute:: suppress_newlines
+        
+        should newlines be escaped in output. Boolean.
+
+    .. attribute:: traceback
+    
+        a stringified traceback, or None.
+
+    .. attribute:: text
+        
+        the human-readable message. Constructed by substituting ``args``/``kwargs`` into ``format_spec``. String.
+
+    .. automethod:: __init__
+
 
 *************************
 Outputs
