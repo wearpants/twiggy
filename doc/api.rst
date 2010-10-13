@@ -5,8 +5,29 @@ API Reference
 *************************
 Global Objects
 *************************
-.. automodule:: twiggy
-    :members:
+.. module:: twiggy
+
+.. data:: log
+
+    the magic log object
+
+
+.. data:: internal_log
+
+    `.InternalLogger` for reporting errors within Twiggy itself
+
+.. data:: devel_log
+
+    `.InternalLogger` for use by developers writing extensions to Twiggy
+
+.. data:: emitters
+
+    the global :class:`emitters <.Emitter>` dictionary
+
+.. autofunction:: addEmitters
+
+.. autofunction:: quickSetup
+
 
 *************************
 Library
