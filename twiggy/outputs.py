@@ -9,10 +9,8 @@ class Output(object):
     Does the work of formatting and writing a message.
 
     :ivar _format: a callable taking a `Message` and formatting it for output. `None` means return the message unchanged.
+    :cvar bool use_locks: use locks when running in a synchronous, multithreaded environment. Threadsafe subclasses may disable locking for higher throughput. Defaults to true.
 
-    :cvar bool use_locks: use locks when running in a synchronous,
-    multithreaded environment. Threadsafe subclasses may disable locking
-    for higher throughput. Defaults to true.
     """
 
     use_locks = True
