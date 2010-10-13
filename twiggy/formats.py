@@ -24,17 +24,11 @@ class LineFormat(object):
     :ivar string separator: separator between different fields
     :ivar string traceback_prefix: prepended to traceback lines
     :ivar ConverterTable conversion: does the work of formatting :attr:`~Message.fields`
+
+    Setting traceback_prefix to ``'\\\\n'`` (double backslash n) rolls it up to a single line.
     """
 
     def __init__(self, separator=':', traceback_prefix='\nTRACE ', conversion=line_conversion):
-        """
-        Interesting trick:
-        Setting traceback_prefix to '\\n' rolls it up to a single line.
-
-        :ivar conversion: helper to turn a message to a string
-        :type conversion: ConversionTable
-
-        """
         self.separator = separator
         self.traceback_prefix = traceback_prefix
         self.conversion = conversion
