@@ -6,5 +6,10 @@ def thread_name():
     return threading.currentThread().getName()
 
 def iso8601time(gmtime = None):
-    """ISO 8601 - it sucks less!"""
+    """convert time to ISO 8601 format - it sucks less!
+    
+    :arg int gmtime: time in seconds since epoch. If None, use ``time.gmtime()`` (UTC) 
+    
+    XXX timezone is not supported
+    """
     return time.strftime("%Y-%m-%dT%H:%M:%S", gmtime if gmtime is not None else time.gmtime())
