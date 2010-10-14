@@ -1,7 +1,7 @@
 import copy
 
 class Converter(object):
-    """Holder for ConversionTable items
+    """Holder for `.ConversionTable` items
 
     :ivar key: the key to apply the conversion to
     :ivar function convertValue: one-argument function to convert the value
@@ -18,40 +18,18 @@ class Converter(object):
         self.required = required
 
     def __repr__(self):
-        # XXX perhaps poke around in convertValue/convertItem to see if we can extract a meaningul
+        # XXX perhaps poke around in convertValue/convertItem to see if we can extract a meaningful
         # `"some_string".format`? eh.
         return "<Converter('{}', {}, {}, {})>".format(self.key, self.convertValue, self.convertItem, self.required)
 
 class ConversionTable(list):
-    """Converts dictionaries using Converters
-
-    For each item, one or more corresponding Converters *c* are found by
-    matching key. A list is built by calling c.convertItem(item_key,
-    c.convertValue(item_value)) in the same order as converters are supplied.
-    Any values for which no Converter is found are sorted by key, passed to
-    genericValue/genericItem and appended. If any required items are missing,
-    ValueError is raised. The resulting list is passed to aggregate, and its
-    return value is returned as the result of the conversion.
-
-    Users may override genericValue/genericItem/aggregate by subclassing or
-    assigning a new function on a ConversionTable instance.
-
-    Really, it's pretty intuitive.
-
-    >>> 8*8
-    64
-
-    Math is hard:
-
-    >>> 2+2
-    4
-
-    """
+    """Converts dictionaries using Converters"""
 
     def __init__(self, seq):
         """
-        :arg seq: a sequence of Converters, arg tuples or kwarg dicts (which
-        will be used to create Converters)
+        :arg seq: a sequence of Converters
+        
+        You may also pass 3-or-4 item arg tuples or kwarg dicts (which will be used to create `Converters <.Converter>`)
         """
 
         super(ConversionTable, self).__init__([])
@@ -83,7 +61,10 @@ class ConversionTable(list):
         return dict(converteds)
 
     def convert(self, d):
-        """do the conversion.  See class docstring"""
+        """do the conversion
+        
+        :arg dict d: the data to convert. Keys should be strings.
+        """
         # XXX I could be much faster & efficient!
         # XXX I have written this pattern at least 10 times
         converts = set(x.key for x in self)
@@ -109,25 +90,25 @@ class ConversionTable(list):
         return self.aggregate(l)
 
     def copy(self):
-        """Make an independent copy"""
+        """make an independent copy of this ConversionTable"""
         return copy.deepcopy(self)
 
     def get(self, key):
-        """return the *first* Converter for key"""
+        """return the *first* converter for ``key``"""
         for c in self:
             if c.key == key:
                 return c
 
     def getAll(self, key):
-        """return a list of all Converters for key"""
+        """return a list of all converters for ``key``"""
         return [c for c in self if c.key == key]
 
     def add(self, *args, **kwargs):
-        """Append a `Converter`. Args & kwargs will be passed through"""
+        """Append a `.Converter`. ``args`` & ``kwargs`` will be passed through to its constructor"""
         self.append(Converter(*args, **kwargs))
 
     def delete(self, key):
-        """delete the *all* converters for key"""
+        """delete the *all* of the converters for ``key``"""
         for i, c in enumerate(self):
             if c.key == key:
                 del self[i]

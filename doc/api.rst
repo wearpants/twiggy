@@ -27,18 +27,6 @@ Global Objects
 
 .. autofunction:: quickSetup
 
-
-*************************
-Library
-*************************
-.. automodule:: twiggy.lib
-    :members:
-
-Converter
-===============
-.. automodule:: twiggy.lib.converter
-    :members:
-
 *************************
 Features
 *************************
@@ -152,6 +140,62 @@ Levels
 *************************
 .. automodule:: twiggy.levels
     :members:
+
+*************************
+Library
+*************************
+.. automodule:: twiggy.lib
+    :members:
+
+Converter
+===============
+.. module:: twiggy.lib.converter
+
+.. autoclass:: Converter
+
+.. class:: ConversionTable(seq)
+
+    Convert data dictionaries using `Converters <.Converter>`
+
+    For each item in the dictionary to be converted:
+    
+    #. Find one or more corresponding converters ``c`` by matching key. 
+    #. Build a list of converted items by calling ``c.convertItem(item_key, c.convertValue(item_value))``. The list will have items in the same order as converters were supplied.
+    #. Dict items for which no converter was found are sorted by key and passed to `.genericValue` / `.genericItem`. These items are appended to the list from step 2. 
+    #. If any required items are missing, :exc:`ValueError` is raised.
+    #. The resulting list of converted items is passed to `.aggregate`. The value it returns is the result of the conversion.
+
+
+    Users may override `.genericValue`/`.genericItem`/`.aggregate` by subclassing or assigning a new function on a ConversionTable instance.
+
+    Really, it's pretty intuitive.
+
+    .. automethod:: __init__
+
+    .. automethod:: convert
+    
+    .. method:: genericValue(value)
+        
+        convert values for which no specific `.Converter` is supplied
+
+    .. method:: genericItem(key, value)
+        
+        convert items for which no specific `.Converter` is supplied
+        
+    .. method:: aggregate(converteds)
+        
+        aggregate list of converted items.  The return value of `.convert`
+
+    .. automethod:: copy
+    
+    .. automethod:: get
+    
+    .. automethod:: getAll
+    
+    .. automethod:: add
+    
+    .. automethod:: delete
+
 
 *************************
 Logger
