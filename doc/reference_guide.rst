@@ -235,12 +235,11 @@ If the feature should add fields *and* emit in the same step (like :meth:`.struc
 
         return self.fieldsDict(d)
 
-
 Writing Outputs and Formats
 ==============================
 Outputs do the work of writing a message to an external resource (file, socket, etc.).  User-defined outputs should inherit from :class:`.Output` or :class:`.AsyncOutput` if they wish to support :term:`asynchronous logging` (preferred).
 
-An Output subclass's ``__init__`` should take a ``format`` (see below) and any parameters needed to acquire resources (filename, hostname, etc.), but *not the resources themselves*. These are created in ``_open``.  Implementations supporting asynchronous logging should also take a ``msg_buffer`` argument (see :class:`.AsyncOutput`).
+An Output subclass's ``__init__`` should take a ``format`` (see below) and any parameters needed to acquire resources (filename, hostname, etc.), but *not the resources themselves*. These are created in :meth:`._open`.  Implementations supporting asynchronous logging should also take a ``msg_buffer`` argument (see :class:`.AsyncOutput`).
 
 
 Outputs should define the following:
@@ -258,5 +257,46 @@ If the output requires locking to be thread-safe, set the class attribute :attr:
 
 The :attr:`format <.Output._format>` callable is Output-specific; it should take a :class:`.Message` and return an appropriate object (string, database row, etc.) to be written. **Do not modify** the received message - it is shared by all outputs.
 
+.. _conversion-table-example:
 
-How to do that, including :class:`.ConversionTable`
+:class:`ConversionTables<.ConversionTable>` are particulary useful for formatting fields. They are commonly used with :class:`.LineFormat` to format messages for text-oriented output.
+
+.. testcode::
+    
+    from twiggy.lib.converter import ConversionTable
+    conversion = ConversionTable()
+    
+    fields = {'shape': 'square',
+              'height': 10,
+              'width': 5,
+              'color': 'blue'}
+
+    # hide shape field name
+    # uppercase value
+    # make mandatory
+    conversion.add(key = 'shape',
+                   convertValue = str.upper,
+                   convertItem = '{1}'.format, # stringify 2nd item (value)
+                   required = True)
+   
+    # format height value with two decimal places
+    # show as "<key> is <value>"
+    conversion.add('height', '{.2f}'.format, "{0} is {1}".format)
+   
+    # separate fields in final output by colons
+    conversion.aggregate = ':'.join
+    
+    # unknown items are sorted by key
+    
+    # unknown values are stringified
+    conversion.genericValue = str
+    
+    # show unknown items as "<key>=<value>"
+    conversion.genericItem = "{0}={1}".format
+    
+    # convert!
+    conversion.convert(fields)
+
+.. testoutput::
+
+    SQUARE:height is 10.00:color=blue:width=5

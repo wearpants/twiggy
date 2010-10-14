@@ -168,7 +168,7 @@ Converter
 
     Users may override `.genericValue`/`.genericItem`/`.aggregate` by subclassing or assigning a new function on a ConversionTable instance.
 
-    Really, it's pretty intuitive.
+    Really, it's :ref:`pretty intuitive <conversion-table-example>`.
 
     .. automethod:: __init__
 
