@@ -147,7 +147,6 @@ The messages output by an emitter are determined by its :attr:`~.Emitter.min_lev
     # functions are passed the message; return True to emit
     e.filter = lambda msg: msg.fields['address'] > 0xDECAF
     # lists are all()'d
-    # XXX this doesn't work yet
-    # e.filter = ["^mem.y$", lambda msg: msg.fields['address'] > 0xDECAF]
+    e.filter = ["^mem.y$", lambda msg: msg.fields['address'] > 0xDECAF]
 
 For more see :mod:`.filters`
