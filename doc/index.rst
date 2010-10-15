@@ -43,9 +43,7 @@ Why Twiggy Should Be Your New Logger
 You should use Twiggy because it is awesome. For more information, `see this blog post <http://blog.wearpants.org/meet-twiggy>`_.
 
 .. warning::
-    Twiggy works great, but is not rock solid; do not use for nuclear power plants, spaceships or mortgage derivatives trading (not that it'd matter).
-
-.. seealso:: :doc:`blog_post_notes`
+    Twiggy works great, but is not rock solid (yet); do not use for nuclear power plants, spaceships or mortgage derivatives trading (not that it'd matter).
 
 **************
 Documentation

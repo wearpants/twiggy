@@ -243,6 +243,18 @@ Loggers should not be created directly by users; use the global :data:`.log` ins
     
         convenvience method to bind ``name`` field
     
+    .. method:: struct(**kwargs) -> bound Logger
+    
+        convenience method for :term:`structured logging`. Calls :meth:`.fields` and emits at ``INFO``
+
+    .. method:: structDict(d) -> bound Logger
+    
+        convenience method for :term:`structured logging`. Use instead of `.struct` if you have keys which are not valid Python identifiers.
+
+        :arg dict d: dictionary of fields. Keys should be strings.
+
+
+    
     The following methods cause messages to be emitted.  ``format_spec`` is a template string into which ``args`` and ``kwargs`` will be substitued.
     
     .. automethod:: debug

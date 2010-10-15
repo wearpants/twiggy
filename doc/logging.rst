@@ -161,14 +161,18 @@ Routed to a `file <.FileOutput>`, the above produces the following::
     deal
     2010-03-28T14:23:34Z:WARNING:oh noes
     TRACE Traceback (most recent call last):
-    TRACE   File "futz.py", line 35, in <module>
+    TRACE   File "<doctest log-output[...]>", line 35, in <module>
     TRACE     1/0
     TRACE ZeroDivisionError: integer division or modulo by zero
     2010-03-28T14:23:34Z:INFO:benito:hi there
     2010-03-28T14:23:34Z:INFO:Going for a walk. path: less traveled roads: 42
-    2010-03-28T14:23:34Z:INFO:paths=less traveled:roads=42:Going for a walk
+    2010-03-28T14:23:34Z:INFO:path=less traveled:roads=42:Going for a walk
     2010-03-28T14:23:34Z:INFO:dolphins=thankful:paths=42:
     2010-03-28T14:23:34Z:INFO:myblog:request_id=12345:rows=100:user=frank:frobnicating database
     2010-03-28T14:23:34Z:INFO:myblog:bytes=5678:request_id=12345:sending page over tubes
     2010-03-28T14:23:34Z:INFO:myblog:request_id=67890:Client connected
     2010-03-28T14:23:34Z:INFO:donjuan:pants=sexy:hello, ladies want to dance?
+    2010-03-28T14:23:34Z:INFO:myblog:request_id=12345:rows=100:user=frank:frobnicating database
+    2010-03-28T14:23:34Z:INFO:myblog:bytes=5678:request_id=12345:sending page over tubes
+    2010-03-28T14:23:34Z:DEBUG:myblog:request_id=67890:Client connected
+
