@@ -13,7 +13,7 @@ Who, What, When, Where
 
 Twiggy is a more Pythonic logger.
 
-.. doctest:: log-output
+.. doctest:: demo
 
     >>> log.name('frank').fields(number=42).info("hello {who}, it's a {} day", 'sunny', who='world')
     INFO:frank:number=42:hello world, it's a sunny day

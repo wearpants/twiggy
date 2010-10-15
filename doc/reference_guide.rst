@@ -12,7 +12,7 @@ Dynamic Logging
 
 Any functions in message args/fields are called and the value substitued.
 
-.. doctest:: log-output
+.. doctest:: dynamic-logging
 
     >>> import os
     >>> from twiggy.lib import thread_name
@@ -23,7 +23,7 @@ Any functions in message args/fields are called and the value substitued.
 
 This can be useful with partially-bound loggers, which let's us do some cool stuff. Here's a proxy class that logs which thread accesses attributes.
 
-.. testcode:: log-output
+.. testcode:: dynamic-logging
 
     class ThreadTracker(object):
         """a proxy that logs attribute access"""
@@ -41,7 +41,7 @@ This can be useful with partially-bound loggers, which let's us do some cool stu
 
 Let's see it in action.
 
-.. doctest:: log-output
+.. doctest:: dynamic-logging
     
     >>> foo = Bunch()
     >>> foo.bar = 42
@@ -64,7 +64,7 @@ Features!
 *******************
 :mod:`Features <.features>` are optional additons of logging functionality to the `.log`. They encapsulate common logging patterns. Code can be written using a feature, enhancing what information is logged. The feature can be disabled at :ref:`runtime <twiggy-setup>` if desired.
 
-.. doctest:: log-output
+.. doctest:: features
 
     >>> from twiggy.features import socket as socket_feature
     >>> log.addFeature(socket_feature.socket)
@@ -142,7 +142,7 @@ Alternate Styles
 ================
 In addition to the default new-style (braces) format specs, twiggy also supports old-style (percent, aka printf) and templates (dollar).
 
-.. doctest:: log-output
+.. doctest:: alternate-styles
 
     >>> log.options(style='percent').info('I like %s', "bikes")
     INFO:I like bikes
@@ -168,7 +168,7 @@ Independence of logger instances
 ================================
 Each log instance created by partial binding is independent from each other. In particular, a logger's :meth:`.name` has no relation to the object; it's just for human use.
 
-.. doctest:: log-output
+.. doctest:: independent-loggers
 
     >>> log.name('bob') is log.name('bob')
     False

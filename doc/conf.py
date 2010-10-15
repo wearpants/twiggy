@@ -87,14 +87,19 @@ pygments_style = 'sphinx'
 #modindex_common_prefix = []
 
 # docttest support
-rst_prolog = """
-.. testsetup:: log-output
+
+log_output_template = \
+""".. testsetup:: {}
 
     import sys
     from twiggy import quickSetup, log
     quickSetup(file=sys.stdout)
     del quickSetup
 """
+def make_test_prolog(*testgroups):
+    return "\n".join(log_output_template.format(g) for g in testgroups)
+
+rst_prolog = make_test_prolog("demo", "magic-log", "better-output", "structured-logging", "partial-binding", "dynamic-logging", "features", "alternate-styles", "independent-loggers", )
 
 # -- Options for HTML output ---------------------------------------------------
 

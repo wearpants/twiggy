@@ -19,7 +19,7 @@ The Magic log
 
 The main interface is the the magic :data:`log`.
 
-.. doctest:: log-output
+.. doctest:: magic-log
 
     >>> from twiggy import log
     >>> log
@@ -27,7 +27,7 @@ The main interface is the the magic :data:`log`.
 
 It works out of the box, using typical :mod:`.levels`. Arbitrary levels are *not* supported. Note that when logging, you never need to refer to any level object; just use the methods on the log.
 
-.. doctest:: log-output
+.. doctest:: magic-log
 
     >>> log.debug('You may not care')
     DEBUG:You may not care
@@ -36,14 +36,14 @@ It works out of the box, using typical :mod:`.levels`. Arbitrary levels are *not
 
 The log can handle messages in several styles of :ref:`format strings<alternate-styles>`, defaulting to `new-style <http://docs.python.org/library/string.html#format-string-syntax>`_.
 
-.. doctest:: log-output
+.. doctest:: magic-log
 
     >>> log.info('I wear {} on my {where}', 'pants', where='legs')
     INFO:I wear pants on my legs
 
 You can name your loggers.
 
-.. doctest:: log-output
+.. doctest:: magic-log
 
     >>> mylog = log.name('alfredo')
     >>> mylog.debug('hello')
@@ -58,7 +58,7 @@ Twiggy's default output strives to be user-friendly and to avoid pet peeves.
 
 Newlines are suppressed by default; that can be turned off per-message.
 
-.. doctest:: log-output
+.. doctest:: better-output
 
     >>> log.info('user\ninput\nannoys\nus')
     INFO:user\ninput\nannoys\nus
@@ -68,7 +68,7 @@ Newlines are suppressed by default; that can be turned off per-message.
 
 Exceptions are prefixed by ``TRACE``. By default, :meth:`tracing <.trace>` will use the current exception, but you can also pass an exc_info tuple.
 
-.. doctest:: log-output
+.. doctest:: better-output
 
     >>> try:
     ...     1/0
@@ -76,7 +76,7 @@ Exceptions are prefixed by ``TRACE``. By default, :meth:`tracing <.trace>` will 
     ...     log.trace('error').warning('oh noes')
     WARNING:oh noes
     TRACE Traceback (most recent call last):
-    TRACE   File "<doctest log-output[...]>", line 2, in <module>
+    TRACE   File "<doctest better-output[...]>", line 2, in <module>
     TRACE     1/0
     TRACE ZeroDivisionError: integer division or modulo by zero
 
@@ -89,28 +89,28 @@ Structured Logging
 **********************
 I like this method chaining style a lot.
 
-.. doctest:: log-output
+.. doctest:: structured-logging
 
     >>> log.name('benito').info('hi there')
     INFO:benito:hi there
 
 It makes :term:`structured logging` easy. In the past, fielded data was stuffed in the text of your message:
 
-.. doctest:: log-output
+.. doctest:: structured-logging
 
     >>> log.info('Going for a walk. path: {} roads: {}', "less traveled", 42)
     INFO:Going for a walk. path: less traveled roads: 42
 
 Instead, you can use :meth:`.fields` to add arbitrary key-value pairs.  Output is easily parseable.
 
-.. doctest:: log-output
+.. doctest:: structured-logging
 
     >>> log.fields(path="less traveled", roads=42).info('Going for a walk')
     INFO:path=less traveled:roads=42:Going for a walk
 
 The :meth:`.struct` is a short cut for *only* logging fields. This is great for runtime statistics gathering.
 
-.. doctest:: log-output
+.. doctest:: structured-logging
 
     >>> log.struct(paths=42, dolphins='thankful')
     INFO:dolphins=thankful:paths=42:
@@ -121,7 +121,7 @@ Partial Binding
 
 Each call to :meth:`.fields` or :meth:`.options` creates a new, independent log instance that inherits all of the data of the parent.  This incremental binding can be useful for webapps.
 
-.. doctest:: log-output
+.. doctest:: partial-binding
 
     >>> ## an application-level log
     ... webapp_log = log.name("myblog")
@@ -138,7 +138,7 @@ Each call to :meth:`.fields` or :meth:`.options` creates a new, independent log 
 
 Chained style is awesome. It allows you to create complex yet parsable log messages in a concise way.
 
-.. doctest:: log-output
+.. doctest:: partial-binding
 
     >>> log.name('donjuan').fields(pants='sexy').info("hello, {who} want to {what}?", who='ladies', what='dance')
     INFO:donjuan:pants=sexy:hello, ladies want to dance?
@@ -161,7 +161,7 @@ Routed to a `file <.FileOutput>`, the above produces the following::
     deal
     2010-03-28T14:23:34Z:WARNING:oh noes
     TRACE Traceback (most recent call last):
-    TRACE   File "<doctest log-output[...]>", line 35, in <module>
+    TRACE   File "<doctest better-output[...]>", line 35, in <module>
     TRACE     1/0
     TRACE ZeroDivisionError: integer division or modulo by zero
     2010-03-28T14:23:34Z:INFO:benito:hi there
