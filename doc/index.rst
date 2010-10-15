@@ -23,6 +23,7 @@ Twiggy is a more Pythonic logger.
 :homepage: http://twiggy.wearpants.org/
 :hosting: http://python-twiggy.googlecode.com/
 :license: `BSD <http://www.opensource.org/licenses/bsd-license.php>`_
+:Python: 2.7
 
 Twiggy was born at `Pycon 2010 <http://us.pycon.org/2010/>`_ after I whined about the standard library's `logging <http://docs.python.org/library/logging.html>`_ and Jesse Noller "invited" me to do something about it.
 
