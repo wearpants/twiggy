@@ -31,6 +31,9 @@ Global Objects
 Features
 *************************
 
+.. automodule:: twiggy.features
+    :members:
+
 procinfo
 ===========
 .. automodule:: twiggy.features.procinfo
@@ -297,6 +300,12 @@ Loggers should not be created directly by users; use the global :data:`.log` ins
             :noindex:
             
             Should the message be emitted.
+
+    .. automethod:: addFeature
+
+    .. automethod:: disableFeature
+    
+    .. automethod:: delFeature
 
 .. autoclass:: InternalLogger
 

@@ -234,6 +234,7 @@ class Logger(BaseLogger):
         try:
             msg = Message(level, format_spec, self._fields.copy(), self._options.copy(), *args, **kwargs)
         except StandardError:
+            # XXX use .fields() instead?
             _twiggy.internal_log.trace().info("Error formatting message level: {0!r}, format: {1!r}, fields: {2!r}, "\
                                       "options: {3!r}, args: {4!r}, kwargs: {5!r}",
                                       level, format_spec, self._fields, self._options, args, kwargs)

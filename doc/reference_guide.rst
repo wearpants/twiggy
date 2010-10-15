@@ -21,8 +21,6 @@ Any functions in message args/fields are called and the value substitued.
     >>> log.fields(pid=os.getpid).info("I'm in thread {}", thread_name)
     INFO:pid=...:I'm in thread MainThread
 
-.. seealso:: :mod:`.procinfo` feature
-
 This can be useful with partially-bound loggers, which let's us do some cool stuff. Here's a proxy class that logs which thread accesses attributes.
 
 .. testcode:: log-output
@@ -59,10 +57,12 @@ Let's see it in action.
 
 If you really want to log a callable, ``repr()`` it or wrap it in lambda.
 
+.. seealso:: :mod:`.procinfo` feature
+
 *******************
 Features!
 *******************
-Features are optional additons of logging functionality to the magic :data:`log`. They encapsulate common logging patterns. Code can be written using a feature, enhancing what information is logged. The feature can be disabled at :ref:`runtime <twiggy-setup>` if desired.
+:mod:`Features <.features>` are optional additons of logging functionality to the `.log`. They encapsulate common logging patterns. Code can be written using a feature, enhancing what information is logged. The feature can be disabled at :ref:`runtime <twiggy-setup>` if desired.
 
 .. doctest:: log-output
 
@@ -89,7 +89,7 @@ Stays Out of Your Way
 ***********************
 Twiggy tries to stay out of your way.  Specifically, an error in logging should **never** propogate outside the logging subsystem and cause your main application to crash. Instead, errors are trapped and reported by the  :data:`~twiggy.internal_log`.
 
-Instances of :class:`.InternalLogger` only have a single :class:`.Output` - they do not use emitters. By default, these messages are sent to standard error. You may assign an alternate ouput (such as a file) to ``twiggy.internal_log.output`` if desired, with the following conditions:
+Instances of :class:`.InternalLogger` only have a single :class:`.Output` - they do not use emitters. By default, these messages are sent to standard error. You may assign an alternate ouput (such as a file) to `twiggy.internal_log.output` if desired, with the following conditions:
 
 * the output should be failsafe - any errors that occur during internal logging will be dumped to standard error, and suppressed, causing the original message to be discarded.
 * accordingly, networked or asynchronous outputs are not recommended.
@@ -105,7 +105,7 @@ Asynchronous loggers never lock.
 *******************
 Use by Libraries
 *******************
-Libraries require special care to be polite and usable by application code.  The library should have a single bound in its top-level package that's used by modules. Library logging should generally be silent by default.::
+Libraries require special care to be polite and usable by application code.  The library should have a single bound in its top-level package that's used by modules. Library logging should generally be silent by default. ::
 
     # in mylib/__init__.py
     log = twiggy.log.name('mylib')
@@ -115,13 +115,13 @@ Libraries require special care to be polite and usable by application code.  The
     from . import log
     log.debug("hi there")
 
-This allows application code to enable/disable all of library's logging as needed.::
+This allows application code to enable/disable all of library's logging as needed. ::
 
     # in twiggy_setup
     import mylib
     mylib.log.min_level = twiggy.levels.INFO
 
-In addition to min_level, loggers also have a :attr:`~.Logger.filter`. This filter operates *only on the format string*, and is intended to allow users to selectively disable individual messages in a poorly-written library.::
+In addition to :attr:`~.BaseLogger.min_level`, loggers also have a :attr:`~.Logger.filter`. This filter operates *only on the format string*, and is intended to allow users to selectively disable individual messages in a poorly-written library. ::
 
     # in mylib:
     for i in xrange(1000000):
@@ -151,7 +151,7 @@ In addition to the default new-style (braces) format specs, twiggy also supports
 
 Use Fields
 ==========
-Use :meth:`.fields` to include key-value data in a message instead of embedding it the human-readable string.::
+Use :meth:`.fields` to include key-value data in a message instead of embedding it the human-readable string. ::
 
     # do this:
     log.fields(key1='a', key2='b').info("stuff happenend")
@@ -166,7 +166,7 @@ Technical Details
 
 Independence of logger instances
 ================================
-Each log instance created by partial binding is independent from each other. In particular, a logger's :meth:`.name` has no relation to the object; it's just for human use:
+Each log instance created by partial binding is independent from each other. In particular, a logger's :meth:`.name` has no relation to the object; it's just for human use.
 
 .. doctest:: log-output
 
@@ -180,7 +180,7 @@ Twiggy has been written to be fast, minimizing the performance impact on the mai
 *******************
 Extending Twiggy
 *******************
-When developing extensions to twiggy, use the :data:`devel_log`. An :class:`.InternalLogger`, the devel_log is completely separate from the main :data:`log`.  By default, messages logged to the devel_log are discarded; assigning an appropriate :class:`.Ouput` to its ``output`` attribute before using.
+When developing extensions to twiggy, use the :data:`devel_log`. An :class:`.InternalLogger`, the devel_log is completely separate from the main :data:`log`.  By default, messages logged to the devel_log are discarded; assigning an appropriate :class:`.Output` to its :attr:`~twiggy.devel_log.output` attribute before using.
 
 Writing Features
 ===================
@@ -229,7 +229,7 @@ Writing Outputs and Formats
 ==============================
 Outputs do the work of writing a message to an external resource (file, socket, etc.).  User-defined outputs should inherit from :class:`.Output` or :class:`.AsyncOutput` if they wish to support :term:`asynchronous logging` (preferred).
 
-An Output subclass's ``__init__`` should take a ``format`` (see below) and any parameters needed to acquire resources (filename, hostname, etc.), but *not the resources themselves*. These are created in :meth:`._open`.  Implementations supporting asynchronous logging should also take a ``msg_buffer`` argument (see :class:`.AsyncOutput`).
+An Output subclass's ``__init__`` should take a :ref:`format <format-function>` and any parameters needed to acquire resources (filename, hostname, etc.), but *not the resources themselves*. These are created in :meth:`._open`.  Implementations supporting asynchronous logging should also take a :class:`msg_buffer <.AsyncOutput>` argument.
 
 
 Outputs should define the following:
