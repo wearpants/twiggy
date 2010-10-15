@@ -74,7 +74,7 @@ class ConversionTable(list):
         missing = required - avail
 
         if missing:
-            raise ValueError("Missing fields {0}".format(list(missing)))
+            raise ValueError("Missing fields {}".format(list(missing)))
 
         l = []
         for c in self:

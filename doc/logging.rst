@@ -38,7 +38,7 @@ The log can handle messages in several styles of :ref:`format strings<alternate-
 
 .. doctest:: log-output
 
-    >>> log.info('I wear {0} on my {where}', 'pants', where='legs')
+    >>> log.info('I wear {} on my {where}', 'pants', where='legs')
     INFO:I wear pants on my legs
 
 You can name your loggers.
@@ -98,7 +98,7 @@ It makes :term:`structured logging` easy. In the past, fielded data was stuffed 
 
 .. doctest:: log-output
 
-    >>> log.info('Going for a walk. path: {0} roads: {1}', "less traveled", 42)
+    >>> log.info('Going for a walk. path: {} roads: {}', "less traveled", 42)
     INFO:Going for a walk. path: less traveled roads: 42
 
 Instead, you can use :meth:`.fields` to add arbitrary key-value pairs.  Output is easily parseable.

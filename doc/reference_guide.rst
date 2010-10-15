@@ -18,7 +18,7 @@ Any functions in message args/fields are called and the value substitued:
     >>> from twiggy.lib import thread_name
     >>> thread_name()
     'MainThread'
-    >>> log.fields(pid=os.getpid).info("I'm in thread {0}", thread_name)
+    >>> log.fields(pid=os.getpid).info("I'm in thread {}", thread_name)
     INFO:pid=...:I'm in thread MainThread
 
 This can be useful with partially-bound loggers, which let's us do some cool stuff:
@@ -33,7 +33,7 @@ This can be useful with partially-bound loggers, which let's us do some cool stu
     ...         self.__log = log.name("tracker").fields(obj_id=id(obj), thread=thread_name)
     ...         self.__log.debug("started tracking")
     ...     def __getattr__(self, attr):
-    ...         self.__log.debug("accessed {0}", attr)
+    ...         self.__log.debug("accessed {}", attr)
     ...         return getattr(self.__obj, attr)
     ...
     >>> class Bunch(object):
