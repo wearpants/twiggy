@@ -196,11 +196,22 @@ class Logger(BaseLogger):
 
     @emit.info
     def struct(self, **kwargs):
-        """convenience method for structured logging
+        """convenience method for structured logging.
 
-        Sets ``fields`` and emits at ``INFO``
+        Calls fields() and emits at INFO
         """
         return self.fields(**kwargs)
+
+    @emit.info
+    def structDict(self, d):
+        """convenience method for structured logging. 
+
+        Use instead of struct() if you have keys which are not valid Python identifiers
+
+        """
+        return self.fieldsDict(d)
+
+
 
     ## Boring stuff
     def _emit(self, level, format_spec = '',  *args, **kwargs):
