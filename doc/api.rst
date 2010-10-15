@@ -133,6 +133,13 @@ Formats
     
         :class:`.ConversionTable` used to format :attr:`.fields`. Defaults to :data:`line_conversion`
 
+    .. automethod:: format_text
+    
+    .. automethod:: format_fields
+    
+    .. automethod:: format_traceback
+    
+
 .. data:: line_conversion
 
     a default line-oriented :class:`.ConversionTable`. Produces a nice-looking string from :attr:`.fields`.
