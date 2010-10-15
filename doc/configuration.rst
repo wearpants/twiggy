@@ -19,15 +19,18 @@ To quickly configure output, use the `quickSetup` function.  Quick setup is limi
 *******************
 twiggy_setup.py
 *******************
+.. testsetup:: twiggy-setup
+
+    from twiggy import emitters
+    emitters.clear()
+
 Twiggy's output side features modern, loosely coupled design.
 
 By convention, your configuration lives in a file in your application called ``twiggy_setup.py``, in a function called ``twiggy_setup()``. You can of course put your configuration elsewhere, but using a separate module makes integration with configuration management systems easy.  You should import and run ``twiggy_setup`` near the top of your application.  It's particularly important to set up twiggy *before spawning new processes*.
 
 A ``twiggy_setup`` function should create ouputs and use the :func:`addEmitters` convenience function to link those outputs to the log:
 
-.. test
-
-.. testcode::
+.. testcode:: twiggy-setup
 
     from twiggy import *
     def twiggy_setup():
@@ -52,14 +55,14 @@ In this example, we create two log destinations: ``alice.log`` and ``bob.log``. 
 
 :func:`addEmitters` populates the :data:`emitters` dictionary:
 
-.. doctest::
+.. doctest:: twiggy-setup
 
-    >>> emitters.keys()
+    >>> sorted(emitters.keys())
     ['alice', 'betty', 'brian.*']
 
 :class:`Emitters <.Emitter>` can be removed by deleting them from this dict. The filters and min_level may be modified during the running of the application, but outputs *cannot* be changed.  Instead, remove the emitter and re-add it.
 
-.. doctest::
+.. doctest:: twiggy-setup
 
     >>> # bump level
     ... emitters['alice'].min_level = levels.WARNING
@@ -106,7 +109,12 @@ Use ``'\\n'`` as a traceback prefix to fold exceptions into a single line.
 
 LineFormat uses a `.ConversionTable` to stringify the arbitrary fields in a message. To customize, copy the default :data:`.line_format` and modify:
 
-.. testcode::
+.. testsetup:: line-format
+    
+    from twiggy import *
+    emitters.clear()
+
+.. testcode:: line-format
 
     # in your twiggy_setup
     import copy
@@ -126,7 +134,7 @@ Filtering Output
 ***************************
 The messages output by an emitter are determined by its :attr:`~.Emitter.min_level` and :attr:`~.Emitter.filter`. These attributes may be changed while the application is running. The filter attribute of emitters is intelligent; you may assign strings, bools or functions and it will magically do the right thing.  Assigning a list indicates that *all* of the filters must pass for the message to be output.
 
-.. testcode::
+.. testcode:: line-format
 
     e = emitters['memory']
     e.min_level = levels.WARNING
