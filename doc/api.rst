@@ -21,7 +21,7 @@ Global Objects
 
 .. data:: emitters
 
-    the global :class:`emitters <.Emitter>` dictionary
+    the global :class:`emitters <.Emitter>` dictionary, tied to the :data:`.log`
 
 .. autofunction:: addEmitters
 
@@ -80,7 +80,21 @@ Filters
     :arg strings names: glob patterns.
     :rtype: `.filter` function
 
-.. autoclass:: Emitter
+.. class:: Emitter
+
+    Hold and manage an :class:`.Output` and associated :func:`.filter`
+
+    .. attribute:: min_level
+    
+        only emit if greater than this `.LogLevel`
+        
+    .. attribute:: filter
+        
+        arbitrary :func:`.filter` on message contents. Assigning to this attribute is :func:`intelligent <.msgFilter>`. 
+
+    .. attribute:: _output
+        
+        `.Output` to emit messages to. Do not modify.
 
 *************************
 Formats
@@ -102,6 +116,8 @@ Formats
     .. attribute:: traceback_prefix
         
         string to prepend to traceback lines. Defaults to ``\nTRACE``.
+
+        .. _folding-exceptions:
 
         Set to ``'\\n'`` (double backslash n) to roll up tracebacks to a single line.
         

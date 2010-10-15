@@ -50,13 +50,7 @@ def glob_names(*names):
 
 
 class Emitter(object):
-    """
-    Hold and manage an :class:`.Output` and associated :func:`.filter`
-
-    :ivar LogLevel min_level: only emit if greater than this
-    :ivar filter filter: arbitrary test on message contents
-    :ivar Output _output: where to emit messages to. Do not modify.
-    """
+    """Hold and manage an Output and associated filter."""
 
     def __init__(self, min_level, filter, output):
         if not isinstance(min_level, levels.LogLevel):

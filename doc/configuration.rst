@@ -26,9 +26,9 @@ twiggy_setup.py
 
 Twiggy's output side features modern, loosely coupled design.
 
-By convention, your configuration lives in a file in your application called ``twiggy_setup.py``, in a function called ``twiggy_setup()``. You can of course put your configuration elsewhere, but using a separate module makes integration with configuration management systems easy.  You should import and run ``twiggy_setup`` near the top of your application.  It's particularly important to set up twiggy *before spawning new processes*.
+By convention, your configuration lives in a file in your application called ``twiggy_setup.py``, in a function called ``twiggy_setup()``. You can of course put your configuration elsewhere, but using a separate module makes integration with configuration management systems easy.  You should import and run ``twiggy_setup`` near the top of your application.  It's particularly important to set up Twiggy *before spawning new processes*.
 
-A ``twiggy_setup`` function should create ouputs and use the :func:`addEmitters` convenience function to link those outputs to the log:
+A ``twiggy_setup`` function should create ouputs and use the :func:`addEmitters` convenience function to link those outputs to the :data:`log`.
 
 .. testcode:: twiggy-setup
 
@@ -47,12 +47,6 @@ A ``twiggy_setup`` function should create ouputs and use the :func:`addEmitters`
     # near the top of your __main__
     twiggy_setup()
 
-
-In this example, we create two log destinations: ``alice.log`` and ``bob.log``.  alice will recieve all messages, and bob will receive two sets of messages:
-
-* messages with the name field equal to ``betty`` and level >= ``INFO``
-* messages with the name field glob-matching ``brian.*``
-
 :func:`addEmitters` populates the :data:`emitters` dictionary:
 
 .. doctest:: twiggy-setup
@@ -60,7 +54,12 @@ In this example, we create two log destinations: ``alice.log`` and ``bob.log``. 
     >>> sorted(emitters.keys())
     ['alice', 'betty', 'brian.*']
 
-:class:`Emitters <.Emitter>` can be removed by deleting them from this dict. The filters and min_level may be modified during the running of the application, but outputs *cannot* be changed.  Instead, remove the emitter and re-add it.
+In this example, we create two log destinations: ``alice.log`` and ``bob.log``.  alice will recieve all messages, and bob will receive two sets of messages:
+
+* messages with the name field equal to ``betty`` and level >= ``INFO``
+* messages with the name field glob-matching ``brian.*``
+
+:class:`Emitters <.Emitter>` can be removed by deleting them from this dict. :attr:`~.Emitter.filter` and :attr:`~.Emitter.min_level` may be modified during the running of the application, but outputs *cannot* be changed.  Instead, remove the emitter and re-add it.
 
 .. doctest:: twiggy-setup
 
@@ -76,38 +75,24 @@ We'll examine the various parts in more detail.
 **************************
 Outputs
 **************************
-Outputs are the destinations to which log messages are written (files, databases, etc.). Several :mod:`implementations <.outputs>` are provided. Once created, outputs cannot be modified.  Each output has an associated :mod:`.formats`.
+Outputs are the destinations to which log messages are written (files, databases, etc.). Several :mod:`implementations <.outputs>` are provided. Once created, outputs cannot be modified.  Each output has an associated :mod:`format <.formats>`.
 
 .. _async-logging:
 
 Asynchronous Logging
 ====================
-Many outputs can be configured to use a separate, dedicated process to log messages. This is known as :term:`asynchronous logging` and is enabled with the ``msg_buffer`` argument:
-
-.. autoclass:: twiggy.outputs.AsyncOutput
-    :noindex:
-
-Asynchronous mode dramatically reduces the cost of logging, as expensive formatting and writing operations are moved out of the main thread of control.
+Many outputs can be configured to use a separate, dedicated process to log messages. This is known as :term:`asynchronous logging` and is enabled with the `msg_buffer <.AsyncOutput>` argument. Asynchronous mode dramatically reduces the cost of logging, as expensive formatting and writing operations are moved out of the main thread of control.
 
 .. warning: There is a slight, but non-zero, chance that messages may be lost if something goes awry with the child process.
 
 *********************
 Formats
 *********************
-:mod:`Formats <.formats>` transform a log message into a form that can be written by an output. The result of formatting is output-dependent - for example, an output that posts to an HTTP server may take a format that provides JSON, whereas an output that writes to a file may produce text.
+:mod:`Formats <.formats>` transform a log message into a form that can be written by an output. The result of formatting is output dependent; for example, an output that posts to an HTTP server may take a format that provides JSON, whereas an output that writes to a file may produce text.
 
 Line-oriented formatting
 ========================
-:class:`.LineFormat` formats messages for text-oriented outputs such as a file or standard error.
-
-.. autoclass:: twiggy.formats.LineFormat
-    :noindex:
-
-.. _folding-exceptions:
-
-Use ``'\\n'`` as a traceback prefix to fold exceptions into a single line.
-
-LineFormat uses a `.ConversionTable` to stringify the arbitrary fields in a message. To customize, copy the default :data:`.line_format` and modify:
+:class:`.LineFormat` formats messages for text-oriented outputs such as a file or standard error. It uses a `.ConversionTable` to stringify the arbitrary fields in a message. To customize, copy the default :data:`.line_format` and modify:
 
 .. testsetup:: line-format
     
@@ -127,12 +112,10 @@ LineFormat uses a `.ConversionTable` to stringify the arbitrary fields in a mess
     # output messages with name 'memory' to stderr
     addEmitters(('memory', levels.DEBUG, filters.names('memory'), outputs.StreamOutput(format = my_format)))
 
-.. seealso: For details, see :class:`.ConversionTable`.
-
 ***************************
 Filtering Output
 ***************************
-The messages output by an emitter are determined by its :attr:`~.Emitter.min_level` and :attr:`~.Emitter.filter`. These attributes may be changed while the application is running. The filter attribute of emitters is intelligent; you may assign strings, bools or functions and it will magically do the right thing.  Assigning a list indicates that *all* of the filters must pass for the message to be output.
+The messages output by an emitter are determined by its :attr:`~.Emitter.min_level` and filter (a :func:`function <.filter>` which take a :class:`.Message` and returns bool). These attributes may be changed while the application is running. The :attr:`~.Emitter.filter` attribute of emitters is `intelligent <.msgFilter>`; you may assign strings, bools or functions and it will magically do the right thing.  Assigning a list indicates that *all* of the filters must pass for the message to be output.
 
 .. testcode:: line-format
 
@@ -149,4 +132,4 @@ The messages output by an emitter are determined by its :attr:`~.Emitter.min_lev
     # lists are all()'d
     e.filter = ["^mem.y$", lambda msg: msg.fields['address'] > 0xDECAF]
 
-For more see :mod:`.filters`
+.. seealso:: Available :mod:`.filters`
