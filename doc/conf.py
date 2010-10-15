@@ -178,6 +178,11 @@ html_use_opensearch = 'http://twiggy.wearpants.org'
 # Output file base name for HTML help builder.
 htmlhelp_basename = 'Twiggydoc'
 
+# custom html stuff
+html_show_copyright = True
+html_context = {'author_name': u'Peter Fein',
+                'author_link': u'http://i.wearpants.org',
+                'copyright_year': u'2010'}
 
 # -- Options for LaTeX output --------------------------------------------------
 
