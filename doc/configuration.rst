@@ -25,6 +25,8 @@ By convention, your configuration lives in a file in your application called ``t
 
 A ``twiggy_setup`` function should create ouputs and use the :func:`addEmitters` convenience function to link those outputs to the log:
 
+.. test
+
 .. testcode::
 
     from twiggy import *
@@ -115,8 +117,7 @@ LineFormat uses a `.ConversionTable` to stringify the arbitrary fields in a mess
                              required = True)
 
     # output messages with name 'memory' to stderr
-    addEmitters(('memory', levels.DEBUG, filters.names('memory'),
-                 outputs.StreamOutput(format = my_format))
+    addEmitters(('memory', levels.DEBUG, filters.names('memory'), outputs.StreamOutput(format = my_format)))
 
 .. seealso: For details, see :class:`.ConversionTable`.
 
@@ -138,6 +139,7 @@ The messages output by an emitter are determined by its :attr:`~.Emitter.min_lev
     # functions are passed the message; return True to emit
     e.filter = lambda msg: msg.fields['address'] > 0xDECAF
     # lists are all()'d
-    e.filter = ["^mem.y$", lambda msg: msg.fields['address'] > 0xDECAF]
+    # XXX this doesn't work yet
+    # e.filter = ["^mem.y$", lambda msg: msg.fields['address'] > 0xDECAF]
 
 For more see :mod:`.filters`
