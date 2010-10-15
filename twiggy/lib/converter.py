@@ -6,7 +6,7 @@ class Converter(object):
     :ivar key: the key to apply the conversion to
     :ivar function convertValue: one-argument function to convert the value
     :ivar function convertItem: two-argument function converting the key & converted value
-    :ivar bool required: is the item required to present
+    :ivar bool required: is the item required to present. Items are optional by default.
     """
 
     __slots__ = ['key', 'convertValue', 'convertItem', 'required']
@@ -95,13 +95,13 @@ class ConversionTable(list):
         return copy.deepcopy(self)
 
     def get(self, key):
-        """return the *first* converter for ``key``"""
+        """return the *first* converter for key"""
         for c in self:
             if c.key == key:
                 return c
 
     def getAll(self, key):
-        """return a list of all converters for ``key``"""
+        """return a list of all converters for key"""
         return [c for c in self if c.key == key]
 
     def add(self, *args, **kwargs):
@@ -109,7 +109,7 @@ class ConversionTable(list):
         self.append(Converter(*args, **kwargs))
 
     def delete(self, key):
-        """delete the *all* of the converters for ``key``"""
+        """delete the *all* of the converters for key"""
         for i, c in enumerate(self):
             if c.key == key:
                 del self[i]

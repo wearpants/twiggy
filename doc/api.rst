@@ -141,7 +141,7 @@ Formats
         
         :time: in iso8601 format (required)
         :level: message level (required)
-        :name: logger name (optional)
+        :name: logger name
     
     Remaining fields are sorted alphabetically and formatted as ``key=value``
     
@@ -269,7 +269,7 @@ Loggers should not be created directly by users; use the global :data:`.log` ins
     
     .. method:: struct(**kwargs) -> bound Logger
     
-        convenience method for :term:`structured logging`. Calls :meth:`.fields` and emits at ``INFO``
+        convenience method for :term:`structured logging`. Calls :meth:`.fields` and emits at `.info`
 
     .. method:: structDict(d) -> bound Logger
     
@@ -322,7 +322,7 @@ Message
 
     .. _message-options:
 
-    The constructor takes a dict of ``options`` to control message creation.  In addition to :attr:`.suppress_newlines`, this class recognizes the following options:
+    The constructor takes a dict of ``options`` to control message creation.  In addition to :attr:`.suppress_newlines`, the following options are recognized:
 
         :trace: control traceback inclusion.  Either a traceback tuple, or one of the strings ``always``, ``error``, in which case a traceback will be extracted from the current stack frame.
         :style: the style of template used for ``format_spec``. One of ``braces``, ``percent``, ``dollar``.
@@ -359,7 +359,7 @@ Outputs
     
     .. attribute:: _format
 
-        a :ref:`callable <format-function>` taking a `.Message` and formatting it for output. ``None`` means return the message unchanged.
+        a :ref:`callable <format-function>` taking a `.Message` and formatting it for output. None means return the message unchanged.
         
     .. attribute:: use_locks
     
@@ -379,7 +379,7 @@ Outputs
 
     An `.Output` with support for :term:`asynchronous logging`.
 
-    Inheriting from this class transparently adds support for asynchronous logging using the multiprocessing module. This is off by default, as it can cause log messages to be dropped. See ``the msg_buffer`` argument.
+    Inheriting from this class transparently adds support for asynchronous logging using the multiprocessing module. This is off by default, as it can cause log messages to be dropped.
 
     :arg int msg_buffer: number of messages to buffer in memory when using asynchronous logging. ``0`` turns asynchronous output off, a negative integer means an unlimited buffer, a positive integer is the size of the buffer.
 

@@ -140,7 +140,7 @@ class DequeOutput(Output):
 class FileOutput(AsyncOutput):
     """Output messages to a file
 
-    ``name``, ``mode``, ``buffering`` are passed to ``open(..)``
+    ``name``, ``mode``, ``buffering`` are passed to :func:`open`
     """
     def __init__(self, name, format, mode='a', buffering=1, msg_buffer=0):
         self.filename = name
