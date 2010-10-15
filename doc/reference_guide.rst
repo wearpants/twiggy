@@ -12,7 +12,7 @@ Dynamic Logging
 
 Any functions in message args/fields are called and the value substitued:
 
-.. doctest::
+.. doctest:: log-output
 
     >>> import os
     >>> from twiggy.lib import thread_name
@@ -23,7 +23,7 @@ Any functions in message args/fields are called and the value substitued:
 
 This can be useful with partially-bound loggers, which let's us do some cool stuff:
 
-.. doctest::
+.. doctest:: log-output
 
     >>> class ThreadTracker(object):
     ...     """a proxy that logs attribute access"""
@@ -58,24 +58,22 @@ Features!
 *******************
 Features are optional additons of logging functionality to the magic :data:`log`. They encapsulate common logging patterns. Code can be written using a feature, enhancing what information is logged. The feature can be disabled at :ref:`runtime <twiggy-setup>` if desired.
 
-.. doctest::
+.. doctest:: log-output
 
-    >>> import twiggy.features.socket
-    >>> twiggy.quickSetup()
-    >>> twiggy.log.addFeature(twiggy.features.socket.socket)
+    >>> from twiggy.features import socket as socket_feature
+    >>> log.addFeature(socket_feature.socket)
     >>> import socket
-    >>> s = socket.socket(socket.AF_INET, socket.SOCK_STREAM) #doctest:+ELLIPSIS
-    <socket._socketobject object at 0x...>
+    >>> s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     >>> s.connect(('www.python.org', 80))
-    >>> twiggy.log.socket(s).debug("connected")
-    DEBUG:host=dinsdale.python.org:ip_addr=82.94.164.162:port=80:service=http:connected
+    >>> log.socket(s).debug("connected")
+    DEBUG:host=dinsdale.python.org:ip_addr=82.94.164.162:port=80:service=www:connected
     >>> # turn off the feature - the name is still available
-    ... twiggy.log.disableFeature('socket')
-    >>> twiggy.log.socket(s).debug("connected")
+    ... log.disableFeature('socket')
+    >>> log.socket(s).debug("connected")
     DEBUG:connected
     >>> # use a different implementation
-    ... twiggy.log.addFeature(twiggy.features.socket.socket_minimal, 'socket')
-    >>> twiggy.log.socket(s).debug("connected")
+    ... log.addFeature(socket_feature.socket_minimal, 'socket')
+    >>> log.socket(s).debug("connected")
     DEBUG:ip_addr=82.94.164.162:port=80:connected
 
 .. _never-raises:
@@ -101,9 +99,7 @@ Asynchronous loggers never lock.
 *******************
 Use by Libraries
 *******************
-Libraries require special care to be polite and usable by application code.  The library should have a single bound in its top-level package that's used by modules. Library logging should generally be silent by default.
-
-.. testcode::
+Libraries require special care to be polite and usable by application code.  The library should have a single bound in its top-level package that's used by modules. Library logging should generally be silent by default.::
 
     # in mylib/__init__.py
     log = twiggy.log.name('mylib')
@@ -113,17 +109,13 @@ Libraries require special care to be polite and usable by application code.  The
     from . import log
     log.debug("hi there")
 
-This allows application code to enable/disable all of library's logging as needed.
-
-.. testcode::
+This allows application code to enable/disable all of library's logging as needed.::
 
     # in twiggy_setup
     import mylib
     mylib.log.min_level = twiggy.levels.INFO
 
-In addition to min_level, loggers also have a :attr:`~.Logger.filter`. This filter operates *only on the format string*, and is intended to allow users to selectively disable individual messages in a poorly-written library.
-
-.. testcode::
+In addition to min_level, loggers also have a :attr:`~.Logger.filter`. This filter operates *only on the format string*, and is intended to allow users to selectively disable individual messages in a poorly-written library.::
 
     # in mylib:
     for i in xrange(1000000):
@@ -142,9 +134,9 @@ Tips And Tricks
 
 Alternate Styles
 ================
-In addition to the default new-style (braces) format specs, twiggy also supports old-style (percent, aka printf) and templates (dollar):
+In addition to the default new-style (braces) format specs, twiggy also supports old-style (percent, aka printf) and templates (dollar).
 
-.. doctest::
+.. doctest:: log-output
 
     >>> log.options(style='percent').info('I like %s', "bikes")
     INFO:I like bikes
@@ -153,9 +145,7 @@ In addition to the default new-style (braces) format specs, twiggy also supports
 
 Use Fields
 ==========
-Use :meth:`.fields` to include key-value data in a message instead of embedding it the human-readable string.
-
-.. testcode::
+Use :meth:`.fields` to include key-value data in a message instead of embedding it the human-readable string.::
 
     # do this:
     log.fields(key1='a', key2='b').info("stuff happenend")
@@ -172,7 +162,7 @@ Independence of logger instances
 ================================
 Each log instance created by partial binding is independent from each other. In particular, a logger's :meth:`.name` has no relation to the object; it's just for human use:
 
-.. doctest::
+.. doctest:: log-output
 
     >>> log.name('bob') is log.name('bob')
     False
@@ -192,7 +182,7 @@ Features are used to encapsulate common logging patterns. They are implemented a
 
 Features come in two flavors: those that add information to a message's fields or set options, and those that cause output.
 
-Features which only add fields/set options should simply call the appropriate method on ``self`` and return the resultant object.
+Features which only add fields/set options should simply call the appropriate method on ``self`` and return the resultant object.::
 
 .. testcode::
 
@@ -281,7 +271,7 @@ The :attr:`format <.Output._format>` callable is Output-specific; it should take
    
     # format height value with two decimal places
     # show as "<key> is <value>"
-    conversion.add('height', '{.2f}'.format, "{0} is {1}".format)
+    conversion.add('height', '{:.2f}'.format, "{0} is {1}".format)
    
     # separate fields in final output by colons
     conversion.aggregate = ':'.join
@@ -295,7 +285,7 @@ The :attr:`format <.Output._format>` callable is Output-specific; it should take
     conversion.genericItem = "{0}={1}".format
     
     # convert!
-    conversion.convert(fields)
+    print conversion.convert(fields)
 
 .. testoutput::
 

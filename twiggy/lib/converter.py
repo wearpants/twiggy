@@ -25,7 +25,7 @@ class Converter(object):
 class ConversionTable(list):
     """Converts dictionaries using Converters"""
 
-    def __init__(self, seq):
+    def __init__(self, seq=None):
         """
         :arg seq: a sequence of Converters
         
@@ -33,6 +33,7 @@ class ConversionTable(list):
         """
 
         super(ConversionTable, self).__init__([])
+        if seq is None: return
         for i in seq:
             if isinstance(i, Converter):
                 self.append(i)

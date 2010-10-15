@@ -6,9 +6,7 @@ Logging Messages
 
 This part describes how user code can log messages with twiggy.
 
-To get started quickly, use :func:`quickSetup`:
-
-.. doctest::
+To get started quickly, use :func:`quickSetup`.::
 
     >>> import twiggy
     >>> twiggy.quickSetup()
@@ -18,9 +16,10 @@ To get started quickly, use :func:`quickSetup`:
 ****************
 The Magic log
 ****************
+
 The main interface is the the magic :data:`log`.
 
-.. doctest::
+.. doctest:: log-output
 
     >>> from twiggy import log
     >>> log #doctest:+ELLIPSIS
@@ -28,7 +27,7 @@ The main interface is the the magic :data:`log`.
 
 It works out of the box, using typical :mod:`.levels`. Arbitrary levels are *not* supported. Note that when logging, you never need to refer to any level object; just use the methods on the log.
 
-.. doctest::
+.. doctest:: log-output
 
     >>> log.debug('You may not care')
     DEBUG:You may not care
@@ -37,14 +36,14 @@ It works out of the box, using typical :mod:`.levels`. Arbitrary levels are *not
 
 The log can handle messages in several styles of :ref:`format strings<alternate-styles>`, defaulting to `new-style <http://docs.python.org/library/string.html#format-string-syntax>`_.
 
-.. doctest::
+.. doctest:: log-output
 
     >>> log.info('I wear {0} on my {where}', 'pants', where='legs')
     INFO:I wear pants on my legs
 
 You can name your loggers.
 
-.. doctest::
+.. doctest:: log-output
 
     >>> mylog = log.name('alfredo')
     >>> mylog.debug('hello')
@@ -59,7 +58,7 @@ Twiggy's default output strives to be user-friendly and to avoid pet peeves.
 
 Newlines are suppressed by default; that can be turned off per-message.
 
-.. doctest::
+.. doctest:: log-output
 
     >>> log.info('user\ninput\nannoys\nus')
     INFO:user\ninput\nannoys\nus
@@ -69,7 +68,7 @@ Newlines are suppressed by default; that can be turned off per-message.
 
 Exceptions are prefixed by ``TRACE``. By default, :meth:`tracing <.trace>` will use the current exception, but you can also pass an exc_info tuple.
 
-.. doctest::
+.. doctest:: log-output
 
     >>> try:
     ...     1/0
@@ -77,7 +76,7 @@ Exceptions are prefixed by ``TRACE``. By default, :meth:`tracing <.trace>` will 
     ...     log.trace('error').warning('oh noes') #doctest:+ELLIPSIS
     WARNING:oh noes
     TRACE Traceback (most recent call last):
-    TRACE   File "<doctest notes.txt[...]>", line 2, in <module>
+    TRACE   File "<doctest log-output[...]>", line 2, in <module>
     TRACE     1/0
     TRACE ZeroDivisionError: integer division or modulo by zero
 
@@ -90,28 +89,28 @@ Structured Logging
 **********************
 I like this method chaining style a lot.
 
-.. doctest::
+.. doctest:: log-output
 
     >>> log.name('benito').info('hi there')
     INFO:benito:hi there
 
 It makes :term:`structured logging` easy. In the past, fielded data was stuffed in the text of your message:
 
-.. doctest::
+.. doctest:: log-output
 
     >>> log.info('Going for a walk. path: {0} roads: {1}', "less traveled", 42)
-    INFO:Going for a walk. paths: less traveled roads: 42
+    INFO:Going for a walk. path: less traveled roads: 42
 
 Instead, you can use :meth:`.fields` to add arbitrary key-value pairs.  Output is easily parseable.
 
-.. doctest::
+.. doctest:: log-output
 
     >>> log.fields(path="less traveled", roads=42).info('Going for a walk')
     INFO:path=less traveled:roads=42:Going for a walk
 
 The :meth:`.struct` is a short cut for *only* logging fields. This is great for runtime statistics gathering.
 
-.. doctest::
+.. doctest:: log-output
 
     >>> log.struct(paths=42, dolphins='thankful')
     INFO:dolphins=thankful:paths=42:
@@ -122,7 +121,7 @@ Partial Binding
 
 Each call to :meth:`.fields` or :meth:`.options` creates a new, independent log instance that inherits all of the data of the parent.  This incremental binding can be useful for webapps.
 
-.. doctest::
+.. doctest:: log-output
 
     >>> ## an application-level log
     ... webapp_log = log.name("myblog")
@@ -139,7 +138,7 @@ Each call to :meth:`.fields` or :meth:`.options` creates a new, independent log 
 
 Chained style is awesome. It allows you to create complex yet parsable log messages in a concise way.
 
-.. doctest::
+.. doctest:: log-output
 
     >>> log.name('donjuan').fields(pants='sexy').info("hello, {who} want to {what}?", who='ladies', what='dance')
     INFO:donjuan:pants=sexy:hello, ladies want to dance?
