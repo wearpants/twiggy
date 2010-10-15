@@ -31,6 +31,11 @@ Global Objects
 Features
 *************************
 
+procinfo
+===========
+.. automodule:: twiggy.features.procinfo
+    :members:
+
 socket
 ========
 .. automodule:: twiggy.features.socket

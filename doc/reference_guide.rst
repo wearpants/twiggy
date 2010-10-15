@@ -21,6 +21,8 @@ Any functions in message args/fields are called and the value substitued.
     >>> log.fields(pid=os.getpid).info("I'm in thread {}", thread_name)
     INFO:pid=...:I'm in thread MainThread
 
+.. seealso:: :mod:`.procinfo` feature
+
 This can be useful with partially-bound loggers, which let's us do some cool stuff. Here's a proxy class that logs which thread accesses attributes.
 
 .. testcode:: log-output
