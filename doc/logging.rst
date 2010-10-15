@@ -22,7 +22,7 @@ The main interface is the the magic :data:`log`.
 .. doctest:: log-output
 
     >>> from twiggy import log
-    >>> log #doctest:+ELLIPSIS
+    >>> log
     <twiggy.logger.Logger object at 0x...>
 
 It works out of the box, using typical :mod:`.levels`. Arbitrary levels are *not* supported. Note that when logging, you never need to refer to any level object; just use the methods on the log.
@@ -73,7 +73,7 @@ Exceptions are prefixed by ``TRACE``. By default, :meth:`tracing <.trace>` will 
     >>> try:
     ...     1/0
     ... except:
-    ...     log.trace('error').warning('oh noes') #doctest:+ELLIPSIS
+    ...     log.trace('error').warning('oh noes')
     WARNING:oh noes
     TRACE Traceback (most recent call last):
     TRACE   File "<doctest log-output[...]>", line 2, in <module>
