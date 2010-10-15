@@ -184,14 +184,10 @@ Features come in two flavors: those that add information to a message's fields o
 
 Features which only add fields/set options should simply call the appropriate method on ``self`` and return the resultant object.::
 
-.. testcode::
-
     def dimensions(self, shape):
         return self.fields(height=shape.height, width=shape.width)
 
-Features can also emit messages as usual.  Do not return from these methods.
-
-.. testcode::
+Features can also emit messages as usual.  Do not return from these methods.::
 
     def sayhi(self, lang):
         if lang == 'en':
@@ -201,9 +197,7 @@ Features can also emit messages as usual.  Do not return from these methods.
 
 .. _wsgi-support:
 
-If the feature should add fields *and* emit in the same step (like :meth:`.struct`), use the :func:`.emit` decorators.  Here's a prototype feature that dumps information about a `WSGI environ <http://www.python.org/dev/peps/pep-0333/#environ-variables>`_.
-
-.. testcode::
+If the feature should add fields *and* emit in the same step (like :meth:`.struct`), use the :func:`.emit` decorators.  Here's a prototype feature that dumps information about a `WSGI environ <http://www.python.org/dev/peps/pep-0333/#environ-variables>`_.::
 
     from twiggy.logger import emit
 
