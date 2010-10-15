@@ -77,7 +77,6 @@ Exceptions are prefixed by ``TRACE``. By default, :meth:`tracing <.trace>` will 
     WARNING:oh noes
     TRACE Traceback (most recent call last):
     TRACE   File "<doctest better-output[...]>", line 2, in <module>
-    TRACE     1/0
     TRACE ZeroDivisionError: integer division or modulo by zero
 
 .. seealso:: :ref:`How to fold exceptions to a single line<folding-exceptions>`
@@ -162,7 +161,6 @@ Routed to a `file <.FileOutput>`, the above produces the following::
     2010-03-28T14:23:34Z:WARNING:oh noes
     TRACE Traceback (most recent call last):
     TRACE   File "<doctest better-output[...]>", line 35, in <module>
-    TRACE     1/0
     TRACE ZeroDivisionError: integer division or modulo by zero
     2010-03-28T14:23:34Z:INFO:benito:hi there
     2010-03-28T14:23:34Z:INFO:Going for a walk. path: less traveled roads: 42
