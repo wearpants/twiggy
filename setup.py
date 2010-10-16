@@ -3,7 +3,7 @@
 from distutils.core import setup
 
 setup(name='Twiggy',
-      version='0.4',
+      version='0.4.0',
       description='a Pythonic logger',
       author='Peter Fein',
       author_email='pfein@pobox.com',
