@@ -22,6 +22,7 @@ Twiggy is a more Pythonic logger.
 :email: pfein@pobox.com
 :homepage: http://twiggy.wearpants.org/
 :hosting: http://python-twiggy.googlecode.com/
+:IRC: irc://irc.freenode.net/#wearpants
 :license: `BSD <http://www.opensource.org/licenses/bsd-license.php>`_
 :Python: 2.7
 
