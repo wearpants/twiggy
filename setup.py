@@ -1,14 +1,20 @@
 #!/usr/bin/env python
 
 from distutils.core import setup
+import os.path
+
+# this horrible mess brought to you by the crap that is Python distutils. Just use CPAN.
+version_file = os.path.join(os.path.dirname(__file__), 'VERSION')
+VERSION = open(version_file).read().strip().split('.')
+release = '.'.join(VERSION)
 
 setup(name='Twiggy',
-      version='0.4.1',
+      version=release,
       description='a Pythonic logger',
       author='Peter Fein',
       author_email='pfein@pobox.com',
       url='http://twiggy.wearpants.org',
-      download_url='http://python-twiggy.googlecode.com/files/Twiggy-0.4.1.tar.gz',
+      download_url='http://python-twiggy.googlecode.com/files/Twiggy-{}.tar.gz'.format(release),
       packages=['twiggy', 'twiggy.lib', 'twiggy.features'],
       license = "BSD",
       classifiers = [
