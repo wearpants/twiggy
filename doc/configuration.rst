@@ -32,7 +32,7 @@ A ``twiggy_setup`` function should create ouputs and use the :func:`addEmitters`
 
 .. testcode:: twiggy-setup
 
-    from twiggy import *
+    from twiggy import addEmitters, outputs, levels, filters, formats, emitters # import * is also ok
     def twiggy_setup():
         alice_output = outputs.FileOutput("alice.log", format=formats.line_format)
         bob_output = outputs.FileOutput("bob.log", format=formats.line_format)
