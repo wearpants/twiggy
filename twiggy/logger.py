@@ -61,7 +61,7 @@ class BaseLogger(object):
 
     def fieldsDict(self, d):
         """bind fields for structured logging.
-        
+
         Use this instead of `.fields` if you have keys which are not valid Python identifiers.
         """
         clone = self._clone()
@@ -204,7 +204,7 @@ class Logger(BaseLogger):
 
     @emit.info
     def structDict(self, d):
-        """convenience method for structured logging. 
+        """convenience method for structured logging.
 
         Use instead of struct() if you have keys which are not valid Python identifiers
 
@@ -222,7 +222,7 @@ class Logger(BaseLogger):
         try:
             if not self.filter(format_spec): return
         except StandardError:
-            _twiggy.internal_log.trace().info("Error in Logger filtering with {0!r} on {1}", self.filter, format_spec)
+            _twiggy.internal_log.info("Error in Logger filtering with {0!r} on {1}", self.filter, format_spec)
             # just continue emitting in face of filter error
 
         # XXX should we trap here too b/c of "Dictionary changed size during iteration" (or other rare errors?)
@@ -235,7 +235,7 @@ class Logger(BaseLogger):
             msg = Message(level, format_spec, self._fields.copy(), self._options.copy(), *args, **kwargs)
         except StandardError:
             # XXX use .fields() instead?
-            _twiggy.internal_log.trace().info("Error formatting message level: {0!r}, format: {1!r}, fields: {2!r}, "\
+            _twiggy.internal_log.info("Error formatting message level: {0!r}, format: {1!r}, fields: {2!r}, "\
                                       "options: {3!r}, args: {4!r}, kwargs: {5!r}",
                                       level, format_spec, self._fields, self._options, args, kwargs)
             return
@@ -245,7 +245,7 @@ class Logger(BaseLogger):
             try:
                 include = emitter.filter(msg)
             except StandardError:
-                _twiggy.internal_log.trace().info("Error filtering with emitter {}. Message: {1!r}", name, msg)
+                _twiggy.internal_log.info("Error filtering with emitter {}. Message: {1!r}", name, msg)
             else:
                 if include: outputs.add(emitter._output)
 
