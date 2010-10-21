@@ -93,15 +93,15 @@ Filters
     Hold and manage an :class:`.Output` and associated :func:`.filter`
 
     .. attribute:: min_level
-    
+
         only emit if greater than this `.LogLevel`
-        
+
     .. attribute:: filter
-        
-        arbitrary :func:`.filter` on message contents. Assigning to this attribute is :func:`intelligent <.msgFilter>`. 
+
+        arbitrary :func:`.filter` on message contents. Assigning to this attribute is :func:`intelligent <.msgFilter>`.
 
     .. attribute:: _output
-        
+
         `.Output` to emit messages to. Do not modify.
 
 *************************
@@ -115,45 +115,45 @@ Formats
 *Formats* are single-argument callables that take a `.Message` and return an object appropriate for the `.Output` they are assigned to.
 
 .. class:: LineFormat(separator=':', traceback_prefix='\\nTRACE', conversion=line_conversion)
-    
+
 
     .. attribute:: separator
-    
+
         string to separate line parts. Defaults to ``:``.
-        
+
     .. attribute:: traceback_prefix
-        
+
         string to prepend to traceback lines. Defaults to ``\nTRACE``.
 
         .. _folding-exceptions:
 
         Set to ``'\\n'`` (double backslash n) to roll up tracebacks to a single line.
-        
+
     .. attribute:: conversion
-    
+
         :class:`.ConversionTable` used to format :attr:`.fields`. Defaults to :data:`line_conversion`
 
     .. automethod:: format_text
-    
+
     .. automethod:: format_fields
-    
+
     .. automethod:: format_traceback
-    
+
 
 .. data:: line_conversion
 
     a default line-oriented :class:`.ConversionTable`. Produces a nice-looking string from :attr:`.fields`.
-    
+
     Fields are separated by a colon (``:``). Resultant string includes:
-        
+
         :time: in iso8601 format (required)
         :level: message level (required)
         :name: logger name
-    
+
     Remaining fields are sorted alphabetically and formatted as ``key=value``
-    
+
 .. data:: line_format
-    
+
     a default :class:`.LineFormat` for output to a file. :ref:`Sample output <sample-file-output>`.
 
     Fields are formatted using :data:`.line_conversion` and separated from the message :attr:`.text` by a colon (``:``). Traceback lines are prefixed by ``TRACE``.
@@ -189,10 +189,10 @@ Converter
     Convert data dictionaries using `Converters <.Converter>`
 
     For each item in the dictionary to be converted:
-    
-    #. Find one or more corresponding converters ``c`` by matching key. 
+
+    #. Find one or more corresponding converters ``c`` by matching key.
     #. Build a list of converted items by calling ``c.convertItem(item_key, c.convertValue(item_value))``. The list will have items in the same order as converters were supplied.
-    #. Dict items for which no converter was found are sorted by key and passed to `.genericValue` / `.genericItem`. These items are appended to the list from step 2. 
+    #. Dict items for which no converter was found are sorted by key and passed to `.genericValue` / `.genericItem`. These items are appended to the list from step 2.
     #. If any required items are missing, :exc:`ValueError` is raised.
     #. The resulting list of converted items is passed to `.aggregate`. The value it returns is the result of the conversion.
 
@@ -204,27 +204,27 @@ Converter
     .. automethod:: __init__
 
     .. automethod:: convert
-    
+
     .. method:: genericValue(value)
-        
+
         convert values for which no specific `.Converter` is supplied
 
     .. method:: genericItem(key, value)
-        
+
         convert items for which no specific `.Converter` is supplied
-        
+
     .. method:: aggregate(converteds)
-        
+
         aggregate list of converted items.  The return value of `.convert`
 
     .. automethod:: copy
-    
+
     .. automethod:: get
-    
+
     .. automethod:: getAll
-    
+
     .. automethod:: add
-    
+
     .. automethod:: delete
 
 
@@ -234,60 +234,60 @@ Logger
 Loggers should not be created directly by users; use the global :data:`.log` instead.
 
 .. module:: twiggy.logger
-    
+
 .. class:: BaseLogger(fields=None, options=None, min_level=None)
 
     Base class for loggers
 
     .. attribute:: _fields
-    
+
         dictionary of bound fields for :term:`structured logging`.
         By default, contains a single field ``time`` with value ``time.gmtime()``.  This function will be called for each message emitted, populating the field with the current ``time.struct_time``.
 
     .. attribute:: _options
 
-        dictionary of bound :ref:`options <message-options>`. 
-    
+        dictionary of bound :ref:`options <message-options>`.
+
     .. attribute:: min_level
-    
+
         minimum :class:`.LogLevel` for which to emit. For optimization purposes only.
-    
+
     .. method:: fields(**kwargs) -> bound Logger
-    
+
         bind fields for :term:`structured logging`. ``kwargs`` are interpreted as names/values of fields.
-    
+
     .. method:: fieldsDict(d) -> bound Logger
 
         bind fields for structured logging. Use this instead of `.fields` if you have keys which are not valid Python identifiers.
-        
+
         :arg dict d: dictionary of fields. Keys should be strings.
 
     .. method:: options(**kwargs) -> bound Logger
-        
+
         bind :ref:`options <message-options>` for message creation.
-        
+
     .. method:: trace(trace='error') -> bound Logger
-    
+
         convenience method to enable :ref:`traceback logging <message-options>`
-    
+
     .. method:: name(name) -> bound Logger
-    
+
         convenvience method to bind ``name`` field
-    
+
     .. method:: struct(**kwargs) -> bound Logger
-    
+
         convenience method for :term:`structured logging`. Calls :meth:`.fields` and emits at `.info`
 
     .. method:: structDict(d) -> bound Logger
-    
+
         convenience method for :term:`structured logging`. Use instead of `.struct` if you have keys which are not valid Python identifiers.
 
         :arg dict d: dictionary of fields. Keys should be strings.
 
 
-    
+
     The following methods cause messages to be emitted.  ``format_spec`` is a template string into which ``args`` and ``kwargs`` will be substitued.
-    
+
     .. automethod:: debug
     .. automethod:: info
     .. automethod:: warning
@@ -296,22 +296,22 @@ Loggers should not be created directly by users; use the global :data:`.log` ins
 
 
 .. class:: Logger(fields=None, options=None, min_level=None)
-    
+
     Logger for end-users. The type of the magic :data:`.log`
-    
+
     .. attribute:: filter
-    
+
         Filter on ``format_spec``. For optimization purposes only. Should have the following signature:
-        
+
         .. function:: func(format_spec : string) -> bool
             :noindex:
-            
+
             Should the message be emitted.
 
     .. automethod:: addFeature
 
     .. automethod:: disableFeature
-    
+
     .. automethod:: delFeature
 
 .. autoclass:: InternalLogger
@@ -323,7 +323,7 @@ Message
 *************************
 .. module:: twiggy.message
 
-.. class:: Message(level, format_spec, fields, options, *args, **kwargs)
+.. class:: Message(_twiggy_level, _twiggy_format_spec, _twiggy_fields, _twiggy_options, *args, **kwargs)
 
     A logging message.  Users never create these directly.
 
@@ -343,15 +343,15 @@ Message
         dictionary of :term:`structured logging` fields.  Keys are string, values are arbitrary. A ``level`` item is required.
 
     .. attribute:: suppress_newlines
-        
+
         should newlines be escaped in output. Boolean.
 
     .. attribute:: traceback
-    
+
         a stringified traceback, or None.
 
     .. attribute:: text
-        
+
         the human-readable message. Constructed by substituting ``args``/``kwargs`` into ``format_spec``. String.
 
     .. automethod:: __init__
@@ -361,21 +361,21 @@ Message
 Outputs
 *************************
 .. module:: twiggy.outputs
-    
+
 .. class:: Output(format=None)
-    
+
     .. attribute:: _format
 
         a :ref:`callable <format-function>` taking a `.Message` and formatting it for output. None means return the message unchanged.
-        
+
     .. attribute:: use_locks
-    
+
         Class variable, indicating that locks should be used when running in a synchronous, multithreaded environment. Threadsafe subclasses may disable locking for higher throughput. Defaults to True.
 
     .. automethod:: __init__
 
     The following methods should be implemented by subclasses.
-    
+
     .. automethod:: twiggy.outputs.Output._open
 
     .. automethod:: twiggy.outputs.Output._close
