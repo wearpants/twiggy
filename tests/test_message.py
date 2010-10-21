@@ -31,8 +31,8 @@ class MessageTestCase(unittest2.TestCase):
                     "Hello {0} {who}",
                     {},
                     opts,
-                    "Mister",
-                    who="Funnypants\nand shirt",
+                    args=["Mister"],
+                    kwargs={'who':"Funnypants\nand shirt"},
                     )
 
         assert m.text == '''Hello Mister Funnypants\nand shirt'''
@@ -45,8 +45,8 @@ class MessageTestCase(unittest2.TestCase):
                     "Hello {0} {who}",
                     {},
                     opts,
-                    "Mister",
-                    who="Funnypants\nand shirt",
+                    args=["Mister"],
+                    kwargs={'who':"Funnypants\nand shirt"},
                     )
 
         assert m.text == \
@@ -58,7 +58,8 @@ and shirt'''
                     "Hello {who}",
                     {'shirt':42, 'name': 'jose'},
                     Message._default_options,
-                    who="Funnypants",
+                    args=(),
+                    kwargs={'who':"Funnypants"},
                     )
 
         assert m.fields == {'shirt':42, 'name': 'jose', 'level':twiggy.levels.DEBUG}
@@ -71,7 +72,8 @@ and shirt'''
                     "Hello {0}",
                     {'shirt':42, 'name': 'jose'},
                     Message._default_options,
-                    'Mister'
+                    args=['Mister'],
+                    kwargs={}
                     )
 
         assert m.fields == {'shirt':42, 'name': 'jose', 'level':twiggy.levels.DEBUG}
@@ -84,6 +86,8 @@ and shirt'''
                     "Hello",
                     {'shirt':42, 'name': 'jose'},
                     Message._default_options,
+                    (),
+                    {}
                     )
 
         assert m.fields == {'shirt':42, 'name': 'jose', 'level':twiggy.levels.DEBUG}
@@ -100,8 +104,8 @@ and shirt'''
                     "Hello {0} {who}",
                     {},
                     opts,
-                    "Mister",
-                    who="Funnypants",
+                    args=["Mister"],
+                    kwargs={'who':"Funnypants\nand shirt"},
                     )
 
     def test_dollar_style(self):
@@ -112,7 +116,8 @@ and shirt'''
                     "Hello $who",
                     {},
                     opts,
-                    who="Funnypants",
+                    args=[],
+                    kwargs={'who':"Funnypants"},
                     )
 
         assert m.text == "Hello Funnypants"
@@ -125,7 +130,8 @@ and shirt'''
                     "Hello %s",
                     {},
                     opts,
-                    "Funnypants",
+                    args=["Funnypants"],
+                    kwargs={}
                     )
 
         assert m.text == "Hello Funnypants"
@@ -138,7 +144,8 @@ and shirt'''
                     "Hello %(who)s",
                     {},
                     opts,
-                    who="Funnypants",
+                    args=[],
+                    kwargs={'who':"Funnypants"},
                     )
 
         assert m.text == "Hello Funnypants"
@@ -152,8 +159,8 @@ and shirt'''
                         "Hello %s %(who)s",
                         {},
                         opts,
-                        "Mister",
-                        who="Funnypants",
+                        args=["Mister"],
+                        kwargs={'who':"Funnypants\nand shirt"},
                         )
 
     def test_callables(self):
@@ -161,8 +168,8 @@ and shirt'''
                     "Hello {0} {who}",
                     {'shirt': lambda: 42, 'name': 'jose'},
                     Message._default_options,
-                    lambda: "Mister",
-                    who=lambda: "Funnypants",
+                    args=[lambda: "Mister"],
+                    kwargs={'who':lambda: "Funnypants"},
                     )
 
         assert m.fields == {'shirt':42, 'name': 'jose', 'level':twiggy.levels.DEBUG}

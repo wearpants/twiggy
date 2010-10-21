@@ -17,13 +17,13 @@ class Message(object):
     # XXX I need a __repr__!
 
     def __init__(self, _twiggy_level, _twiggy_format_spec, _twiggy_fields, _twiggy_options,
-                 *args, **kwargs):
+                 args, kwargs):
         """
         :arg LogLevel _twiggy_level: the level of the message
         :arg string _twiggy_format_spec: the human-readable message template. Should match the ``style`` in options.
         :arg dict _twiggy_fields: dictionary of fields for :ref:`structured logging <structured-logging>`
         :arg tuple args: substitution arguments for ``format_spec``.
-        :arg tuple kwargs: substitution keyword arguments for ``format_spec``.
+        :arg dict kwargs: substitution keyword arguments for ``format_spec``.
         :arg dict _twiggy_options: a dictionary of :ref:`options <message-options>` to control message creation.
         """
 
