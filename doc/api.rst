@@ -296,6 +296,7 @@ Loggers should not be created directly by users; use the global :data:`.log` ins
 
     .. automethod:: debug
     .. automethod:: info
+    .. automethod:: notice
     .. automethod:: warning
     .. automethod:: error
     .. automethod:: critical
