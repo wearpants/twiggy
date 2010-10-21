@@ -55,8 +55,8 @@ class Message(object):
         if style not in ('braces', 'percent', 'dollar'):
             raise ValueError("Bad format spec style {0!r}".format(style))
 
-        """Populate `text` by calling callables in `fields`, `args` and `kwargs`, and substituting into `format_spec`.
-        """
+        ## Populate `text` by calling callables in `fields`, `args` and `kwargs`, 
+        ## and substituting into `format_spec`.
 
         ## call any callables
         for k, v in fields.iteritems():
