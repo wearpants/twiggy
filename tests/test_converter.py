@@ -14,6 +14,12 @@ def convVal(x):
 def convItem(x, y):
     return x, y
 
+class ConverterTestCase(unittest2.TestCase):
+
+    def test_repr(self):
+        c = Converter("pants", convVal, convItem)
+        assert repr(c) == "<Converter('pants')>"
+
 class ConversionTableTestCase(unittest2.TestCase):
 
     def test_init_simple(self):
@@ -64,13 +70,31 @@ class ConversionTableTestCase(unittest2.TestCase):
         assert ct[0].convertItem is ct2[0].convertItem
         assert ct[0].required == ct2[0].required
 
-    def test_get(self):
+    def test_duplicate(self):
         c1 = Converter("pants", convVal, convItem)
         c2 = Converter("pants", convVal, convItem)
+        c3 = Converter("shirt", convVal, convItem)
 
-        ct = ConversionTable([c1, c2])
+        ct = ConversionTable([c1, c2, c3])
 
         assert ct.get('pants') is c1
         l = ct.getAll('pants')
         assert l[0] is c1
         assert l[1] is c2
+
+        ct.delete('pants')
+        l = ct.getAll('pants')
+        assert not l
+        assert len(ct) == 1
+        assert ct[0] is c3
+
+    def test_generic(self):
+        c = Converter("pants", convVal, convItem)
+        ct = ConversionTable([c])
+        assert ct.convert({'shirt':42}) == {'shirt':42}
+
+    def test_missing(self):
+        c = Converter("pants", convVal, convItem, True)
+        ct = ConversionTable([c])
+        with self.assertRaises(ValueError):
+            ct.convert({'shirt':42}) == {'shirt':42}

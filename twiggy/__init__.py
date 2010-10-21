@@ -18,7 +18,7 @@ emitters = log._emitters
 __internal_format = formats.LineFormat(conversion = formats.line_conversion)
 __internal_output = outputs.StreamOutput(format = __internal_format, stream=sys.stderr)
 
-internal_log = logger.InternalLogger(fields = __fields, output=__internal_output).name('twiggy.internal')
+internal_log = logger.InternalLogger(fields = __fields, output=__internal_output).name('twiggy.internal').trace('error')
 
 devel_log = logger.InternalLogger(fields = __fields, output = outputs.NullOutput()).name('twiggy.devel')
 
