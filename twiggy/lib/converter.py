@@ -20,7 +20,7 @@ class Converter(object):
     def __repr__(self):
         # XXX perhaps poke around in convertValue/convertItem to see if we can extract a meaningful
         # `"some_string".format`? eh.
-        return "<Converter('{}', {}, {}, {})>".format(self.key, self.convertValue, self.convertItem, self.required)
+        return "<Converter({!r})>".format(self.key)
 
 class ConversionTable(list):
     """Converts dictionaries using Converters"""
@@ -28,7 +28,7 @@ class ConversionTable(list):
     def __init__(self, seq=None):
         """
         :arg seq: a sequence of Converters
-        
+
         You may also pass 3-or-4 item arg tuples or kwarg dicts (which will be used to create `Converters <.Converter>`)
         """
 
@@ -63,7 +63,7 @@ class ConversionTable(list):
 
     def convert(self, d):
         """do the conversion
-        
+
         :arg dict d: the data to convert. Keys should be strings.
         """
         # XXX I could be much faster & efficient!
@@ -110,6 +110,7 @@ class ConversionTable(list):
 
     def delete(self, key):
         """delete the *all* of the converters for key"""
-        for i, c in enumerate(self):
-            if c.key == key:
-                del self[i]
+        # this weird idiom creates a new list without the deleted items and
+        # replaces the contents of self. Can't iterate and remove() items at
+        # the same time (indexes get messed up.
+        self[:] = [c for c in self if c.key != key]
