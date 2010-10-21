@@ -219,8 +219,6 @@ class Logger(BaseLogger):
     ## Boring stuff
     def _emit(self, level, format_spec, args, kwargs):
         """does the work of emitting - for internal use"""
-        assert args is not None
-        assert kwargs is not None
 
         # XXX should these traps be collapsed?
         if level < self.min_level: return
