@@ -6,6 +6,6 @@ def make_mesg():
                    "Hello {0} {who}",
                    {'shirt':42, 'name': 'jose'},
                    Message._default_options,
-                   "Mister",
-                   who="Funnypants",
+                   args=["Mister"],
+                   kwargs={'who':"Funnypants"},
                    )
