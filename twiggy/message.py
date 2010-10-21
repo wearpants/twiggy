@@ -12,11 +12,12 @@ class Message(object):
     #: default option values. Don't change these!
     _default_options = {'suppress_newlines' : True,
                         'trace' : None,
-                        'style': 'braces'}
+                        'style': 'braces',
+                        'context': 'both'}
 
     # XXX I need a __repr__!
 
-    def __init__(self, level, format_spec, fields, options,
+    def __init__(self, level, format_spec, fields, options, process, thread,
                  *args, **kwargs):
         """
         :arg LogLevel level: the level of the message
@@ -57,6 +58,19 @@ class Message(object):
 
         """Populate `text` by calling callables in `fields`, `args` and `kwargs`, and substituting into `format_spec`.
         """
+        # XXX check for existing fields and warn with internal_log
+        context = options['context']
+        if context == 'both':
+            fields.update(process)
+            fields.update(thread)
+        elif context == 'process':
+            fields.update(process)
+        elif context == 'thread':
+            fields.update(thread)
+        elif context is None:
+            pass
+        else:
+            assert False, "impossible context"
 
         ## call any callables
         for k, v in fields.iteritems():
