@@ -27,9 +27,7 @@ class Message(object):
         :arg dict options: a dictionary of :ref:`options <message-options>` to control message creation.
         """
 
-        self.fields = fields
         self.suppress_newlines = options['suppress_newlines']
-        self.fields['level'] = level
 
         ## format traceback
         # XXX this needs some cleanup/branch consolidation
@@ -58,24 +56,34 @@ class Message(object):
 
         """Populate `text` by calling callables in `fields`, `args` and `kwargs`, and substituting into `format_spec`.
         """
+
         # XXX check for existing fields and warn with internal_log
         context = options['context']
+
+        if context not in ('both', 'process', 'thread', None):
+            raise ValueError("Bad context {0!r}".format(context))
+
         if context == 'both':
-            fields.update(process)
-            fields.update(thread)
+            self.fields = process
+            self.fields.update(thread)
+            self.fields.update(fields)
         elif context == 'process':
-            fields.update(process)
+            self.fields = process
+            self.fields.update(fields)
         elif context == 'thread':
-            fields.update(thread)
+            self.fields = thread
+            self.fields.update(fields)
         elif context is None:
-            pass
+            self.fields = fields
         else:
             assert False, "impossible context"
 
+        self.fields['level'] = level
+
         ## call any callables
-        for k, v in fields.iteritems():
+        for k, v in self.fields.iteritems():
             if callable(v):
-                fields[k] = v()
+                self.fields[k] = v()
 
         for k, v in kwargs.iteritems():
             if callable(v):

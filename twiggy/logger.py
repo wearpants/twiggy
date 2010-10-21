@@ -145,7 +145,7 @@ class InternalLogger(BaseLogger):
 class Logger(BaseLogger):
     """Logger for end-users"""
 
-    __slots__ = ['_emitters', 'filter', '_thread', '_process']
+    __slots__ = ['_emitters', 'filter', '_threadlocal', '_process']
 
     def _feature_noop(self, *args, **kwargs):
         return self._clone()
@@ -180,24 +180,29 @@ class Logger(BaseLogger):
         delattr(cls, name)
 
     def __init__(self, fields = None, options = None, emitters = None,
-                 min_level = None, filter = None, process = None, thread = None):
+                 min_level = None, filter = None, process = None, threadlocal = None):
         super(Logger, self).__init__(fields, options, min_level)
         #: a dict of emitters
         self._emitters = emitters if emitters is not None else {}
         self.filter = filter if filter is not None else lambda format_spec: True
         self._process = process if process is not None else {}
-        self._thread = thread if thread is not None else threading.local()
+        self._threadlocal = threadlocal if threadlocal is not None else threading.local()
 
-    def context(self, which='thread', **kwargs):
-        self.contextDict(kwargs, which=which)
+    @property
+    def _thread(self):
+        return self._threadlocal.__dict__
 
-    def contextDict(self, d, which='thread'):
-        if which == 'process':
-            self._process.update(d)
-        elif which == 'thread':
-            self._thread.__dict__.update(d)
-        else:
-            raise ValueError("Bad context {}".format(which))
+    def thread(self, **kwargs):
+        self.threadDict(kwargs)
+
+    def threadDict(self, d):
+        self._thread.update(d)
+
+    def process(self, **kwargs):
+        self.processDict(kwargs)
+
+    def processDict(self, d):
+        self._process.update(d)
 
     def _clone(self):
         """return a new Logger instance with copied attributes
@@ -207,7 +212,7 @@ class Logger(BaseLogger):
         return self.__class__(fields = self._fields, options = self._options,
                               emitters = self._emitters, min_level = self.min_level,
                               filter = self.filter, process = self._process,
-                              thread = self._thread)
+                              threadlocal = self._threadlocal)
 
     @emit.info
     def struct(self, **kwargs):
@@ -245,7 +250,7 @@ class Logger(BaseLogger):
         if not potential_emitters: return
 
         try:
-            msg = Message(level, format_spec, self._fields.copy(), self._options.copy(), self._process, self._thread.__dict__, *args, **kwargs)
+            msg = Message(level, format_spec, self._fields.copy(), self._options.copy(), self._process.copy(), self._thread.copy(), *args, **kwargs)
         except StandardError:
             # XXX use .fields() instead?
             _twiggy.internal_log.info("Error formatting message level: {0!r}, format: {1!r}, fields: {2!r}, "\
