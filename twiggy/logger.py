@@ -90,22 +90,27 @@ class BaseLogger(object):
     def debug(self, format_spec = '', *args, **kwargs):
         """Emit at ``DEBUG`` level"""
         self._emit(levels.DEBUG, format_spec, args, kwargs)
+        return True
 
     def info(self, format_spec = '', *args, **kwargs):
         """Emit at ``INFO`` level"""
         self._emit(levels.INFO, format_spec, args, kwargs)
+        return True
 
     def warning(self, format_spec = '', *args, **kwargs):
         """Emit at ``WARNING`` level"""
         self._emit(levels.WARNING, format_spec, args, kwargs)
+        return True
 
     def error(self, format_spec = '', *args, **kwargs):
         """Emit at ``ERROR`` level"""
         self._emit(levels.ERROR, format_spec, args, kwargs)
+        return True
 
     def critical(self, format_spec = '', *args, **kwargs):
         """Emit at ``CRITICAL`` level"""
         self._emit(levels.CRITICAL, format_spec, args, kwargs)
+        return True
 
 class InternalLogger(BaseLogger):
     """Special-purpose logger for internal uses. Sends messages directly to output, bypassing :data:`.emitters`.
