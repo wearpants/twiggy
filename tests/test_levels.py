@@ -9,7 +9,8 @@ class LevelTestCase(unittest2.TestCase):
 
     def test_ordering(self):
         assert levels.DEBUG < levels.INFO
-        assert levels.INFO < levels.WARNING
+        assert levels.INFO < levels.NOTICE
+        assert levels.NOTICE < levels.WARNING
         assert levels.WARNING < levels.ERROR
         assert levels.ERROR < levels.CRITICAL
         assert levels.CRITICAL < levels.DISABLED

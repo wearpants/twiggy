@@ -184,6 +184,12 @@ Converter
 
 .. autoclass:: Converter
 
+.. autofunction:: sameValue
+
+.. autofunction:: sameItem
+
+.. autofunction:: drop
+
 .. class:: ConversionTable(seq)
 
     Convert data dictionaries using `Converters <.Converter>`
@@ -290,6 +296,7 @@ Loggers should not be created directly by users; use the global :data:`.log` ins
 
     .. automethod:: debug
     .. automethod:: info
+    .. automethod:: notice
     .. automethod:: warning
     .. automethod:: error
     .. automethod:: critical

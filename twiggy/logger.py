@@ -27,6 +27,7 @@ def emit(level):
 
 emit.debug = emit(levels.DEBUG)
 emit.info = emit(levels.INFO)
+emit.notice = emit(levels.NOTICE)
 emit.warning = emit(levels.WARNING)
 emit.error = emit(levels.ERROR)
 emit.critical = emit(levels.CRITICAL)
@@ -94,6 +95,11 @@ class BaseLogger(object):
     def info(self, format_spec = '', *args, **kwargs):
         """Emit at ``INFO`` level"""
         self._emit(levels.INFO, format_spec, args, kwargs)
+
+    def notice(self, format_spec = '', *args, **kwargs):
+        """Emit at ``NOTICE`` level"""
+        self._emit(levels.NOTICE, format_spec, args, kwargs)
+        return True
 
     def warning(self, format_spec = '', *args, **kwargs):
         """Emit at ``WARNING`` level"""
