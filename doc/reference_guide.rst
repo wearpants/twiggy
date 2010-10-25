@@ -173,9 +173,24 @@ Each log instance created by partial binding is independent from each other. In 
     >>> log.name('bob') is log.name('bob')
     False
 
-Internal optimizations
+Optimizations
 ========================
 Twiggy has been written to be fast, minimizing the performance impact on the main execution path. In particular, messages that will cause no output are handled as quickly as possible.  Users are therefore encouraged to add lots of logging for development/debugging purposes and then turn them off in production.
+
+The emit methods can be hidden behind an appropriate ``assert``. Python will eliminate the statement entirely when run with bytecode optimization (``python -O``).
+
+.. testcode:: optimizations
+
+    assert log.debug("This goes away with python -O") is None
+    assert not log.debug("So does this")
+    
+.. testoutput:: optimizations
+    :hide:
+    
+    DEBUG:This goes away with python -O
+    DEBUG:So does this
+    
+.. note:: The author doesn't particularly care for code written like this, but likes making his users happy more.
 
 *******************
 Extending Twiggy

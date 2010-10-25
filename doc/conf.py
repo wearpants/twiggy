@@ -108,7 +108,7 @@ log_output_template = \
 def make_test_prolog(*testgroups):
     return "\n".join(log_output_template.format(g) for g in testgroups)
 
-rst_prolog = make_test_prolog("demo", "magic-log", "better-output", "structured-logging", "partial-binding", "dynamic-logging", "features", "alternate-styles", "independent-loggers", )
+rst_prolog = make_test_prolog("demo", "magic-log", "better-output", "structured-logging", "partial-binding", "dynamic-logging", "features", "alternate-styles", "independent-loggers", "optimizations" )
 
 # -- Options for HTML output ---------------------------------------------------
 
