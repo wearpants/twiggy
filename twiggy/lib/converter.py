@@ -1,5 +1,17 @@
 import copy
 
+def sameValue(v):
+    """return the value unchanged"""
+    return v
+
+def sameItem(k, v):
+    """return the item unchanged"""
+    return k, v
+
+def drop(k, v):
+    """return None, indicating the item should be dropped"""
+    return None
+
 class Converter(object):
     """Holder for `.ConversionTable` items
 
