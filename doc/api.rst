@@ -323,7 +323,7 @@ Message
 *************************
 .. module:: twiggy.message
 
-.. class:: Message(_twiggy_level, _twiggy_format_spec, _twiggy_fields, _twiggy_options, *args, **kwargs)
+.. class:: Message(level, format_spec, fields, options, args, kwargs)
 
     A logging message.  Users never create these directly.
 

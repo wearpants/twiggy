@@ -16,24 +16,24 @@ class Message(object):
 
     # XXX I need a __repr__!
 
-    def __init__(self, _twiggy_level, _twiggy_format_spec, _twiggy_fields, _twiggy_options,
+    def __init__(self, level, format_spec, fields, options,
                  args, kwargs):
         """
-        :arg LogLevel _twiggy_level: the level of the message
-        :arg string _twiggy_format_spec: the human-readable message template. Should match the ``style`` in options.
-        :arg dict _twiggy_fields: dictionary of fields for :ref:`structured logging <structured-logging>`
+        :arg LogLevel level: the level of the message
+        :arg string format_spec: the human-readable message template. Should match the ``style`` in options.
+        :arg dict fields: dictionary of fields for :ref:`structured logging <structured-logging>`
         :arg tuple args: substitution arguments for ``format_spec``.
         :arg dict kwargs: substitution keyword arguments for ``format_spec``.
-        :arg dict _twiggy_options: a dictionary of :ref:`options <message-options>` to control message creation.
+        :arg dict options: a dictionary of :ref:`options <message-options>` to control message creation.
         """
 
-        self.fields = _twiggy_fields
-        self.suppress_newlines = _twiggy_options['suppress_newlines']
-        self.fields['level'] = _twiggy_level
+        self.fields = fields
+        self.suppress_newlines = options['suppress_newlines']
+        self.fields['level'] = level
 
         ## format traceback
         # XXX this needs some cleanup/branch consolidation
-        trace = _twiggy_options['trace']
+        trace = options['trace']
         if isinstance(trace, tuple) and len(trace) == 3:
             self.traceback = "\n".join(traceback.format_exception(trace))
         elif trace == "error":
@@ -51,7 +51,7 @@ class Message(object):
         else:
             self.traceback = None
 
-        style = _twiggy_options['style']
+        style = options['style']
         ## XXX maybe allow '%', '$', and '{}' as aliases?
         if style not in ('braces', 'percent', 'dollar'):
             raise ValueError("Bad format spec style {0!r}".format(style))
@@ -60,9 +60,9 @@ class Message(object):
         ## and substituting into `format_spec`.
 
         ## call any callables
-        for k, v in _twiggy_fields.iteritems():
+        for k, v in fields.iteritems():
             if callable(v):
-                _twiggy_fields[k] = v()
+                fields[k] = v()
 
         for k, v in kwargs.iteritems():
             if callable(v):
@@ -71,22 +71,22 @@ class Message(object):
         args = tuple(v() if callable(v) else v for v in args)
 
         ## substitute
-        if _twiggy_format_spec == '':
+        if format_spec == '':
             self.text = ''
             return
 
         if style == 'braces':
-            s = _twiggy_format_spec.format(*args, **kwargs)
+            s = format_spec.format(*args, **kwargs)
         elif style == 'percent':
             # a % style format
             if args and kwargs:
                 raise ValueError("can't have both args & kwargs with % style format specs")
             else:
-                s = _twiggy_format_spec % (args or kwargs)
+                s = format_spec % (args or kwargs)
         elif style == 'dollar':
             if args:
                 raise ValueError("can't use args with $ style format specs")
-            s = Template(_twiggy_format_spec).substitute(kwargs)
+            s = Template(format_spec).substitute(kwargs)
         else:
             assert False, "impossible style"
 
