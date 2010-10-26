@@ -1,5 +1,5 @@
 """
-Levels include (increasing severity): ``DEBUG``, ``INFO``, ``WARNING``, ``ERROR``, ``CRITICAL``, ``DISABLED``
+Levels include (increasing severity): ``DEBUG``, ``INFO``, ``NOTICE``, ``WARNING``, ``ERROR``, ``CRITICAL``, ``DISABLED``
 """
 
 class LogLevel(object):
@@ -34,7 +34,8 @@ def name2level(name):
 
 DEBUG = LogLevel('DEBUG', 1)
 INFO = LogLevel('INFO', 2)
-WARNING = LogLevel('WARNING', 3)
-ERROR = LogLevel('ERROR', 4)
-CRITICAL = LogLevel('CRITICAL', 5)
-DISABLED = LogLevel('DISABLED', 6)
+NOTICE = LogLevel('NOTICE', 3)
+WARNING = LogLevel('WARNING', 4)
+ERROR = LogLevel('ERROR', 5)
+CRITICAL = LogLevel('CRITICAL', 6)
+DISABLED = LogLevel('DISABLED', 7)

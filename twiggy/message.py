@@ -17,21 +17,25 @@ class Message(object):
 
     # XXX I need a __repr__!
 
-    def __init__(self, level, format_spec, fields, options, process, thread,
-                 *args, **kwargs):
+
+    def __init__(self, _twiggy_level, _twiggy_format_spec, _twiggy_fields, _twiggy_options,
+                 _twiggy_process, _twiggy_thread, args, kwargs):
         """
-        :arg LogLevel level: the level of the message
-        :arg string format_spec: the human-readable message template. Should match the ``style`` in options.
+        :arg LogLevel _twiggy_level: the level of the message
+        :arg string _twiggy_format_spec: the human-readable message template. Should match the ``style`` in options.
+        :arg dict _twiggy_fields: dictionary of fields for :ref:`structured logging <structured-logging>`
         :arg tuple args: substitution arguments for ``format_spec``.
-        :arg tuple kwargs: substitution keyword arguments for ``format_spec``.
-        :arg dict options: a dictionary of :ref:`options <message-options>` to control message creation.
+        :arg dict kwargs: substitution keyword arguments for ``format_spec``.
+        :arg dict _twiggy_options: a dictionary of :ref:`options <message-options>` to control message creation.
         """
 
-        self.suppress_newlines = options['suppress_newlines']
+        self.fields = _twiggy_fields
+        self.suppress_newlines = _twiggy_options['suppress_newlines']
+        self.fields['level'] = _twiggy_level
 
         ## format traceback
         # XXX this needs some cleanup/branch consolidation
-        trace = options['trace']
+        trace = _twiggy_options['trace']
         if isinstance(trace, tuple) and len(trace) == 3:
             self.traceback = "\n".join(traceback.format_exception(trace))
         elif trace == "error":
@@ -49,36 +53,36 @@ class Message(object):
         else:
             self.traceback = None
 
-        style = options['style']
+        style = _twiggy_options['style']
         ## XXX maybe allow '%', '$', and '{}' as aliases?
         if style not in ('braces', 'percent', 'dollar'):
             raise ValueError("Bad format spec style {0!r}".format(style))
 
-        """Populate `text` by calling callables in `fields`, `args` and `kwargs`, and substituting into `format_spec`.
-        """
+        ## Populate `text` by calling callables in `fields`, `args` and `kwargs`,
+        ## and substituting into `format_spec`.
 
         # XXX check for existing fields and warn with internal_log
-        context = options['context']
+        context = _twiggy_options['context']
 
         if context not in ('both', 'process', 'thread', None):
             raise ValueError("Bad context {0!r}".format(context))
 
         if context == 'both':
-            self.fields = process
-            self.fields.update(thread)
-            self.fields.update(fields)
+            self.fields = _twiggy_process
+            self.fields.update(_twiggy_thread)
+            self.fields.update(_twiggy_fields)
         elif context == 'process':
-            self.fields = process
-            self.fields.update(fields)
+            self.fields = _twiggy_process
+            self.fields.update(_twiggy_fields)
         elif context == 'thread':
             self.fields = thread
-            self.fields.update(fields)
+            self.fields.update(_twiggy_fields)
         elif context is None:
-            self.fields = fields
+            self.fields = _twiggy_fields
         else:
             assert False, "impossible context"
 
-        self.fields['level'] = level
+        self.fields['level'] = _twiggy_level
 
         ## call any callables
         for k, v in self.fields.iteritems():
@@ -92,22 +96,22 @@ class Message(object):
         args = tuple(v() if callable(v) else v for v in args)
 
         ## substitute
-        if format_spec == '':
+        if _twiggy_format_spec == '':
             self.text = ''
             return
 
         if style == 'braces':
-            s = format_spec.format(*args, **kwargs)
+            s = _twiggy_format_spec.format(*args, **kwargs)
         elif style == 'percent':
             # a % style format
             if args and kwargs:
                 raise ValueError("can't have both args & kwargs with % style format specs")
             else:
-                s = format_spec % (args or kwargs)
+                s = _twiggy_format_spec % (args or kwargs)
         elif style == 'dollar':
             if args:
                 raise ValueError("can't use args with $ style format specs")
-            s = Template(format_spec).substitute(kwargs)
+            s = Template(_twiggy_format_spec).substitute(kwargs)
         else:
             assert False, "impossible style"
 

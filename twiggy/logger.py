@@ -22,12 +22,13 @@ def emit(level):
     def decorator(f):
         @wraps(f)
         def wrapper(self, *args, **kwargs):
-            f(self, *args, **kwargs)._emit(level)
+            f(self, *args, **kwargs)._emit(level, '', [], {})
         return wrapper
     return decorator
 
 emit.debug = emit(levels.DEBUG)
 emit.info = emit(levels.INFO)
+emit.notice = emit(levels.NOTICE)
 emit.warning = emit(levels.WARNING)
 emit.error = emit(levels.ERROR)
 emit.critical = emit(levels.CRITICAL)
@@ -52,7 +53,7 @@ class BaseLogger(object):
     def _clone(self):
         return self.__class__(fields = self._fields, options = self._options, min_level = self.min_level)
 
-    def _emit(self, level, format_spec = '', *args, **kwargs):
+    def _emit(self, level, format_spec, args, kwargs):
         raise NotImplementedError
 
     ## The Magic
@@ -90,23 +91,28 @@ class BaseLogger(object):
     ## Do something
     def debug(self, format_spec = '', *args, **kwargs):
         """Emit at ``DEBUG`` level"""
-        self._emit(levels.DEBUG, format_spec, *args, **kwargs)
+        self._emit(levels.DEBUG, format_spec, args, kwargs)
 
     def info(self, format_spec = '', *args, **kwargs):
         """Emit at ``INFO`` level"""
-        self._emit(levels.INFO, format_spec, *args, **kwargs)
+        self._emit(levels.INFO, format_spec, args, kwargs)
+
+    def notice(self, format_spec = '', *args, **kwargs):
+        """Emit at ``NOTICE`` level"""
+        self._emit(levels.NOTICE, format_spec, args, kwargs)
+        return True
 
     def warning(self, format_spec = '', *args, **kwargs):
         """Emit at ``WARNING`` level"""
-        self._emit(levels.WARNING, format_spec, *args, **kwargs)
+        self._emit(levels.WARNING, format_spec, args, kwargs)
 
     def error(self, format_spec = '', *args, **kwargs):
         """Emit at ``ERROR`` level"""
-        self._emit(levels.ERROR, format_spec, *args, **kwargs)
+        self._emit(levels.ERROR, format_spec, args, kwargs)
 
     def critical(self, format_spec = '', *args, **kwargs):
         """Emit at ``CRITICAL`` level"""
-        self._emit(levels.CRITICAL, format_spec, *args, **kwargs)
+        self._emit(levels.CRITICAL, format_spec, args, kwargs)
 
 class InternalLogger(BaseLogger):
     """Special-purpose logger for internal uses. Sends messages directly to output, bypassing :data:`.emitters`.
@@ -125,13 +131,13 @@ class InternalLogger(BaseLogger):
         return self.__class__(fields = self._fields, options = self._options,
                               min_level = self.min_level, output = self.output)
 
-    def _emit(self, level, format_spec = '',  *args, **kwargs):
+    def _emit(self, level, format_spec, args, kwargs):
         """does work of emitting - for internal use"""
 
         if level < self.min_level: return
         try:
             try:
-                msg = Message(level, format_spec, self._fields.copy(), self._options.copy(), {}, {}, *args, **kwargs)
+                msg = Message(level, format_spec, self._fields.copy(), self._options.copy(), {}, {}, args, kwargs)
             except StandardError:
                 msg = None
                 raise
@@ -232,8 +238,9 @@ class Logger(BaseLogger):
         return self.fieldsDict(d)
 
     ## Boring stuff
-    def _emit(self, level, format_spec = '',  *args, **kwargs):
+    def _emit(self, level, format_spec, args, kwargs):
         """does the work of emitting - for internal use"""
+
         # XXX should these traps be collapsed?
         if level < self.min_level: return
 
@@ -250,7 +257,7 @@ class Logger(BaseLogger):
         if not potential_emitters: return
 
         try:
-            msg = Message(level, format_spec, self._fields.copy(), self._options.copy(), self._process.copy(), self._thread.copy(), *args, **kwargs)
+            msg = Message(level, format_spec, self._fields.copy(), self._options.copy(), self._process.copy(), self._thread.copy(), args, kwargs)
         except StandardError:
             # XXX use .fields() instead?
             _twiggy.internal_log.info("Error formatting message level: {0!r}, format: {1!r}, fields: {2!r}, "\
