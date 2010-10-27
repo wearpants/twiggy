@@ -1,4 +1,5 @@
 import unittest2
+import sys
 
 import twiggy.levels
 from twiggy.message import Message
@@ -122,6 +123,20 @@ and shirt'''
 
         assert m.text == "Hello Funnypants"
 
+
+    def test_dollar_style_bad(self):
+        opts = Message._default_options.copy()
+        opts['style'] = 'dollar'
+
+        with self.assertRaises(ValueError):
+            m = Message(twiggy.levels.DEBUG,
+                        "Hello $who",
+                        {},
+                        opts,
+                        args=[42],
+                        kwargs={'who':"Funnypants"},
+                        )
+
     def test_percent_style_args(self):
         opts = Message._default_options.copy()
         opts['style'] = 'percent'
@@ -176,3 +191,82 @@ and shirt'''
         assert m.traceback is None
 
         assert m.text == "Hello Mister Funnypants"
+
+    def test_empty_format_spec(self):
+        m = Message(twiggy.levels.DEBUG,
+            '',
+            {'shirt': lambda: 42, 'name': 'jose'},
+            Message._default_options,
+            args=[lambda: "Mister"],
+            kwargs={'who':lambda: "Funnypants"},
+            )
+
+        assert m.text == ''
+        assert m.name == 'jose'
+        assert m.fields['shirt'] == 42
+
+
+    def test_bad_trace(self):
+        opts = Message._default_options.copy()
+        opts['trace'] = 'kaboom'
+
+        with self.assertRaises(ValueError):
+            m = Message(twiggy.levels.DEBUG,
+                "Hello {0} {who}",
+                {'shirt': lambda: 42, 'name': 'jose'},
+                opts,
+                args=[lambda: "Mister"],
+                kwargs={'who':lambda: "Funnypants"},
+                )
+
+    def test_trace_error_without_error(self):
+        opts = Message._default_options.copy()
+        opts['trace'] = 'error'
+
+        m = Message(twiggy.levels.DEBUG,
+            "Hello {0} {who}",
+            {'shirt': lambda: 42, 'name': 'jose'},
+            opts,
+            args=[lambda: "Mister"],
+            kwargs={'who':lambda: "Funnypants"},
+            )
+
+        assert m.traceback is None
+
+
+    def test_trace_error_with_error(self):
+        opts = Message._default_options.copy()
+        opts['trace'] = 'error'
+
+
+        try:
+            1/0
+        except ZeroDivisionError:
+            m = Message(twiggy.levels.DEBUG,
+                "Hello {0} {who}",
+                {'shirt': lambda: 42, 'name': 'jose'},
+                opts,
+                args=[lambda: "Mister"],
+                kwargs={'who':lambda: "Funnypants"},
+                )
+
+        assert m.traceback.startswith('Traceback (most recent call last):')
+        assert m.traceback.endswith('ZeroDivisionError: integer division or modulo by zero\n')
+
+    def test_trace_tuple(self):
+        opts = Message._default_options.copy()
+
+        try:
+            1/0
+        except ZeroDivisionError:
+            opts['trace'] = sys.exc_info()
+            m = Message(twiggy.levels.DEBUG,
+                "Hello {0} {who}",
+                {'shirt': lambda: 42, 'name': 'jose'},
+                opts,
+                args=[lambda: "Mister"],
+                kwargs={'who':lambda: "Funnypants"},
+                )
+
+        assert m.traceback.startswith('Traceback (most recent call last):')
+        assert m.traceback.endswith('ZeroDivisionError: integer division or modulo by zero\n')

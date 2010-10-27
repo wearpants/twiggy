@@ -35,7 +35,7 @@ class Message(object):
         # XXX this needs some cleanup/branch consolidation
         trace = _twiggy_options['trace']
         if isinstance(trace, tuple) and len(trace) == 3:
-            self.traceback = "\n".join(traceback.format_exception(trace))
+            self.traceback = "\n".join(traceback.format_exception(*trace))
         elif trace == "error":
             tb = sys.exc_info()
             if tb[0] is None:
@@ -88,7 +88,7 @@ class Message(object):
                 raise ValueError("can't use args with $ style format specs")
             s = Template(_twiggy_format_spec).substitute(kwargs)
         else:
-            assert False, "impossible style"
+            assert False, "impossible style" # pragma: no cover
 
         self.text = s
 
