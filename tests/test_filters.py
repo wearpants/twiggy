@@ -1,12 +1,17 @@
 import unittest2
 
-from twiggy import filters, message
+import re
+
+from twiggy import filters, message, levels
 
 from . import make_mesg
 
 m = make_mesg()
 
 class msgFilterTestCase(unittest2.TestCase):
+
+    # XXX more robust testing of the exact type/func.__name__ of the returned f
+    # might be nice (instead of just callable), but eh.
 
     def test_None(self):
         f = filters.msgFilter(None)
@@ -28,6 +33,15 @@ class msgFilterTestCase(unittest2.TestCase):
         assert f(m)
 
         f = filters.msgFilter("^Goodbye.*$")
+        assert callable(f)
+        assert not f(m)
+
+    def test_regex(self):
+        f = filters.msgFilter(re.compile("^Hello.*$"))
+        assert callable(f)
+        assert f(m)
+
+        f = filters.msgFilter(re.compile("^Goodbye.*$"))
         assert callable(f)
         assert not f(m)
 
@@ -56,3 +70,23 @@ class namesTestCase(unittest2.TestCase):
 
         assert filters.glob_names("jo*", "frank")(m)
         assert not filters.glob_names("*bob", "frank")(m)
+
+class EmitterTestCase(unittest2.TestCase):
+
+    def test_bad_min_level(self):
+        with self.assertRaises(ValueError):
+            filters.Emitter(42, None, None)
+
+    def test_filter_property(self):
+        # XXX we really should mock & test that msgFilter is being called. eh.
+
+        e = filters.Emitter(levels.INFO, "^Hello.*$", 'output-unused')
+
+        f = e.filter
+        assert callable(f)
+        assert f(m)
+
+        e.filter = "^Goodbye.*$"
+        f = e.filter
+        assert callable(f)
+        assert not f(m)
