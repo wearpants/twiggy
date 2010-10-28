@@ -31,10 +31,11 @@ class LevelTestCase(unittest2.TestCase):
     def test_equality(self):
         assert levels.DEBUG == levels.DEBUG
 
-    def test_bogus(self):
+    def test_bogus_not_equals(self):
         assert levels.DEBUG != 1
 
+    @unittest2.skipIf(sys.version_info < (3,), "Python 2.x comparisons are insane")
+    def test_bogus_compare(self):
         # XXX is there a comparable test for 2.x?
-        if sys.version_info > (3,):
-            with self.assertRaises(TypeError):
-                levels.debug < 42
+        with self.assertRaises(TypeError):
+            levels.DEBUG < 42
