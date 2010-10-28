@@ -1,12 +1,6 @@
 import unittest2
-import doctest
 
 from twiggy.lib.converter import Converter, ConversionTable
-import twiggy.lib.converter as twiggy_lib_converter
-
-def load_tests(loader, tests, ignore):
-    tests.addTests(doctest.DocTestSuite(twiggy_lib_converter))
-    return tests
 
 def convVal(x):
     return x
@@ -21,6 +15,10 @@ class ConverterTestCase(unittest2.TestCase):
         assert repr(c) == "<Converter('pants')>"
 
 class ConversionTableTestCase(unittest2.TestCase):
+
+    def test_init_None(self):
+        ct = ConversionTable()
+        assert len(ct) == 0
 
     def test_init_simple(self):
         c = Converter("pants", convVal, convItem)
@@ -87,6 +85,45 @@ class ConversionTableTestCase(unittest2.TestCase):
         assert not l
         assert len(ct) == 1
         assert ct[0] is c3
+
+    def test_get(self):
+        c = Converter("pants", convVal, convItem)
+        
+        ct = ConversionTable([c,
+                              ("shirt", convVal, convItem, True)])
+
+        assert ct.get("belt") is None
+        assert ct.get("pants") is c
+
+
+    def test_getAll_no_match(self):
+        ct = ConversionTable([("pants", convVal, convItem),
+                              ("shirt", convVal, convItem, True)])
+
+        l = ct.getAll("belt")
+        assert isinstance(l, list)
+        assert not l
+
+    def test_convert(self):
+        ct = ConversionTable([
+            ("joe", "I wear {}".format, convItem),
+            ("frank", "You wear {}".format, convItem)])
+        
+        ct.genericValue = "Someone wears {}".format
+        
+        d = ct.convert({'joe':'pants', 'frank':'shirt', 'bob':'shoes'})
+        assert d == {'joe': "I wear pants", 'frank': "You wear shirt", 'bob': "Someone wears shoes"}
+
+    def test_drop(self):
+        ct = ConversionTable([
+            ("joe", "I wear {}".format, convItem),
+            ("frank", "You wear {}".format, lambda k, v: None)])
+        
+        ct.genericItem = lambda k, v: None
+        
+        d = ct.convert({'joe':'pants', 'frank':'shirt', 'bob':'shoes'})
+        assert d == {'joe': "I wear pants"}
+
 
     def test_generic(self):
         c = Converter("pants", convVal, convItem)
