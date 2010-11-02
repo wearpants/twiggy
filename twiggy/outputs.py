@@ -22,7 +22,7 @@ class Output(object):
         self._format = format if format is not None else self._noop_format
         self._sync_init()
         
-        if close_atexit:
+        if close_atexit: #pragma: no cover
             atexit.register(self.close)
 
     def _sync_init(self):
@@ -70,7 +70,7 @@ class AsyncOutput(Output):
         else:
             self._async_init(msg_buffer, close_atexit)
         
-        if close_atexit:
+        if close_atexit: #pragma: no cover
             atexit.register(self.close)
 
     def _async_init(self, msg_buffer, close_atexit):
@@ -84,7 +84,7 @@ class AsyncOutput(Output):
 
     # use a plain function so Windows is cool
     @staticmethod
-    def __child_main(self):
+    def __child_main(self):            
         self._open()
         while True:
             # XXX should _close() be in a finally: ?
@@ -165,9 +165,9 @@ class FileOutput(AsyncOutput):
 
 class StreamOutput(Output):
     """Output to an externally-managed stream."""
-    def __init__(self, format, stream=sys.stderr, close_atexit=True):
+    def __init__(self, format, stream=sys.stderr):
         self.stream = stream
-        super(StreamOutput, self).__init__(format, close_atexit)
+        super(StreamOutput, self).__init__(format, False) # close_atexit makes no sense here
 
     def _open(self):
         pass

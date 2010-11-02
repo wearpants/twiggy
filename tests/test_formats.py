@@ -1,11 +1,9 @@
 import unittest2
-import time
 import copy
 
 from twiggy import formats, levels, message
 
-# an arbitrary but consistent time
-when = time.struct_time((2010, 10, 28, 2, 15, 57, 3, 301, 0))
+from . import when
    
 class ConversionsTestCase(unittest2.TestCase):
    
