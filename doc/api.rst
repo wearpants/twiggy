@@ -404,4 +404,4 @@ Outputs
 
 .. autoclass:: NullOutput
 
-.. autoclass:: DequeOutput
+.. autoclass:: ListOutput

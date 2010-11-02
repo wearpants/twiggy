@@ -2,7 +2,6 @@ import multiprocessing
 import threading
 import sys
 import atexit
-from collections import deque
 
 class Output(object):
     """Does the work of formatting and writing a message."""
@@ -123,24 +122,24 @@ class NullOutput(Output):
     def _close(self):
         pass
 
-class DequeOutput(Output):
-    """an output that stuffs messages in a deque
+class ListOutput(Output):
+    """an output that stuffs messages in a list
     
     Useful for unittesting.
     
-    :ivar deque deque: messages that have been emitted
+    :ivar list messages: messages that have been emitted
     """
 
     use_locks = False
 
     def _open(self):
-        self.deque = deque([])
+        self.messages = []
 
     def _write(self, msg):
-        self.deque.append(msg)
+        self.messages.append(msg)
 
     def _close(self):
-        self.deque.clear()
+        del self.messages[:]
 
 
 class FileOutput(AsyncOutput):

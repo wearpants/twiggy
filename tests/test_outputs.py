@@ -64,3 +64,18 @@ class FileOutputTestCase(unittest2.TestCase):
         s = open(self.fname, 'r').read()
         assert s == "DEBUG:jose:shirt=42:Hello Mister Funnypants\n"
 
+class ListOutputTest(unittest2.TestCase):
+
+    def test_list_output(self):
+        o = outputs.ListOutput()
+        o.output(m)
+        assert len(o.messages) == 1
+        assert o.messages[0] is m
+        
+        m2 = make_mesg()
+        m2.fields['time'] = when
+        
+        o.output(m2)
+        assert o.messages[1] is m2
+        o.close()
+        assert not o.messages
