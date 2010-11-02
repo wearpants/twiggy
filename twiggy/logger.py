@@ -5,6 +5,7 @@ import levels
 import outputs
 import formats
 
+import warnings
 import sys
 import time
 import traceback
@@ -156,6 +157,7 @@ class Logger(BaseLogger):
         :arg func: the function to add
         :arg string name: the name to add it under. If None, use the function's name.
         """
+        warnings.warn("Use of features is currently discouraged, pending refactoring", RuntimeWarning)
         name = name if name is not None else func.__name__
         setattr(cls, name, func)
 
@@ -167,6 +169,7 @@ class Logger(BaseLogger):
 
         :arg string name: the name of the feature to disable.
         """
+        warnings.warn("Use of features is currently discouraged, pending refactoring", RuntimeWarning)
         # get func directly from class dict - we don't want an unbound method.
         setattr(cls, name, cls.__dict__['_feature_noop'])
 
@@ -176,6 +179,7 @@ class Logger(BaseLogger):
 
         :arg string name: the name of the feature to remove
         """
+        warnings.warn("Use of features is currently discouraged, pending refactoring", RuntimeWarning)
         delattr(cls, name)
 
     def __init__(self, fields = None, options = None, emitters = None,
