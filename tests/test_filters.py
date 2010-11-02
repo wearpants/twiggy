@@ -1,4 +1,4 @@
-import unittest2
+import unittest
 
 import re
 
@@ -8,7 +8,7 @@ from . import make_mesg
 
 m = make_mesg()
 
-class msgFilterTestCase(unittest2.TestCase):
+class msgFilterTestCase(unittest.TestCase):
 
     # XXX more robust testing of the exact type/func.__name__ of the returned f
     # might be nice (instead of just callable), but eh.
@@ -55,7 +55,7 @@ class msgFilterTestCase(unittest2.TestCase):
             f = filters.msgFilter(42)
 
 
-class namesTestCase(unittest2.TestCase):
+class namesTestCase(unittest.TestCase):
 
     def test_names(self):
         n = filters.names("foo", "bar")
@@ -71,7 +71,7 @@ class namesTestCase(unittest2.TestCase):
         assert filters.glob_names("jo*", "frank")(m)
         assert not filters.glob_names("*bob", "frank")(m)
 
-class EmitterTestCase(unittest2.TestCase):
+class EmitterTestCase(unittest.TestCase):
 
     def test_bad_min_level(self):
         with self.assertRaises(ValueError):

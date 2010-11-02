@@ -1,4 +1,4 @@
-import unittest2
+import unittest
 
 from twiggy.lib.converter import Converter, ConversionTable
 
@@ -8,13 +8,13 @@ def convVal(x):
 def convItem(x, y):
     return x, y
 
-class ConverterTestCase(unittest2.TestCase):
+class ConverterTestCase(unittest.TestCase):
 
     def test_repr(self):
         c = Converter("pants", convVal, convItem)
         assert repr(c) == "<Converter('pants')>"
 
-class ConversionTableTestCase(unittest2.TestCase):
+class ConversionTableTestCase(unittest.TestCase):
 
     def test_init_None(self):
         ct = ConversionTable()

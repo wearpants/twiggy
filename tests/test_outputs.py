@@ -1,4 +1,4 @@
-import unittest2
+import unittest
 import tempfile
 import os
 
@@ -17,7 +17,7 @@ class UnlockedFileOutput(outputs.FileOutput):
 
     use_locks = False
 
-class FileOutputTestCase(unittest2.TestCase):
+class FileOutputTestCase(unittest.TestCase):
 
     def setUp(self):
         self.fname = tempfile.mktemp()
@@ -64,7 +64,7 @@ class FileOutputTestCase(unittest2.TestCase):
         s = open(self.fname, 'r').read()
         assert s == "DEBUG:jose:shirt=42:Hello Mister Funnypants\n"
 
-class ListOutputTest(unittest2.TestCase):
+class ListOutputTest(unittest.TestCase):
 
     def test_list_output(self):
         o = outputs.ListOutput()

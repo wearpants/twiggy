@@ -1,4 +1,4 @@
-import unittest2
+import unittest
 import sys
 
 import twiggy.levels
@@ -6,7 +6,7 @@ from twiggy.message import Message
 
 from . import make_mesg
 
-class MessageTestCase(unittest2.TestCase):
+class MessageTestCase(unittest.TestCase):
 
     def test_basic(self):
         m = make_mesg()

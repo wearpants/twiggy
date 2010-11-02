@@ -1,9 +1,9 @@
-import unittest2
+import unittest
 import sys
 
 from twiggy import levels
 
-class LevelTestCase(unittest2.TestCase):
+class LevelTestCase(unittest.TestCase):
 
     def test_display(self):
         assert str(levels.DEBUG) == 'DEBUG'
@@ -34,7 +34,7 @@ class LevelTestCase(unittest2.TestCase):
     def test_bogus_not_equals(self):
         assert levels.DEBUG != 1
 
-    @unittest2.skipIf(sys.version_info < (3,), "Python 2.x comparisons are insane")
+    @unittest.skipIf(sys.version_info < (3,), "Python 2.x comparisons are insane")
     def test_bogus_compare(self):
         # XXX is there a comparable test for 2.x?
         with self.assertRaises(TypeError):

@@ -1,11 +1,11 @@
-import unittest2
+import unittest
 import copy
 
 from twiggy import formats, levels, message
 
 from . import when
    
-class ConversionsTestCase(unittest2.TestCase):
+class ConversionsTestCase(unittest.TestCase):
    
     fields = {
         'time': when,
@@ -44,7 +44,7 @@ class ConversionsTestCase(unittest2.TestCase):
             formats.shell_format.conversion.convert(d) 
 
 
-class FormatTestCase(unittest2.TestCase):
+class FormatTestCase(unittest.TestCase):
 
     fields = {
         'time': when,
