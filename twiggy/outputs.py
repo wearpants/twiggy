@@ -68,18 +68,19 @@ class AsyncOutput(Output):
         if msg_buffer == 0:
             self._sync_init()
         else:
-            self._async_init(msg_buffer)
+            self._async_init(msg_buffer, close_atexit)
         
         if close_atexit:
             atexit.register(self.close)
 
-    def _async_init(self, msg_buffer):
+    def _async_init(self, msg_buffer, close_atexit):
         """the guts of init - for internal use"""
         self.output = self.__async_output
         self.close = self.__async_close
         self.__queue = multiprocessing.JoinableQueue(msg_buffer)
         self.__child = multiprocessing.Process(target=self.__child_main, args=(self,))
-        self.__child.start() # XXX s.b. daemon=True? don't think so, b/c atexit instead
+        self.__child.daemon = not close_atexit
+        self.__child.start()
 
     # use a plain function so Windows is cool
     @staticmethod
