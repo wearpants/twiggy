@@ -88,7 +88,7 @@ class Message(object):
                 raise ValueError("can't use args with $ style format specs")
             s = Template(format_spec).substitute(kwargs)
         else:
-            assert False, "impossible style" # pragma: no cover
+            assert False, "impossible style"
 
         self.text = s
 
