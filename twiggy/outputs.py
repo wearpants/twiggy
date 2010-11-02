@@ -14,13 +14,16 @@ class Output(object):
         """a format that that just returns the message unchanged - for internal use"""
         return msg
 
-    def __init__(self, format=None):
+    def __init__(self, format=None, close_atexit=True):
         """
         :arg format format: the format to use. If None, return the message unchanged.
+        :arg bool close_atexit: should :meth:`.close` be registered with :mod:`atexit`. If False, the user is responsible for closing the output.
         """
         self._format = format if format is not None else self._noop_format
         self._sync_init()
-        atexit.register(self.close)
+        
+        if close_atexit:
+            atexit.register(self.close)
 
     def _sync_init(self):
         """the guts of init - for internal use"""
@@ -60,13 +63,15 @@ class Output(object):
 class AsyncOutput(Output):
     """An `.Output` with support for asynchronous logging"""
 
-    def __init__(self, format=None, msg_buffer=0):
+    def __init__(self, format=None, msg_buffer=0, close_atexit=True):
         self._format = format if format is not None else self._noop_format
         if msg_buffer == 0:
             self._sync_init()
         else:
             self._async_init(msg_buffer)
-        atexit.register(self.close)
+        
+        if close_atexit:
+            atexit.register(self.close)
 
     def _async_init(self, msg_buffer):
         """the guts of init - for internal use"""
@@ -142,11 +147,11 @@ class FileOutput(AsyncOutput):
 
     ``name``, ``mode``, ``buffering`` are passed to :func:`open`
     """
-    def __init__(self, name, format, mode='a', buffering=1, msg_buffer=0):
+    def __init__(self, name, format, mode='a', buffering=1, msg_buffer=0, close_atexit=True):
         self.filename = name
         self.mode = mode
         self.buffering = buffering
-        super(FileOutput, self).__init__(format, msg_buffer)
+        super(FileOutput, self).__init__(format, msg_buffer, close_atexit)
 
     def _open(self):
         self.file = open(self.filename, self.mode, self.buffering)
@@ -159,9 +164,9 @@ class FileOutput(AsyncOutput):
 
 class StreamOutput(Output):
     """Output to an externally-managed stream."""
-    def __init__(self, format, stream=sys.stderr):
+    def __init__(self, format, stream=sys.stderr, close_atexit=True):
         self.stream = stream
-        super(StreamOutput, self).__init__(format)
+        super(StreamOutput, self).__init__(format, close_atexit)
 
     def _open(self):
         pass
