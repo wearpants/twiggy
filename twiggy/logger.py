@@ -118,7 +118,7 @@ class InternalLogger(BaseLogger):
 
 
     def __init__(self, output, fields = None, options = None, min_level = None):
-        super(InternalLogger, self).__init__(fields, options)
+        super(InternalLogger, self).__init__(fields, options, min_level)
         self.output = output
 
     def _clone(self):
