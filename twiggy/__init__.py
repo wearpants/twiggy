@@ -1,6 +1,7 @@
 __all__=['log', 'emitters', 'addEmitters', 'devel_log', 'filters', 'formats', 'outputs', 'levels', 'quickSetup']
 import time
 import sys
+import os
 
 import logger
 import filters
@@ -8,19 +9,31 @@ import formats
 import outputs
 import levels
 
-## a useful default fields
-__fields = {'time':time.gmtime}
 
-log = logger.Logger(__fields)
+## globals creation is wrapped in a function so that we can do sane testing
+def __populate_globals():
 
-emitters = log._emitters
+    global __fields, log, emitters, __internal_format, __internal_output, internal_log, devel_log
+    ## a useful default fields
+    __fields = {'time':time.gmtime}
 
-__internal_format = formats.LineFormat(conversion = formats.line_conversion)
-__internal_output = outputs.StreamOutput(format = __internal_format, stream=sys.stderr)
+    log = logger.Logger(__fields)
 
-internal_log = logger.InternalLogger(fields = __fields, output=__internal_output).name('twiggy.internal').trace('error')
+    emitters = log._emitters
 
-devel_log = logger.InternalLogger(fields = __fields, output = outputs.NullOutput()).name('twiggy.devel')
+    __internal_format = formats.LineFormat(conversion = formats.line_conversion)
+    __internal_output = outputs.StreamOutput(format=__internal_format, stream=sys.stderr)
+
+    internal_log = logger.InternalLogger(fields = __fields, output=__internal_output).name('twiggy.internal').trace('error')
+
+    devel_log = logger.InternalLogger(fields = __fields, output = outputs.NullOutput()).name('twiggy.devel')
+
+def __del_globals():
+    global __fields, log, emitters, __internal_format, __internal_output, internal_log, devel_log
+    del __fields, log, emitters, __internal_format, __internal_output, internal_log, devel_log
+
+if 'TWIGGY_UNDER_TEST' not in os.environ: # pragma: no cover
+    __populate_globals()
 
 def quickSetup(min_level=levels.DEBUG, file = None, msg_buffer = 0):
     """Quickly set up `emitters`.
