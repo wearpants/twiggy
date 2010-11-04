@@ -48,6 +48,20 @@ class InternalLoggerTest(unittest.TestCase):
         assert log is not self.log
         assert log._fields == {'name':'bob'}
 
+    def test_options(self):
+        log = self.log.options(suppress_newlines=True)
+        assert log is not self.log
+        assert log._options['suppress_newlines'] == True
+
+    def test_bad_options(self):
+        with self.assertRaises(ValueError):
+            log = self.log.options(boom=True)
+
+    def test_trace(self):
+        log = self.log.trace('error')
+        assert log is not self.log
+        assert log._options['trace'] == 'error'
+
     def test_debug(self):
         self.log.debug('hi')
         assert len(self.messages) == 1
