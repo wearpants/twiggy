@@ -12,8 +12,15 @@ import levels
 
 ## globals creation is wrapped in a function so that we can do sane testing
 def __populate_globals():
-
     global __fields, log, emitters, __internal_format, __internal_output, internal_log, devel_log
+
+    try:
+        log
+    except NameError:
+        pass
+    else:
+        raise RuntimeError("Attempted to populate globals twice")
+
     ## a useful default fields
     __fields = {'time':time.gmtime}
 
