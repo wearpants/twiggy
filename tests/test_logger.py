@@ -264,12 +264,13 @@ class LoggerTrapTestCase(unittest.TestCase):
         m = self.internal_messages.pop()
         
         print m.text
+        print m.traceback
         print _twiggy.internal_log._options
-        print sys.exc_info()
         
         assert m.level == levels.INFO
         assert m.name == 'twiggy.internal'
-        assert "Traceback" in m.text
+        assert "Traceback" in m.traceback
+        assert "THUNK" in m.traceback
         assert "Error in Logger filtering" in m.text
         assert "<function bad_filter" in m.text
         
