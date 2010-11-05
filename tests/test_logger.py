@@ -176,4 +176,51 @@ class LoggerTestCase(LoggerTestBase, unittest.TestCase):
 
     def tearDown(self):
         self.output.close()
-        #self.emitters.clear()
+        self.emitters.clear()
+    
+    def test_structDict(self):
+        d={42:42}
+        log = self.log.structDict(d)
+        assert len(self.messages) == 1
+        m = self.messages.pop()
+        self.assertDictContainsSubset(d, m.fields)
+        assert m.fields is not d
+        assert m.text == ""
+        assert m.level == levels.INFO
+
+        # we could do the same tests on options/min_level as done
+        # in test_clone, but that's starting to get redundant
+
+    def test_fields(self):
+        log = self.log.struct(x=42)
+        assert len(self.messages) == 1
+        m = self.messages.pop()
+        self.assertDictContainsSubset({'x':42}, m.fields)
+        assert m.text == ""
+        assert m.level == levels.INFO
+    
+    def test_no_emitters(self):
+        self.emitters.clear()
+        self.log.debug('hi')
+        assert len(self.messages) == 0
+    
+    def test_min_level_emitters(self):
+        self.emitters['*'].min_level = levels.INFO
+        self.log.debug('hi')
+        assert len(self.messages) == 0
+    
+    def test_filter_emitters(self):
+        self.emitters['*'].filter = 'pants'
+        self.log.debug('hi')
+        assert len(self.messages) == 0
+    
+    def test_logger_filter(self):
+        self.log.filter = lambda fmt_spec: 'pants' in fmt_spec
+        self.log.debug('hi')
+        assert len(self.messages) == 0
+        
+        self.log.filter = lambda fmt_spec: 'hi' in fmt_spec
+        self.log.debug('hi')
+        assert len(self.messages) == 1
+        m = self.messages.pop()
+        assert m.text == 'hi'
