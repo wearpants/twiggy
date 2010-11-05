@@ -237,7 +237,7 @@ class LoggerTrapTestCase(unittest.TestCase):
         self.log = logger.Logger()
         self.emitters = self.log._emitters
         self.output = outputs.ListOutput(close_atexit = False)
-        self.emitters['*'] = filters.Emitter(levels.DEBUG, None, self.output)
+        self.emitters['everything'] = filters.Emitter(levels.DEBUG, None, self.output)
         self.messages = self.output.messages
 
 
@@ -273,8 +273,109 @@ class LoggerTrapTestCase(unittest.TestCase):
         assert "THUNK" in m.traceback
         assert "Error in Logger filtering" in m.text
         assert "<function bad_filter" in m.text
+                
+    def test_trap_bad_msg(self):
+        def go_boom():
+            raise RuntimeError("BOOM")
+
+        self.log.fields(func=go_boom).info('hi')
+        assert len(self.messages) == 0
+        
+        assert len(self.internal_messages) == 1
+        m = self.internal_messages.pop()
+        
+        print m.text
+        print m.traceback
+        print _twiggy.internal_log._options
+        
+        assert m.level == levels.INFO
+        assert m.name == 'twiggy.internal'
+        assert "Traceback" in m.traceback
+        assert "BOOM" in m.traceback
+        assert "Error formatting message" in m.text
+        assert "<function go_boom" in m.text
+    
+    def test_trap_output(self):
+        class BorkedOutput(outputs.ListOutput):
+
+            def _write(self, x):
+                raise RuntimeError("BORK")
+
+        out = BorkedOutput(close_atexit = False)
+
+        def cleanup(output):
+            try:
+                del self.emitters['before']
+            except KeyError:
+                pass
+                
+            out.close()
+
+        self.addCleanup(cleanup, out)
+
+        self.emitters['before'] = filters.Emitter(levels.DEBUG, None, out)
+
+        self.log.fields().info('hi')
+
+        assert len(self.messages) == 1
+        m = self.messages.pop()
+        assert m.text == "hi"
+        
+        assert len(self.internal_messages) == 1
+        m = self.internal_messages.pop()
+
+        print m.text
+        print m.traceback
+
+        assert m.level == levels.WARNING
+        assert "Error outputting with <tests.test_logger.BorkedOutput" in m.text
+        assert "Traceback" in m.traceback
+        assert "BORK" in m.traceback
         
         
+    def test_trap_filter(self):
+
+        out = outputs.ListOutput(close_atexit = False)
+
+        def cleanup(output):
+            try:
+                del self.emitters['before']
+            except KeyError:
+                pass
+                
+            out.close()
+
+        self.addCleanup(cleanup, out)
+
+        def go_boom(msg):
+            raise RuntimeError("BOOM")
+
+        self.emitters['before'] = filters.Emitter(levels.DEBUG, go_boom, out)
+
+        self.log.fields().info('hi')
+
+        # errors in filtering cause messages to be output anyway
+        assert len(out.messages) == 1
+        m1 = out.messages.pop()
+        assert m1.text == "hi"
+
+        assert len(self.messages) == 1
+        m2 = self.messages.pop()
+        assert m2.text == "hi"
+        
+        assert m1 is m2
+        
+        assert len(self.internal_messages) == 1
+        m = self.internal_messages.pop()
+
+        print m.text
+        print m.traceback
+
+        assert m.level == levels.INFO
+        assert "Error filtering with emitter before" in m.text
+        assert "<function go_boom" in m.text
+        assert "Traceback" in m.traceback
+        assert "BOOM" in m.traceback
         
         
 

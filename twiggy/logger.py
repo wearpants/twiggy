@@ -244,13 +244,16 @@ class Logger(BaseLogger):
             return
 
         outputs = set()
-        for name, emitter in potential_emitters:
+        # sort to make things deterministic (for tests, mainly)
+        for name, emitter in sorted(potential_emitters):
             try:
                 include = emitter.filter(msg)
             except StandardError:
-                _twiggy.internal_log.info("Error filtering with emitter {}. Message: {1!r}", name, msg)
-            else:
-                if include: outputs.add(emitter._output)
+                _twiggy.internal_log.info("Error filtering with emitter {}. Filter: {} Message: {!r}",
+                                          name, repr(emitter.filter), msg)
+                include = True # output anyway if error
+            
+            if include: outputs.add(emitter._output)
 
         for o in outputs:
             try:
