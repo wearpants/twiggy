@@ -3,6 +3,7 @@ import sys
 import StringIO
 
 from twiggy import logger, outputs, levels, filters
+import twiggy as _twiggy
 
 class LoggerTestBase(object):
     """common tests for loggers"""
@@ -173,7 +174,6 @@ class LoggerTestCase(LoggerTestBase, unittest.TestCase):
         self.emitters['*'] = filters.Emitter(levels.DEBUG, None, self.output)
         self.messages = self.output.messages
 
-
     def tearDown(self):
         self.output.close()
         self.emitters.clear()
@@ -224,3 +224,56 @@ class LoggerTestCase(LoggerTestBase, unittest.TestCase):
         assert len(self.messages) == 1
         m = self.messages.pop()
         assert m.text == 'hi'
+
+class LoggerTrapTestCase(unittest.TestCase):
+
+    
+    def setUp(self):
+        self.internal_output = outputs.ListOutput(close_atexit = False)
+        self.internal_messages = self.internal_output.messages
+        _twiggy._populate_globals()
+        _twiggy.internal_log.output = self.internal_output
+
+        self.log = logger.Logger()
+        self.emitters = self.log._emitters
+        self.output = outputs.ListOutput(close_atexit = False)
+        self.emitters['*'] = filters.Emitter(levels.DEBUG, None, self.output)
+        self.messages = self.output.messages
+
+
+    def tearDown(self):
+        self.internal_output.close()
+        _twiggy._del_globals()
+
+        self.output.close()
+        self.emitters.clear()
+
+    def test_bad_logger_filter(self):
+        def bad_filter(fmt_spec):
+            raise RuntimeError("THUNK")    
+    
+        self.log.filter = bad_filter
+        
+        # a bad filter doesn't stop emitting
+        self.log.debug('hi')
+        assert len(self.messages) == 1
+        m = self.messages.pop()
+        assert m.text == 'hi'
+        
+        assert len(self.internal_messages) == 1
+        m = self.internal_messages.pop()
+        
+        print m.text
+        print _twiggy.internal_log._options
+        print sys.exc_info()
+        
+        assert m.level == levels.INFO
+        assert m.name == 'twiggy.internal'
+        assert "Traceback" in m.text
+        assert "Error in Logger filtering" in m.text
+        assert "<function bad_filter" in m.text
+        
+        
+        
+        
+

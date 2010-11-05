@@ -225,7 +225,7 @@ class Logger(BaseLogger):
         try:
             if not self.filter(format_spec): return
         except StandardError:
-            _twiggy.internal_log.info("Error in Logger filtering with {0!r} on {1}", self.filter, format_spec)
+            _twiggy.internal_log.info("Error in Logger filtering with {0} on {1}", repr(self.filter), format_spec)
             # just continue emitting in face of filter error
 
         # XXX should we trap here too b/c of "Dictionary changed size during iteration" (or other rare errors?)

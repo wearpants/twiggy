@@ -11,7 +11,7 @@ import levels
 
 
 ## globals creation is wrapped in a function so that we can do sane testing
-def __populate_globals():
+def _populate_globals():
     global __fields, log, emitters, __internal_format, __internal_output, internal_log, devel_log
 
     try:
@@ -35,12 +35,12 @@ def __populate_globals():
 
     devel_log = logger.InternalLogger(fields = __fields, output = outputs.NullOutput()).name('twiggy.devel')
 
-def __del_globals():
+def _del_globals():
     global __fields, log, emitters, __internal_format, __internal_output, internal_log, devel_log
     del __fields, log, emitters, __internal_format, __internal_output, internal_log, devel_log
 
 if 'TWIGGY_UNDER_TEST' not in os.environ: # pragma: no cover
-    __populate_globals()
+    _populate_globals()
 
 def quickSetup(min_level=levels.DEBUG, file = None, msg_buffer = 0):
     """Quickly set up `emitters`.
