@@ -2,32 +2,10 @@ import unittest
 import sys
 import StringIO
 
-from twiggy import logger, outputs, levels
+from twiggy import logger, outputs, levels, filters
 
-class InternalLoggerTest(unittest.TestCase):
-
-    def setUp(self):
-        self.output = outputs.ListOutput(close_atexit = False)
-        self.messages = self.output.messages
-        self.log = logger.InternalLogger(output=self.output)
-
-    def tearDown(self):
-        self.output.close()
-
-    def test_clone(self):
-        log = self.log._clone()
-        assert log is not self.log
-        assert type(log) is type(self.log)
-        assert log.output is self.output
-
-        assert log._fields == self.log._fields
-        assert log._fields is not self.log._fields
-
-        assert log._options == self.log._options
-        assert log._options is not self.log._options
-
-        assert log.min_level == self.log.min_level
-
+class LoggerTestBase(object):
+    """common tests for loggers"""
     def test_fieldsDict(self):
         d={42:42}
         log = self.log.fieldsDict(d)
@@ -78,7 +56,7 @@ class InternalLoggerTest(unittest.TestCase):
 
     def test_warning(self):
         self.log.warning('hi')
-        assert len(self.messages) == 1
+        assert len(self.messages) == 1, self.messages
         m = self.messages.pop()
         assert m.text == 'hi'
         assert m.fields['level'] == levels.WARNING
@@ -97,7 +75,7 @@ class InternalLoggerTest(unittest.TestCase):
         assert m.text == 'hi'
         assert m.fields['level'] == levels.CRITICAL
 
-    def test_min_level(self):
+    def test_logger_min_level(self):
         log = self.log.name('test_min_level')
         log.min_level = levels.WARNING
 
@@ -113,6 +91,30 @@ class InternalLoggerTest(unittest.TestCase):
 
         log.info('hi')
         assert len(self.messages) == 0
+
+class InternalLoggerTest(LoggerTestBase, unittest.TestCase):
+
+    def setUp(self):
+        self.output = outputs.ListOutput(close_atexit = False)
+        self.messages = self.output.messages
+        self.log = logger.InternalLogger(output=self.output)
+
+    def tearDown(self):
+        self.output.close()
+
+    def test_clone(self):
+        log = self.log._clone()
+        assert log is not self.log
+        assert type(log) is type(self.log)
+        assert log.output is self.output
+
+        assert log._fields == self.log._fields
+        assert log._fields is not self.log._fields
+
+        assert log._options == self.log._options
+        assert log._options is not self.log._options
+
+        assert log.min_level == self.log.min_level
 
     def test_trap_msg(self):
         sio = StringIO.StringIO()
@@ -161,3 +163,17 @@ class InternalLoggerTest(unittest.TestCase):
         assert "Offending message: <twiggy.message.Message object" in sio.getvalue()
         assert "Error in twiggy internal log! Something is serioulsy broken." in sio.getvalue()
         assert "Traceback" in sio.getvalue()
+
+class LoggerTestCase(LoggerTestBase, unittest.TestCase):
+
+    def setUp(self):
+        self.log = logger.Logger()
+        self.emitters = self.log._emitters
+        self.output = outputs.ListOutput(close_atexit = False)
+        self.emitters['*'] = filters.Emitter(levels.DEBUG, None, self.output)
+        self.messages = self.output.messages
+
+
+    def tearDown(self):
+        self.output.close()
+        #self.emitters.clear()
