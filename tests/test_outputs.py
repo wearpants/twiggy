@@ -1,6 +1,7 @@
 import unittest
 import tempfile
 import os
+import StringIO
 
 from twiggy import outputs, formats
 
@@ -63,6 +64,15 @@ class FileOutputTestCase(unittest.TestCase):
         o.close()
         s = open(self.fname, 'r').read()
         assert s == "DEBUG:jose:shirt=42:Hello Mister Funnypants\n"
+
+class StreamOutputTest(unittest.TestCase):
+    
+    def test_stream_output(self):
+        sio = StringIO.StringIO()
+        o = outputs.StreamOutput(formats.shell_format, sio)
+        o.output(m)
+        o.close()
+        assert sio.getvalue() == "DEBUG:jose:shirt=42:Hello Mister Funnypants\n"
 
 class ListOutputTest(unittest.TestCase):
 
