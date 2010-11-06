@@ -1,0 +1,67 @@
+import unittest
+import twiggy
+import StringIO
+import time
+
+from . import when
+
+def fake_gmtime():
+    return when
+
+class IntegrationTestCase(unittest.TestCase):
+
+    def setUp(self):
+        twiggy._populate_globals()
+        twiggy.log._fields['time'] = fake_gmtime
+    
+    def tearDown(self):
+        twiggy._del_globals()
+
+    def test_integration(self):
+        out1 = twiggy.outputs.StreamOutput(stream=StringIO.StringIO(), format=twiggy.formats.line_format)
+        out2 = twiggy.outputs.StreamOutput(stream=StringIO.StringIO(), format=twiggy.formats.line_format)
+        
+        twiggy.addEmitters(('first', twiggy.levels.INFO, None, out1),
+                           ('second', twiggy.levels.DEBUG, twiggy.filters.glob_names('second.*'), out2),
+                           ('first-filter', twiggy.levels.DEBUG, ".*pants.*", out1))
+        
+        def something():
+            return "something cool"
+        
+        twiggy.log.debug("oh hi")
+        twiggy.log.name("second").info("do you like cheese?")
+        twiggy.log.name("second.child").fields(america="hate").warning("No")
+        twiggy.log.name("first").error("Can you do {}", something)
+        twiggy.log.name("bob").debug("I wear pants")
+        
+        try:
+            raise RuntimeError("Oh Noes!")
+        except:
+            twiggy.log.trace().critical("Went boom")
+
+        print "********************************************"        
+        print out1.stream.getvalue(),
+        print "********************************************"
+        print out2.stream.getvalue(),       
+        print "********************************************"
+        
+
+        # XXX this should really be done with a regex, but I'm feeling lazy
+        assert out1.stream.getvalue().startswith( \
+"""2010-10-28T02:15:57Z:INFO:second:do you like cheese?
+2010-10-28T02:15:57Z:ERROR:first:Can you do something cool
+2010-10-28T02:15:57Z:DEBUG:bob:I wear pants
+2010-10-28T02:15:57Z:CRITICAL:Went boom
+TRACE Traceback (most recent call last):
+""")
+#"""TRACE   File "/home/pfein/Projects/python-twiggy/tests/test_integration.py", line 39, in test_integration
+        assert out1.stream.getvalue().endswith( \
+"""TRACE     raise RuntimeError("Oh Noes!")
+TRACE RuntimeError: Oh Noes!
+""")
+        
+
+        assert out2.stream.getvalue() == \
+"""2010-10-28T02:15:57Z:WARNING:second.child:america=hate:No
+"""
+
