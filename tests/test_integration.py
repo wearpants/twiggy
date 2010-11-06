@@ -18,10 +18,12 @@ class IntegrationTestCase(unittest.TestCase):
         twiggy._del_globals()
 
     def test_integration(self):
+        everything = twiggy.outputs.StreamOutput(stream=StringIO.StringIO(), format=twiggy.formats.line_format)
         out1 = twiggy.outputs.StreamOutput(stream=StringIO.StringIO(), format=twiggy.formats.line_format)
         out2 = twiggy.outputs.StreamOutput(stream=StringIO.StringIO(), format=twiggy.formats.line_format)
         
-        twiggy.addEmitters(('first', twiggy.levels.INFO, None, out1),
+        twiggy.addEmitters(('*', twiggy.levels.DEBUG, None, everything),
+                           ('first', twiggy.levels.INFO, None, out1),
                            ('second', twiggy.levels.DEBUG, twiggy.filters.glob_names('second.*'), out2),
                            ('first-filter', twiggy.levels.DEBUG, ".*pants.*", out1))
         
@@ -39,11 +41,13 @@ class IntegrationTestCase(unittest.TestCase):
         except:
             twiggy.log.trace().critical("Went boom")
 
-        print "********************************************"        
+        print "***************** everything **********************"
+        print everything.stream.getvalue()
+        print "****************** out 1 **************************"
         print out1.stream.getvalue(),
-        print "********************************************"
+        print "****************** out 2 **************************"
         print out2.stream.getvalue(),       
-        print "********************************************"
+        print "***************************************************"
         
 
         # XXX this should really be done with a regex, but I'm feeling lazy
