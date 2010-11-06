@@ -32,7 +32,7 @@ class IntegrationTestCase(unittest.TestCase):
         
         twiggy.log.debug("oh hi")
         twiggy.log.name("second").info("do you like cheese?")
-        twiggy.log.name("second.child").fields(america="hate").warning("No")
+        twiggy.log.name("second.child").fields(cheese="hate").warning("No")
         twiggy.log.name("first").error("Can you do {}", something)
         twiggy.log.name("bob").debug("I wear pants")
         
@@ -42,7 +42,7 @@ class IntegrationTestCase(unittest.TestCase):
             twiggy.log.trace().critical("Went boom")
 
         print "***************** everything **********************"
-        print everything.stream.getvalue()
+        print everything.stream.getvalue(),
         print "****************** out 1 **************************"
         print out1.stream.getvalue(),
         print "****************** out 2 **************************"
@@ -53,6 +53,7 @@ class IntegrationTestCase(unittest.TestCase):
         # XXX this should really be done with a regex, but I'm feeling lazy
         assert out1.stream.getvalue().startswith( \
 """2010-10-28T02:15:57Z:INFO:second:do you like cheese?
+2010-10-28T02:15:57Z:WARNING:second.child:cheese=hate:No
 2010-10-28T02:15:57Z:ERROR:first:Can you do something cool
 2010-10-28T02:15:57Z:DEBUG:bob:I wear pants
 2010-10-28T02:15:57Z:CRITICAL:Went boom
@@ -66,6 +67,6 @@ TRACE RuntimeError: Oh Noes!
         
 
         assert out2.stream.getvalue() == \
-"""2010-10-28T02:15:57Z:WARNING:second.child:america=hate:No
+"""2010-10-28T02:15:57Z:WARNING:second.child:cheese=hate:No
 """
 
