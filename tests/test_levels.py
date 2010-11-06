@@ -15,14 +15,16 @@ class LevelTestCase(unittest.TestCase):
 
     def test_less_than(self):
         assert levels.DEBUG < levels.INFO
-        assert levels.INFO < levels.WARNING
+        assert levels.INFO < levels.NOTICE
+        assert levels.NOTICE < levels.WARNING
         assert levels.WARNING < levels.ERROR
         assert levels.ERROR < levels.CRITICAL
         assert levels.CRITICAL < levels.DISABLED
 
     def test_greater_than(self):
         assert levels.INFO > levels.DEBUG
-        assert levels.WARNING > levels.INFO
+        assert levels.NOTICE > levels.INFO
+        assert levels.WARNING > levels.NOTICE
         assert levels.ERROR > levels.WARNING
         assert levels.CRITICAL > levels.ERROR
         assert levels.DISABLED > levels.CRITICAL
