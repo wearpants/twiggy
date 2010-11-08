@@ -327,6 +327,9 @@ Message
 
     A logging message.  Users never create these directly.
 
+    .. versionchanged:: 0.4.1
+        Pass args/kwargs as list/dict instead of via ``*``/``**`` expansion.
+
     .. _message-options:
 
     The constructor takes a dict of ``options`` to control message creation.  In addition to :attr:`.suppress_newlines`, the following options are recognized:
@@ -374,6 +377,9 @@ Outputs
 
     .. automethod:: __init__
     
+    .. versionadded:: 0.4.1
+        Add the `close_atexit` parameter.     
+    
     .. method:: close
         
         Finalize the output.
@@ -405,3 +411,7 @@ Outputs
 .. autoclass:: NullOutput
 
 .. autoclass:: ListOutput
+    
+    .. versionchanged:: 0.4.1
+        Replace `DequeOutput` with more useful `ListOutput`.
+
