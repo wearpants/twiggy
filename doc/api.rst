@@ -412,6 +412,6 @@ Outputs
 
 .. autoclass:: ListOutput
     
-    .. versionchanged:: 0.4.1
-        Replace `DequeOutput` with more useful `ListOutput`.
+.. versionchanged:: 0.4.1
+    Replace `DequeOutput` with more useful `ListOutput`.
 
