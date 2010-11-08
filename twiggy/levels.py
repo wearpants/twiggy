@@ -59,7 +59,7 @@ class LogLevel(object):
             return self.__value != other.__value
 
     def __hash__(self):
-        return hash(self.__value) # pragma: no cover
+        return hash(self.__value)
 
 def name2level(name):
     """return a `LogLevel` from a case-insensitve string"""
