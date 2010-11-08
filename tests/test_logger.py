@@ -55,6 +55,13 @@ class LoggerTestBase(object):
         assert m.text == 'hi'
         assert m.fields['level'] == levels.INFO
 
+    def test_notice(self):
+        self.log.notice('hi')
+        assert len(self.messages) == 1
+        m = self.messages.pop()
+        assert m.text == 'hi'
+        assert m.fields['level'] == levels.NOTICE
+
     def test_warning(self):
         self.log.warning('hi')
         assert len(self.messages) == 1, self.messages
