@@ -64,6 +64,8 @@ Features!
 *******************
 :mod:`Features <.features>` are optional additons of logging functionality to the `.log`. They encapsulate common logging patterns. Code can be written using a feature, enhancing what information is logged. The feature can be disabled at :ref:`runtime <twiggy-setup>` if desired.
 
+.. warning:: Features are currently deprecated, pending a reimplementation in version 0.5
+
 .. doctest:: features
 
     >>> from twiggy.features import socket as socket_feature
@@ -199,6 +201,9 @@ When developing extensions to twiggy, use the :data:`devel_log`. An :class:`.Int
 
 Writing Features
 ===================
+
+.. warning:: Features are currently deprecated, pending a reimplementation in version 0.5
+
 Features are used to encapsulate common logging patterns. They are implemented as methods added to the :class:`.Logger` class. They receive an instance as the first argument (ie, ``self``). :meth:`Enable the feature <.addFeature>` before using.
 
 Features come in two flavors: those that add information to a message's fields or set options, and those that cause output.

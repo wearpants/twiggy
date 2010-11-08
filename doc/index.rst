@@ -59,3 +59,4 @@ Documentation
     reference_guide
     api
     glossary
+    changelog
