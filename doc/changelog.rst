@@ -3,6 +3,14 @@ Changelog
 ###############################
 
 ******************************
+0.5.0
+******************************
+*XXX Unreleased*
+
+- add a NOTICE level between INFO and WARNING
+- add sameValue, sameItem, drop helper functions to lib.converter
+
+******************************
 0.4.1
 ******************************
 *11/18/2010*

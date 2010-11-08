@@ -190,6 +190,9 @@ Converter
 
 .. autofunction:: drop
 
+.. versionadded:: 0.5.0
+    Add `sameValue`, `sameItem`, `drop`.
+
 .. class:: ConversionTable(seq)
 
     Convert data dictionaries using `Converters <.Converter>`
