@@ -28,11 +28,35 @@ class LogLevel(object):
         else:
             return self.__value < other.__value
 
+    def __le__(self, other):
+        if not isinstance(other, LogLevel):
+            return NotImplemented
+        else:
+            return self.__value <= other.__value
+
+    def __gt__(self, other):
+        if not isinstance(other, LogLevel):
+            return NotImplemented
+        else:
+            return self.__value > other.__value
+
+    def __ge__(self, other):
+        if not isinstance(other, LogLevel):
+            return NotImplemented
+        else:
+            return self.__value >= other.__value
+
     def __eq__(self, other):
         if not isinstance(other, LogLevel):
             return NotImplemented
         else:
             return self.__value == other.__value
+
+    def __ne__(self, other):
+        if not isinstance(other, LogLevel):
+            return NotImplemented
+        else:
+            return self.__value != other.__value
 
     def __hash__(self):
         return hash(self.__value) # pragma: no cover
