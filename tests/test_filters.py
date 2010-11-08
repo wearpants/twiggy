@@ -54,6 +54,36 @@ class msgFilterTestCase(unittest.TestCase):
         with self.assertRaises(ValueError):
             f = filters.msgFilter(42)
 
+    def test_list(self):
+        re1 = "^Hello.*$"
+        re2 = "^.*Funnypants$"
+        l = [re1, re2]
+        f = filters.msgFilter(l)
+        assert callable(f)
+        assert f(m)
+        
+        re3 = "^.*Sillyhead$"
+        l = (re1, re3)
+        f = filters.msgFilter(l)
+        assert callable(f)
+        assert not f(m)
+
+    def test_nested_list(self):
+        # not encouraged as it's equivalent, but let's support it anyway
+        re1 = "^Hello.*$"
+        re2 = "^.*Funnypants$"
+        l = [re1, [re2]]
+        f = filters.msgFilter(l)
+        assert callable(f)
+        assert f(m)
+        
+    def test_single_list(self):
+        re1 = "^Hello.*$"
+        l = [re1]
+        f = filters.msgFilter(l)
+        assert callable(f)
+        assert f(m)
+
 
 class namesTestCase(unittest.TestCase):
 

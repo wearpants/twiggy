@@ -18,10 +18,16 @@ def msgFilter(x):
     elif callable(x): # XXX test w/ inspect.getargs here?
         return x
     elif isinstance(x, (list, tuple)):
-        raise NotImplementedError # XXX write me!
+        return list_wrapper(x)
     else:
         # XXX a dict could be used to filter on fields (w/ callables?)
         raise ValueError("Unknown filter: {0!r}".format(x))
+
+def list_wrapper(l):
+    filts = [msgFilter(i) for i in l]
+    def wrapped(msg):
+        return all(f(msg) for f in filts)
+    return wrapped
 
 def regex_wrapper(regexp):
     assert isinstance(regexp, __re_type)
