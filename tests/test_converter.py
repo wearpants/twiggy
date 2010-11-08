@@ -1,12 +1,29 @@
 import unittest
 
-from twiggy.lib.converter import Converter, ConversionTable
+from twiggy.lib.converter import Converter, ConversionTable, sameValue, sameItem, drop
 
 def convVal(x):
     return x
 
 def convItem(x, y):
     return x, y
+
+class HelperTestCase(unittest.TestCase):
+
+    def test_drop(self):
+        assert drop(1, 2) is None
+
+    def test_same_value(self):
+        o = object()
+        assert sameValue(o) is o
+
+    def test_same_item(self):
+        o1 = object()
+        o2 = object()
+        
+        x1, x2 = sameItem(o1, o2) 
+        assert o1 is x1
+        assert o2 is x2
 
 class ConverterTestCase(unittest.TestCase):
 
@@ -106,20 +123,21 @@ class ConversionTableTestCase(unittest.TestCase):
 
     def test_convert(self):
         ct = ConversionTable([
-            ("joe", "I wear {}".format, convItem),
-            ("frank", "You wear {}".format, convItem)])
+            ("joe", "I wear {}".format, sameItem),
+            ("frank", "You wear {}".format, sameItem),
+            ("bill", sameValue, sameItem)])
         
         ct.genericValue = "Someone wears {}".format
         
-        d = ct.convert({'joe':'pants', 'frank':'shirt', 'bob':'shoes'})
-        assert d == {'joe': "I wear pants", 'frank': "You wear shirt", 'bob': "Someone wears shoes"}
+        d = ct.convert({'joe':'pants', 'frank':'shirt', 'bill': 'naked', 'bob':'shoes'})
+        assert d == {'joe': "I wear pants", 'frank': "You wear shirt", 'bob': "Someone wears shoes", 'bill':"naked"}
 
     def test_drop(self):
         ct = ConversionTable([
             ("joe", "I wear {}".format, convItem),
-            ("frank", "You wear {}".format, lambda k, v: None)])
+            ("frank", "You wear {}".format, drop)])
         
-        ct.genericItem = lambda k, v: None
+        ct.genericItem = drop
         
         d = ct.convert({'joe':'pants', 'frank':'shirt', 'bob':'shoes'})
         assert d == {'joe': "I wear pants"}
