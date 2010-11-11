@@ -11,9 +11,15 @@ Changelog
 - add sameValue, sameItem, drop helper functions to lib.converter
 
 ******************************
+0.4.2
+******************************
+*11/11/2010*
+- fix broken installer
+
+******************************
 0.4.1
 ******************************
-*11/18/2010*
+*11/8/2010*
 
 - full test coverage; numerous bug fixes
 - add close_atexit parameter to Outputs
@@ -27,3 +33,4 @@ Changelog
 *10/18/2010*
 
 First serious public release
+

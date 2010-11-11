@@ -1,8 +1,8 @@
 recursive-include doc *.rst
-include doc/conf.py
+include doc/conf.py doc/twig_sidebar.jpg doc/Makefile
 recursive-include doc/_static *
-recursive-include doc/_templates *.html
+recursive-include doc/_templates *.html .keep
 recursive-include twiggy *.py
 recursive-include tests *.py
-include scripts/time_*.py
-include scripts/*.sh
+include scripts/*.py scripts/*.sh 
+include VERSION LICENSE sitecustomize.py .coveragerc
