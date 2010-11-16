@@ -122,7 +122,7 @@ The messages output by an emitter are determined by its :attr:`~.Emitter.min_lev
     e = emitters['memory']
     e.min_level = levels.WARNING
     # True allows all messages through (None works as well)
-    e.fitler = True
+    e.filter = True
     # False blocks all messages
     e.filter = False
     # Strings are interpreted as regexes (regex objects ok too)
