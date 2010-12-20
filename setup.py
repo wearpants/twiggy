@@ -2,6 +2,11 @@
 
 from distutils.core import setup
 import os.path
+import sys
+
+# stop with the bug reports
+if sys.version_info < (2, 7):
+    raise RuntimeError("Twiggy requires Python 2.7 or greater")
 
 # this horrible mess brought to you by the crap that is Python distutils. Just use CPAN.
 version_file = os.path.join(os.path.dirname(__file__), 'VERSION')
