@@ -11,6 +11,13 @@ Changelog
 - add sameValue, sameItem, drop helper functions to lib.converter
 
 ******************************
+0.4.3
+******************************
+*12/20/2010*
+- add check for Python >= 2.7 to setup.py, to reduce invalid bug reports.
+
+
+******************************
 0.4.2
 ******************************
 *11/11/2010*
