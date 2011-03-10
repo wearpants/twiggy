@@ -3,6 +3,7 @@ syntax: glob
 dist
 MANIFEST
 *.wpr
+*.pyc
 
 doc/_build/*
 wingdbstub.py
