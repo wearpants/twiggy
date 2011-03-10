@@ -21,7 +21,7 @@ Twiggy is a more Pythonic logger.
 :author: `Peter Fein <http://i.wearpants.org>`_
 :email: pfein@pobox.com
 :homepage: http://twiggy.wearpants.org/
-:hosting: http://python-twiggy.googlecode.com/
+:hosting: http://hg.wearpants.org/twiggy/
 :IRC: irc://irc.freenode.net/#wearpants
 :license: `BSD <http://www.opensource.org/licenses/bsd-license.php>`_
 :Python: 2.7
@@ -36,7 +36,7 @@ Install straight with distutils from the `Cheeseshop <http://pypi.python.org/pyp
 
 Get the latest version::
 
-    hg clone https://python-twiggy.googlecode.com/hg/ python-twiggy
+    hg clone http://hg.wearpants.org/twiggy twiggy
 
 *************************************
 Why Twiggy Should Be Your New Logger
