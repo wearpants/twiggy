@@ -4,7 +4,7 @@ import re
 
 __re_type = type(re.compile('foo')) # XXX is there a canonical place for this?
 
-def msgFilter(x):
+def msg_filter(x):
     """intelligently create a filter"""
     # XXX replace lambdas with nicely-named functions, for debugging
     if x is None:
@@ -24,7 +24,7 @@ def msgFilter(x):
         raise ValueError("Unknown filter: {0!r}".format(x))
 
 def list_wrapper(l):
-    filts = [msgFilter(i) for i in l]
+    filts = [msg_filter(i) for i in l]
     def wrapped(msg):
         return all(f(msg) for f in filts)
     return wrapped
@@ -72,4 +72,4 @@ class Emitter(object):
 
     @filter.setter
     def filter(self, f):
-        self._filter = msgFilter(f)
+        self._filter = msg_filter(f)

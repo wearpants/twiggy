@@ -243,7 +243,7 @@ If the feature should add fields *and* emit in the same step (like :meth:`.struc
         if name not in self._fields:
             self = self.name('dumpwsgi')
 
-        return self.fieldsDict(d)
+        return self.fields_dict(d)
 
 Writing Outputs and Formats
 ==============================
@@ -299,10 +299,10 @@ The :attr:`format <.Output._format>` callable is Output-specific; it should take
     # unknown items are sorted by key
     
     # unknown values are stringified
-    conversion.genericValue = str
+    conversion.generic_value = str
     
     # show unknown items as "<key>=<value>"
-    conversion.genericItem = "{0}={1}".format
+    conversion.generic_item = "{0}={1}".format
     
     # convert!
     print conversion.convert(fields)

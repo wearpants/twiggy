@@ -1,4 +1,4 @@
-__all__=['log', 'emitters', 'addEmitters', 'devel_log', 'filters', 'formats', 'outputs', 'levels', 'quickSetup']
+__all__=['log', 'emitters', 'add_emitters', 'devel_log', 'filters', 'formats', 'outputs', 'levels', 'quick_setup']
 import time
 import sys
 import os
@@ -42,7 +42,7 @@ def _del_globals():
 if 'TWIGGY_UNDER_TEST' not in os.environ: # pragma: no cover
     _populate_globals()
 
-def quickSetup(min_level=levels.DEBUG, file = None, msg_buffer = 0):
+def quick_setup(min_level=levels.DEBUG, file = None, msg_buffer = 0):
     """Quickly set up `emitters`.
 
     :arg `.LogLevel` min_level: lowest message level to cause output
@@ -60,7 +60,7 @@ def quickSetup(min_level=levels.DEBUG, file = None, msg_buffer = 0):
 
     emitters['*'] = filters.Emitter(min_level, True, output)
 
-def addEmitters(*tuples):
+def add_emitters(*tuples):
     """Add multiple emitters.
     ``tuples`` should be ``(name_of_emitter, min_level, filter, output)``. The last three are passed to :class:`.Emitter`.
     """

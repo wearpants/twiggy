@@ -14,8 +14,8 @@ line_conversion = ConversionTable([
     ('name', str, '{1}'.format),
 ])
 
-line_conversion.genericValue = str
-line_conversion.genericItem = "{0}={1}".format
+line_conversion.generic_value = str
+line_conversion.generic_item = "{0}={1}".format
 line_conversion.aggregate = ':'.join
 
 class LineFormat(object):

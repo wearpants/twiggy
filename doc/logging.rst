@@ -6,10 +6,10 @@ Logging Messages
 
 This part describes how user code can log messages with twiggy.
 
-To get started quickly, use :func:`quickSetup`.::
+To get started quickly, use :func:`quick_setup`.::
 
     >>> import twiggy
-    >>> twiggy.quickSetup()
+    >>> twiggy.quick_setup()
 
 .. seealso:: Full details on :doc:`configuration`.
 
