@@ -1,8 +1,10 @@
 import sys
 import logging as orig_logging
 from unittest import TestCase
-from twiggy import logging_compat, log
-from twiggy.logging_compat import hijack, restore, hijack_context, getLogger
+from twiggy.outputs import ListOutput
+from twiggy import logging_compat, addEmitters
+from twiggy.logging_compat import (hijack, restore, hijack_context, basicConfig,
+                                   getLogger, root, DEBUG, INFO, ERROR)
 
 class HijackTest(TestCase):
 
@@ -38,7 +40,49 @@ class HijackTest(TestCase):
 class TestGetLogger(TestCase):
     
     def test_name(self):
-        self.failUnlessEqual(getLogger("spam")._fields["name"], "spam")
+        self.failUnlessEqual(getLogger("spam")._logger._fields["name"], "spam")
     
     def test_root(self):
-        self.failUnlessEqual(getLogger(), log)
+        self.failUnlessEqual(getLogger(), root)
+
+    def test_cache(self):
+        eggs = getLogger("eggs")
+        self.failUnless(getLogger("eggs") is eggs)
+        
+class TestFakeLogger(TestCase):
+    
+    def setUp(self):
+        self.logger = getLogger("spam")
+        self.logger.setLevel(DEBUG)
+        self.list_output = ListOutput()
+        self.messages = self.list_output.messages
+        addEmitters(("spam", DEBUG, None, self.list_output))
+
+    def test_level(self):
+        for level in [INFO, ERROR]:
+            self.logger.setLevel(level)
+            self.failUnlessEqual(self.logger.level, level)
+
+    def test_log_no_exc_info(self):
+        self.logger.info("nothing", exc_info=True)
+        self.failUnlessEqual(self.messages[0].traceback, None)
+
+    def test_log_exc_info(self):
+        try:
+            1/0
+        except:
+            self.logger.error("exception", exc_info=True)
+        self.failUnless("ZeroDivisionError" in self.messages[0].traceback)
+        
+    def test_basicConfig(self):
+        self.failUnlessRaises(RuntimeError, basicConfig)
+
+    def test_log(self):
+        for index, level in enumerate((INFO, ERROR)):
+            self.logger.log(level, "spam")
+            self.failUnlessEqual(self.messages[index].text, "spam")
+            self.failUnlessEqual(self.messages[index].level, level)
+
+    def test_log_bad_level(self):
+        self.failUnlessRaises(ValueError, self.logger.log, "illegal level", "eggs")
+        
