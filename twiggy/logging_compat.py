@@ -5,14 +5,16 @@ it implements the following interface:
   getLogger - returns a logger that supports debug/info/error etc'.
   root - the root logger, or just 'log' in twiggy.
 """
-__all__ = ["hijack", "restore", "hijack_context", # patching
-           "getLogger", "root"] # API
+__all__ = ["hijack", "restore", # patching
+           "getLogger", "root", "LoggingBridgeOutput"] # API
 
 import sys
 import logging as orig_logging
-from twiggy import log, levels
-from twiggy.levels import *
-from contextlib import contextmanager
+from .lib.converter import ConversionTable, drop
+from .formats import LineFormat
+from .outputs import Output
+from . import log, levels
+from .levels import *
 
 def basicConfig(**kwargs):
     raise RuntimeError("Twiggy doesn't support logging's basicConfig")
@@ -24,15 +26,6 @@ def hijack():
 def restore():
     """Replace the compatibility module with the original module."""
     sys.modules["logging"] = orig_logging
-
-@contextmanager
-def hijack_context():
-    """Hijack and finally restore."""
-    hijack()
-    try:
-        yield
-    finally:
-        restore()
 
 def log_func_decorator(level):
     def new_func(self, *args, **kwargs):
@@ -59,6 +52,9 @@ class FakeLogger(object):
     def level(self):
         return self._logger.min_level
 
+    def getEffectiveLevel(self):
+        return self.level
+    
     def log(self, level, format_spec, *args, **kwargs):
         logger = self._logger
         if kwargs.pop("exc_info", False):
@@ -77,3 +73,43 @@ def getLogger(name=None):
         return _logger_cache[name]
     return root
 
+logging_bridge_converter = ConversionTable([('time', lambda x:x, drop),
+                                            ('name', lambda x:x, drop),
+                                            ('level', lambda x:x, drop)])
+logging_bridge_converter.genericValue = str
+logging_bridge_converter.genericItem = "{0}={1}".format
+logging_bridge_converter.aggregate = ':'.join
+
+class LoggingBridgeFormat(LineFormat):
+
+    def __init__(self, *args, **kwargs):
+        super(LoggingBridgeFormat, self).__init__(conversion=logging_bridge_converter, 
+                                                  *args, **kwargs)
+    
+    def __call__(self, msg):
+        return (super(LoggingBridgeFormat, self).__call__(msg),
+                msg.level,
+                msg.name)
+
+class LoggingBridgeOutput(Output):
+
+    # for levels in twiggy the aren't in stdlib's logging    
+    FALLBACK_MAP = { NOTICE : orig_logging.WARNING,
+                     DISABLED : orig_logging.NOTSET }
+
+    def __init__(self, *args, **kwargs):
+        super(LoggingBridgeOutput, self).__init__(format=LoggingBridgeFormat(),
+                                                  *args, **kwargs)
+
+    def _open(self):
+        pass
+
+    def _close(self):
+        pass
+    
+    def _write(self, args):
+        text, level, name = args
+        logging_level = getattr(orig_logging, str(level), None)
+        if logging_level is None:
+            logging_level = self.FALLBACK_MAP[level]
+        orig_logging.getLogger(name).log(logging_level, text)

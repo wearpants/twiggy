@@ -1,10 +1,11 @@
 import sys
 import logging as orig_logging
 from unittest import TestCase
+from twiggy import logging_compat, addEmitters, log
 from twiggy.outputs import ListOutput
-from twiggy import logging_compat, addEmitters
-from twiggy.logging_compat import (hijack, restore, hijack_context, basicConfig,
-                                   getLogger, root, DEBUG, INFO, ERROR)
+from twiggy.logging_compat import (hijack, restore, basicConfig,
+                                   getLogger, root, DEBUG, INFO, ERROR,
+                                   LoggingBridgeOutput)
 
 class HijackTest(TestCase):
 
@@ -30,11 +31,6 @@ class HijackTest(TestCase):
     def test_restore(self):
         hijack()
         restore()
-        self.verify_orig()
-        
-    def test_hijack_context(self):
-        with hijack_context():
-            self.verify_comp()
         self.verify_orig()
 
 class TestGetLogger(TestCase):
@@ -86,3 +82,9 @@ class TestFakeLogger(TestCase):
     def test_log_bad_level(self):
         self.failUnlessRaises(ValueError, self.logger.log, "illegal level", "eggs")
         
+class TestLoggingBridge(TestCase):
+    
+    def test_sanity(self):
+        logger = log.name("spam")
+        addEmitters(("spam", DEBUG, None, LoggingBridgeOutput()))
+        logger.error("BLBLBLB")
