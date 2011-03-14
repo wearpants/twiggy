@@ -42,28 +42,28 @@ class FileOutputTestCase(unittest.TestCase):
         o.output(m)
         o.close()
         s = open(self.fname, 'r').read()
-        assert s == "DEBUG:jose:shirt=42:Hello Mister Funnypants\n"
+        assert s == "DEBUG:jose:shirt=42|Hello Mister Funnypants\n"
 
     def test_sync_unlocked(self):
         o = self.make_output(0, False)
         o.output(m)
         o.close()
         s = open(self.fname, 'r').read()
-        assert s == "DEBUG:jose:shirt=42:Hello Mister Funnypants\n"
+        assert s == "DEBUG:jose:shirt=42|Hello Mister Funnypants\n"
 
     def test_async(self):
         o = self.make_output(-1, True)
         o.output(m)
         o.close()
         s = open(self.fname, 'r').read()
-        assert s == "DEBUG:jose:shirt=42:Hello Mister Funnypants\n"
+        assert s == "DEBUG:jose:shirt=42|Hello Mister Funnypants\n"
 
     def test_async_unlocked(self):
         o = self.make_output(-1, False)
         o.output(m)
         o.close()
         s = open(self.fname, 'r').read()
-        assert s == "DEBUG:jose:shirt=42:Hello Mister Funnypants\n"
+        assert s == "DEBUG:jose:shirt=42|Hello Mister Funnypants\n"
 
 class StreamOutputTest(unittest.TestCase):
     
@@ -72,7 +72,7 @@ class StreamOutputTest(unittest.TestCase):
         o = outputs.StreamOutput(formats.shell_format, sio)
         o.output(m)
         o.close()
-        assert sio.getvalue() == "DEBUG:jose:shirt=42:Hello Mister Funnypants\n"
+        assert sio.getvalue() == "DEBUG:jose:shirt=42|Hello Mister Funnypants\n"
 
 class ListOutputTest(unittest.TestCase):
 
