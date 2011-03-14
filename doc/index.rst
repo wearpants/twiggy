@@ -60,3 +60,4 @@ Documentation
     api
     glossary
     changelog
+    contributors
