@@ -59,9 +59,9 @@ class BaseLogger(object):
     ## The Magic
     def fields(self, **kwargs):
         """bind fields for structured logging"""
-        return self.fieldsDict(kwargs)
+        return self.fields_dict(kwargs)
 
-    def fieldsDict(self, d):
+    def fields_dict(self, d):
         """bind fields for structured logging.
 
         Use this instead of `.fields` if you have keys which are not valid Python identifiers.
@@ -213,13 +213,13 @@ class Logger(BaseLogger):
         return self.fields(**kwargs)
 
     @emit.info
-    def structDict(self, d):
+    def struct_dict(self, d):
         """convenience method for structured logging.
 
         Use instead of struct() if you have keys which are not valid Python identifiers
 
         """
-        return self.fieldsDict(d)
+        return self.fields_dict(d)
 
     ## Boring stuff
     def _emit(self, level, format_spec, args, kwargs):
