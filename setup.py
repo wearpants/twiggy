@@ -19,7 +19,6 @@ setup(name='Twiggy',
       author='Peter Fein',
       author_email='pfein@pobox.com',
       url='http://twiggy.wearpants.org',
-      download_url='http://python-twiggy.googlecode.com/files/Twiggy-{}.tar.gz'.format(release),
       packages=['twiggy', 'twiggy.lib', 'twiggy.features'],
       license = "BSD",
       classifiers = [

@@ -58,6 +58,7 @@ Documentation
     configuration
     reference_guide
     api
+    testing
     glossary
     changelog
     contributors
