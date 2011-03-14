@@ -2,7 +2,7 @@ import sys
 import logging as orig_logging
 from unittest import TestCase
 from twiggy import logging_compat, log
-from twiggy.logging_compat import hijack, restore, hijackContext, getLogger
+from twiggy.logging_compat import hijack, restore, hijack_context, getLogger
 
 class HijackTest(TestCase):
 
@@ -30,8 +30,8 @@ class HijackTest(TestCase):
         restore()
         self.verify_orig()
         
-    def test_hijackContext(self):
-        with hijackContext():
+    def test_hijack_context(self):
+        with hijack_context():
             self.verify_comp()
         self.verify_orig()
 

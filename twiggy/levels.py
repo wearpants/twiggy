@@ -65,6 +65,9 @@ def name2level(name):
     """return a `LogLevel` from a case-insensitve string"""
     return LogLevel._name2levels[name.upper()]
 
+def get_level_names():
+    return LogLevel._name2levels.keys()
+
 DEBUG = LogLevel('DEBUG', 1)
 INFO = LogLevel('INFO', 2)
 NOTICE = LogLevel('NOTICE', 3)
