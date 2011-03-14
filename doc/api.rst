@@ -345,7 +345,7 @@ Message
     The constructor takes a dict of ``options`` to control message creation.  In addition to :attr:`.suppress_newlines`, the following options are recognized:
 
         :trace: control traceback inclusion.  Either a traceback tuple, or one of the strings ``always``, ``error``, in which case a traceback will be extracted from the current stack frame.
-        :style: the style of template used for ``format_spec``. One of ``braces``, ``percent``, ``dollar``.
+        :style: the style of template used for ``format_spec``. One of ``braces``, ``percent``, ``dollar``. The aliases ``{}``, ``%`` and ``$`` are also supported.
 
     Any callables passed in ``fields``, ``args`` or ``kwargs`` will be called and the returned value used instead. See :ref:`dynamic messages <dynamic-messages>`.
 

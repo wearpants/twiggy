@@ -142,7 +142,7 @@ Tips And Tricks
 
 Alternate Styles
 ================
-In addition to the default new-style (braces) format specs, twiggy also supports old-style (percent, aka printf) and templates (dollar).
+In addition to the default new-style (braces) format specs, twiggy also supports old-style (percent, aka printf) and templates (dollar). The aliases {}, % and $ are also supported.
 
 .. doctest:: alternate-styles
 
