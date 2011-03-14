@@ -22,7 +22,7 @@ class IntegrationTestCase(unittest.TestCase):
         out1 = twiggy.outputs.StreamOutput(stream=StringIO.StringIO(), format=twiggy.formats.line_format)
         out2 = twiggy.outputs.StreamOutput(stream=StringIO.StringIO(), format=twiggy.formats.line_format)
         
-        twiggy.addEmitters(('*', twiggy.levels.DEBUG, None, everything),
+        twiggy.add_emitters(('*', twiggy.levels.DEBUG, None, everything),
                            ('first', twiggy.levels.INFO, None, out1),
                            ('second', twiggy.levels.DEBUG, twiggy.filters.glob_names('second.*'), out2),
                            ('first-filter', twiggy.levels.DEBUG, ".*pants.*", out1))
