@@ -14,14 +14,14 @@ line_conversion = ConversionTable([
     ('name', str, '{1}'.format),
 ])
 
-line_conversion.genericValue = str
-line_conversion.genericItem = "{0}={1}".format
+line_conversion.generic_value = str
+line_conversion.generic_item = "{0}={1}".format
 line_conversion.aggregate = ':'.join
 
 class LineFormat(object):
     """format a message for text-oriented output. Returns a string."""
 
-    def __init__(self, separator=':', traceback_prefix='\nTRACE ', conversion=line_conversion):
+    def __init__(self, separator='|', traceback_prefix='\nTRACE ', conversion=line_conversion):
         self.separator = separator
         self.traceback_prefix = traceback_prefix
         self.conversion = conversion

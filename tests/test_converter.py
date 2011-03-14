@@ -93,12 +93,12 @@ class ConversionTableTestCase(unittest.TestCase):
         ct = ConversionTable([c1, c2, c3])
 
         assert ct.get('pants') is c1
-        l = ct.getAll('pants')
+        l = ct.get_all('pants')
         assert l[0] is c1
         assert l[1] is c2
 
         ct.delete('pants')
-        l = ct.getAll('pants')
+        l = ct.get_all('pants')
         assert not l
         assert len(ct) == 1
         assert ct[0] is c3
@@ -113,11 +113,11 @@ class ConversionTableTestCase(unittest.TestCase):
         assert ct.get("pants") is c
 
 
-    def test_getAll_no_match(self):
+    def test_get_all_no_match(self):
         ct = ConversionTable([("pants", convVal, convItem),
                               ("shirt", convVal, convItem, True)])
 
-        l = ct.getAll("belt")
+        l = ct.get_all("belt")
         assert isinstance(l, list)
         assert not l
 
@@ -127,7 +127,7 @@ class ConversionTableTestCase(unittest.TestCase):
             ("frank", "You wear {}".format, sameItem),
             ("bill", sameValue, sameItem)])
         
-        ct.genericValue = "Someone wears {}".format
+        ct.generic_value = "Someone wears {}".format
         
         d = ct.convert({'joe':'pants', 'frank':'shirt', 'bill': 'naked', 'bob':'shoes'})
         assert d == {'joe': "I wear pants", 'frank': "You wear shirt", 'bob': "Someone wears shoes", 'bill':"naked"}
@@ -137,7 +137,7 @@ class ConversionTableTestCase(unittest.TestCase):
             ("joe", "I wear {}".format, convItem),
             ("frank", "You wear {}".format, drop)])
         
-        ct.genericItem = drop
+        ct.generic_item = drop
         
         d = ct.convert({'joe':'pants', 'frank':'shirt', 'bob':'shoes'})
         assert d == {'joe': "I wear pants"}

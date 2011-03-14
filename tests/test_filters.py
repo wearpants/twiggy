@@ -8,63 +8,63 @@ from . import make_mesg
 
 m = make_mesg()
 
-class msgFilterTestCase(unittest.TestCase):
+class MsgFilterTestCase(unittest.TestCase):
 
     # XXX more robust testing of the exact type/func.__name__ of the returned f
     # might be nice (instead of just callable), but eh.
 
     def test_None(self):
-        f = filters.msgFilter(None)
+        f = filters.msg_filter(None)
         assert callable(f)
         assert f(m)
 
     def test_bool(self):
-        f = filters.msgFilter(True)
+        f = filters.msg_filter(True)
         assert callable(f)
         assert f(m)
 
-        f = filters.msgFilter(False)
+        f = filters.msg_filter(False)
         assert callable(f)
         assert not f(m)
 
     def test_basestring(self):
-        f = filters.msgFilter("^Hello.*$")
+        f = filters.msg_filter("^Hello.*$")
         assert callable(f)
         assert f(m)
 
-        f = filters.msgFilter("^Goodbye.*$")
+        f = filters.msg_filter("^Goodbye.*$")
         assert callable(f)
         assert not f(m)
 
     def test_regex(self):
-        f = filters.msgFilter(re.compile("^Hello.*$"))
+        f = filters.msg_filter(re.compile("^Hello.*$"))
         assert callable(f)
         assert f(m)
 
-        f = filters.msgFilter(re.compile("^Goodbye.*$"))
+        f = filters.msg_filter(re.compile("^Goodbye.*$"))
         assert callable(f)
         assert not f(m)
 
     def test_callable(self):
         my_func = lambda mesg: True
-        f = filters.msgFilter(my_func)
+        f = filters.msg_filter(my_func)
         assert f is my_func
 
     def test_bad_arg(self):
         with self.assertRaises(ValueError):
-            f = filters.msgFilter(42)
+            f = filters.msg_filter(42)
 
     def test_list(self):
         re1 = "^Hello.*$"
         re2 = "^.*Funnypants$"
         l = [re1, re2]
-        f = filters.msgFilter(l)
+        f = filters.msg_filter(l)
         assert callable(f)
         assert f(m)
         
         re3 = "^.*Sillyhead$"
         l = (re1, re3)
-        f = filters.msgFilter(l)
+        f = filters.msg_filter(l)
         assert callable(f)
         assert not f(m)
 
@@ -73,14 +73,14 @@ class msgFilterTestCase(unittest.TestCase):
         re1 = "^Hello.*$"
         re2 = "^.*Funnypants$"
         l = [re1, [re2]]
-        f = filters.msgFilter(l)
+        f = filters.msg_filter(l)
         assert callable(f)
         assert f(m)
         
     def test_single_list(self):
         re1 = "^Hello.*$"
         l = [re1]
-        f = filters.msgFilter(l)
+        f = filters.msg_filter(l)
         assert callable(f)
         assert f(m)
 
@@ -108,7 +108,7 @@ class EmitterTestCase(unittest.TestCase):
             filters.Emitter(42, None, None)
 
     def test_filter_property(self):
-        # XXX we really should mock & test that msgFilter is being called. eh.
+        # XXX we really should mock & test that msg_filter is being called. eh.
 
         e = filters.Emitter(levels.INFO, "^Hello.*$", 'output-unused')
 

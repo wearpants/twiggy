@@ -32,7 +32,7 @@ class GlobalsTestCase(unittest.TestCase):
         assert twiggy.devel_log._fields['name'] == 'twiggy.devel'
         assert isinstance(twiggy.devel_log.output, twiggy.outputs.NullOutput)
     
-    def test_addEmitters(self):
+    def test_add_emitters(self):
         
         out = twiggy.outputs.ListOutput(close_atexit = False)
         
@@ -44,7 +44,7 @@ class GlobalsTestCase(unittest.TestCase):
         def myfilt(msg):
             return True
         
-        twiggy.addEmitters(('test', twiggy.levels.INFO, myfilt, out))
+        twiggy.add_emitters(('test', twiggy.levels.INFO, myfilt, out))
         
         assert len(twiggy.emitters) == 1
         e = twiggy.emitters['test']
@@ -53,16 +53,16 @@ class GlobalsTestCase(unittest.TestCase):
         assert e.filter is myfilt
         assert e._output is out
         
-    def test_quickSetup_None(self):
-        twiggy.quickSetup(file=None)
+    def test_quick_setup_None(self):
+        twiggy.quick_setup(file=None)
         assert len(twiggy.emitters) == 1
         e = twiggy.emitters['*']
         assert isinstance(e, twiggy.filters.Emitter)
         assert isinstance(e._output, twiggy.outputs.StreamOutput)
         assert e._output.stream is sys.stderr
 
-    def test_quickSetup_stdout(self):
-        twiggy.quickSetup(file=sys.stdout)
+    def test_quick_setup_stdout(self):
+        twiggy.quick_setup(file=sys.stdout)
         assert len(twiggy.emitters) == 1
         e = twiggy.emitters['*']
         assert isinstance(e, twiggy.filters.Emitter)
@@ -70,7 +70,7 @@ class GlobalsTestCase(unittest.TestCase):
         assert e._output.stream is sys.stdout
     
         
-    def test_quickSetup_file(self):
+    def test_quick_setup_file(self):
 
         fname = tempfile.mktemp()
         print fname
@@ -79,7 +79,7 @@ class GlobalsTestCase(unittest.TestCase):
         def cleanup():
             os.remove(fname)
 
-        twiggy.quickSetup(file=fname)
+        twiggy.quick_setup(file=fname)
         assert len(twiggy.emitters) == 1
         e = twiggy.emitters['*']
         assert isinstance(e, twiggy.filters.Emitter)

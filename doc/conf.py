@@ -101,9 +101,9 @@ log_output_template = \
 """.. testsetup:: {}
 
     import sys
-    from twiggy import quickSetup, log
-    quickSetup(file=sys.stdout)
-    del quickSetup
+    from twiggy import quick_setup, log
+    quick_setup(file=sys.stdout)
+    del quick_setup
 """
 def make_test_prolog(*testgroups):
     return "\n".join(log_output_template.format(g) for g in testgroups)

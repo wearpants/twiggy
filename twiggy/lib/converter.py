@@ -59,12 +59,12 @@ class ConversionTable(list):
         # XXX cache converts & requireds below
 
     @staticmethod
-    def genericValue(value):
+    def generic_value(value):
         """convert values for which no specific Converter is supplied"""
         return value
 
     @staticmethod
-    def genericItem(key, value):
+    def generic_item(key, value):
         """convert items for which no specific Converter is supplied"""
         return key, value
 
@@ -96,7 +96,7 @@ class ConversionTable(list):
                     l.append(item)
 
         for key in sorted(avail - converts):
-            item = self.genericItem(key, self.genericValue(d[key]))
+            item = self.generic_item(key, self.generic_value(d[key]))
             if item is not None:
                 l.append(item)
 
@@ -112,7 +112,7 @@ class ConversionTable(list):
             if c.key == key:
                 return c
 
-    def getAll(self, key):
+    def get_all(self, key):
         """return a list of all converters for key"""
         return [c for c in self if c.key == key]
 
