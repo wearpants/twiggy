@@ -10,6 +10,7 @@ Changelog
 - add a NOTICE level between INFO and WARNING
 - add sameValue, sameItem, drop helper functions to lib.converter
 - support {}, %, $ as style aliases.
+- PEP8 name compliance
 
 ******************************
 0.4.3
