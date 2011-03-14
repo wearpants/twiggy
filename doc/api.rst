@@ -184,14 +184,14 @@ Converter
 
 .. autoclass:: Converter
 
-.. autofunction:: sameValue
+.. autofunction:: same_value
 
-.. autofunction:: sameItem
+.. autofunction:: same_item
 
 .. autofunction:: drop
 
 .. versionadded:: 0.5.0
-    Add `sameValue`, `sameItem`, `drop`.
+    Add `same_value`, `same_item`, `drop`.
 
 .. class:: ConversionTable(seq)
 

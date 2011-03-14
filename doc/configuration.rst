@@ -105,8 +105,8 @@ Line-oriented formatting
     import copy
     my_format = copy.copy(formats.line_format)
     my_format.conversion.add(key = 'address', # name of the field
-                             convertValue = hex, # gets original value
-                             convertItem = "{0}={1}".format, # gets called with: key, converted_value
+                             convert_value = hex, # gets original value
+                             convert_item = "{0}={1}".format, # gets called with: key, converted_value
                              required = True)
 
     # output messages with name 'memory' to stderr

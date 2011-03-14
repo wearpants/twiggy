@@ -285,8 +285,8 @@ The :attr:`format <.Output._format>` callable is Output-specific; it should take
     # uppercase value
     # make mandatory
     conversion.add(key = 'shape',
-                   convertValue = str.upper,
-                   convertItem = '{1}'.format, # stringify 2nd item (value)
+                   convert_value = str.upper,
+                   convert_item = '{1}'.format, # stringify 2nd item (value)
                    required = True)
    
     # format height value with two decimal places

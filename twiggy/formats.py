@@ -7,8 +7,8 @@ from .lib import iso8601time
 line_conversion = ConversionTable([
     Converter(key='time',
               # ISO 8601 - it sucks less!
-              convertValue=iso8601time,
-              convertItem='{1}'.format,
+              convert_value=iso8601time,
+              convert_item='{1}'.format,
               required=True),
     ('level', str, '{1}'.format, True),
     ('name', str, '{1}'.format),
@@ -64,4 +64,4 @@ line_format = LineFormat(conversion=line_conversion)
 
 #: a format for use in the shell - no timestamp
 shell_format = copy.copy(line_format)
-shell_format.conversion.get('time').convertItem = lambda k, v: None
+shell_format.conversion.get('time').convert_item = lambda k, v: None
