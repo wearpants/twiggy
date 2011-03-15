@@ -9,6 +9,7 @@ Changelog
 
 - add a NOTICE level between INFO and WARNING
 - add sameValue, sameItem, drop helper functions to lib.converter
+- add logging_compat module for compatibility with stlib's logging
 
 ******************************
 0.4.3
