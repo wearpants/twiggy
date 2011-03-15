@@ -1,10 +1,10 @@
 import copy
 
-def sameValue(v):
+def same_value(v):
     """return the value unchanged"""
     return v
 
-def sameItem(k, v):
+def same_item(k, v):
     """return the item unchanged"""
     return k, v
 
@@ -16,21 +16,21 @@ class Converter(object):
     """Holder for `.ConversionTable` items
 
     :ivar key: the key to apply the conversion to
-    :ivar function convertValue: one-argument function to convert the value
-    :ivar function convertItem: two-argument function converting the key & converted value
+    :ivar function convert_value: one-argument function to convert the value
+    :ivar function convert_item: two-argument function converting the key & converted value
     :ivar bool required: is the item required to present. Items are optional by default.
     """
 
-    __slots__ = ['key', 'convertValue', 'convertItem', 'required']
+    __slots__ = ['key', 'convert_value', 'convert_item', 'required']
 
-    def __init__(self, key, convertValue, convertItem, required = False):
+    def __init__(self, key, convert_value, convert_item, required = False):
         self.key = key
-        self.convertValue = convertValue
-        self.convertItem = convertItem
+        self.convert_value = convert_value
+        self.convert_item = convert_item
         self.required = required
 
     def __repr__(self):
-        # XXX perhaps poke around in convertValue/convertItem to see if we can extract a meaningful
+        # XXX perhaps poke around in convert_value/convert_item to see if we can extract a meaningful
         # `"some_string".format`? eh.
         return "<Converter({!r})>".format(self.key)
 
@@ -59,12 +59,12 @@ class ConversionTable(list):
         # XXX cache converts & requireds below
 
     @staticmethod
-    def genericValue(value):
+    def generic_value(value):
         """convert values for which no specific Converter is supplied"""
         return value
 
     @staticmethod
-    def genericItem(key, value):
+    def generic_item(key, value):
         """convert items for which no specific Converter is supplied"""
         return key, value
 
@@ -91,12 +91,12 @@ class ConversionTable(list):
         l = []
         for c in self:
             if c.key in d:
-                item = c.convertItem(c.key, c.convertValue(d[c.key]))
+                item = c.convert_item(c.key, c.convert_value(d[c.key]))
                 if item is not None:
                     l.append(item)
 
         for key in sorted(avail - converts):
-            item = self.genericItem(key, self.genericValue(d[key]))
+            item = self.generic_item(key, self.generic_value(d[key]))
             if item is not None:
                 l.append(item)
 
@@ -112,7 +112,7 @@ class ConversionTable(list):
             if c.key == key:
                 return c
 
-    def getAll(self, key):
+    def get_all(self, key):
         """return a list of all converters for key"""
         return [c for c in self if c.key == key]
 

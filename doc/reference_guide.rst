@@ -19,7 +19,7 @@ Any functions in message args/fields are called and the value substitued.
     >>> thread_name()
     'MainThread'
     >>> log.fields(pid=os.getpid).info("I'm in thread {}", thread_name)
-    INFO:pid=...:I'm in thread MainThread
+    INFO:pid=...|I'm in thread MainThread
 
 This can be useful with partially-bound loggers, which lets us do some cool stuff. Here's a proxy class that logs which thread accesses attributes.
 
@@ -46,14 +46,14 @@ Let's see it in action.
     >>> foo = Bunch()
     >>> foo.bar = 42
     >>> tracked = ThreadTracker(foo)
-    DEBUG:tracker:obj_id=...:thread=MainThread:started tracking
+    DEBUG:tracker:obj_id=...:thread=MainThread|started tracking
     >>> tracked.bar
-    DEBUG:tracker:obj_id=...:thread=MainThread:accessed bar
+    DEBUG:tracker:obj_id=...:thread=MainThread|accessed bar
     42
     >>> import threading
     >>> t=threading.Thread(target = lambda: tracked.bar * 2, name = "TheDoubler")
     >>> t.start(); t.join()
-    DEBUG:tracker:obj_id=...:thread=TheDoubler:accessed bar
+    DEBUG:tracker:obj_id=...:thread=TheDoubler|accessed bar
 
 If you really want to log a callable, ``repr()`` it or wrap it in lambda.
 
@@ -74,15 +74,15 @@ Features!
     >>> s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     >>> s.connect(('www.python.org', 80))
     >>> log.socket(s).debug("connected")
-    DEBUG:host=dinsdale.python.org:ip_addr=82.94.164.162:port=80:service=www:connected
+    DEBUG:host=dinsdale.python.org:ip_addr=82.94.164.162:port=80:service=www|connected
     >>> # turn off the feature - the name is still available
     ... log.disableFeature('socket')
     >>> log.socket(s).debug("connected")
-    DEBUG:connected
+    DEBUG|connected
     >>> # use a different implementation
     ... log.addFeature(socket_feature.socket_minimal, 'socket')
     >>> log.socket(s).debug("connected")
-    DEBUG:ip_addr=82.94.164.162:port=80:connected
+    DEBUG:ip_addr=82.94.164.162:port=80|connected
 
 .. _never-raises:
 
@@ -142,14 +142,14 @@ Tips And Tricks
 
 Alternate Styles
 ================
-In addition to the default new-style (braces) format specs, twiggy also supports old-style (percent, aka printf) and templates (dollar).
+In addition to the default new-style (braces) format specs, twiggy also supports old-style (percent, aka printf) and templates (dollar). The aliases {}, % and $ are also supported.
 
 .. doctest:: alternate-styles
 
     >>> log.options(style='percent').info('I like %s', "bikes")
-    INFO:I like bikes
+    INFO|I like bikes
     >>> log.options(style='dollar').info('$what kill', what='Cars')
-    INFO:Cars kill
+    INFO|Cars kill
 
 Use Fields
 ==========
@@ -189,8 +189,8 @@ The emit methods can be hidden behind an appropriate ``assert``. Python will eli
 .. testoutput:: optimizations
     :hide:
     
-    DEBUG:This goes away with python -O
-    DEBUG:So does this
+    DEBUG|This goes away with python -O
+    DEBUG|So does this
     
 .. note:: The author doesn't particularly care for code written like this, but likes making his users happy more.
 
@@ -243,7 +243,7 @@ If the feature should add fields *and* emit in the same step (like :meth:`.struc
         if name not in self._fields:
             self = self.name('dumpwsgi')
 
-        return self.fieldsDict(d)
+        return self.fields_dict(d)
 
 Writing Outputs and Formats
 ==============================
@@ -285,8 +285,8 @@ The :attr:`format <.Output._format>` callable is Output-specific; it should take
     # uppercase value
     # make mandatory
     conversion.add(key = 'shape',
-                   convertValue = str.upper,
-                   convertItem = '{1}'.format, # stringify 2nd item (value)
+                   convert_value = str.upper,
+                   convert_item = '{1}'.format, # stringify 2nd item (value)
                    required = True)
    
     # format height value with two decimal places
@@ -299,10 +299,10 @@ The :attr:`format <.Output._format>` callable is Output-specific; it should take
     # unknown items are sorted by key
     
     # unknown values are stringified
-    conversion.genericValue = str
+    conversion.generic_value = str
     
     # show unknown items as "<key>=<value>"
-    conversion.genericItem = "{0}={1}".format
+    conversion.generic_item = "{0}={1}".format
     
     # convert!
     print conversion.convert(fields)

@@ -52,8 +52,13 @@ class Message(object):
             self.traceback = None
 
         style = options['style']
-        ## XXX maybe allow '%', '$', and '{}' as aliases?
-        if style not in ('braces', 'percent', 'dollar'):
+
+        style_aliases = {'braces':'braces', 'dollar':'dollar',
+                'percent':'percent', '{}':'braces', '$':'dollar',
+                '%':'percent'}
+        try:
+            style = style_aliases[style]
+        except KeyError:
             raise ValueError("Bad format spec style {0!r}".format(style))
 
         ## Populate `text` by calling callables in `fields`, `args` and `kwargs`,

@@ -3,7 +3,7 @@ import sys
 from unittest import TestCase
 sys.modules.pop('twiggy', None)
 os.environ.pop('TWIGGY_UNDER_TEST', None) # we need globals!!
-from twiggy import logging_compat, addEmitters, log
+from twiggy import logging_compat, add_emitters, log
 from twiggy.outputs import ListOutput
 from twiggy.logging_compat import (hijack, restore, basicConfig,
                                    getLogger, root, DEBUG, INFO, ERROR,
@@ -55,7 +55,7 @@ class TestFakeLogger(TestCase):
         self.logger.setLevel(DEBUG)
         self.list_output = ListOutput()
         self.messages = self.list_output.messages
-        addEmitters(("spam", DEBUG, None, self.list_output))
+        add_emitters(("spam", DEBUG, None, self.list_output))
 
     def test_level(self):
         for level in [INFO, ERROR]:
@@ -107,12 +107,12 @@ class TestLoggingBridge(TestCase):
         logger = log.name("spam")
         list_output = ListOutput(format=LoggingBridgeFormat())
         messages = list_output.messages
-        addEmitters(("spam", DEBUG, None, list_output))
+        add_emitters(("spam", DEBUG, None, list_output))
         logger.error("eggs")
-        self.failUnlessEqual(messages[0], (':eggs\n', ERROR, 'spam'))
+        self.failUnlessEqual(messages[0], ('|eggs\n', ERROR, 'spam'))
         
     def test_sanity(self):
         logger = log.name("decoy")
-        addEmitters(("decoy", DEBUG, None, LoggingBridgeOutput()))
+        add_emitters(("decoy", DEBUG, None, LoggingBridgeOutput()))
         logger.error("spam")
         logger.notice("eggs")

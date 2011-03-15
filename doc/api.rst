@@ -23,9 +23,9 @@ Global Objects
 
     the global :class:`emitters <.Emitter>` dictionary, tied to the :data:`.log`
 
-.. autofunction:: addEmitters
+.. autofunction:: add_emitters
 
-.. autofunction:: quickSetup
+.. autofunction:: quick_setup
 
 *************************
 Features
@@ -53,7 +53,7 @@ Filters
 
     A *filter* is any function that takes a :class:`.Message` and returns True if it should be :class:`emitted <Emitter>`.
 
-.. function:: msgFilter(x) -> filter
+.. function:: msg_filter(x) -> filter
 
     create a `.filter` intelligently
 
@@ -64,7 +64,7 @@ Filters
         :string: compiled into a regex
         :regex: ``match()`` against the message text
         :callable: returned as is
-        :list: apply `msgFilter` to each element, and ``all()`` the results
+        :list: apply `msg_filter` to each element, and ``all()`` the results
 
     :rtype: `.filter` function
 
@@ -98,7 +98,7 @@ Filters
 
     .. attribute:: filter
 
-        arbitrary :func:`.filter` on message contents. Assigning to this attribute is :func:`intelligent <.msgFilter>`.
+        arbitrary :func:`.filter` on message contents. Assigning to this attribute is :func:`intelligent <.msg_filter>`.
 
     .. attribute:: _output
 
@@ -184,14 +184,14 @@ Converter
 
 .. autoclass:: Converter
 
-.. autofunction:: sameValue
+.. autofunction:: same_value
 
-.. autofunction:: sameItem
+.. autofunction:: same_item
 
 .. autofunction:: drop
 
 .. versionadded:: 0.5.0
-    Add `sameValue`, `sameItem`, `drop`.
+    Add `same_value`, `same_item`, `drop`.
 
 .. class:: ConversionTable(seq)
 
@@ -201,12 +201,12 @@ Converter
 
     #. Find one or more corresponding converters ``c`` by matching key.
     #. Build a list of converted items by calling ``c.convertItem(item_key, c.convertValue(item_value))``. The list will have items in the same order as converters were supplied.
-    #. Dict items for which no converter was found are sorted by key and passed to `.genericValue` / `.genericItem`. These items are appended to the list from step 2.
+    #. Dict items for which no converter was found are sorted by key and passed to `.generic_value` / `.generic_item`. These items are appended to the list from step 2.
     #. If any required items are missing, :exc:`ValueError` is raised.
     #. The resulting list of converted items is passed to `.aggregate`. The value it returns is the result of the conversion.
 
 
-    Users may override `.genericValue`/`.genericItem`/`.aggregate` by subclassing or assigning a new function on a ConversionTable instance.
+    Users may override `.generic_value`/`.generic_item`/`.aggregate` by subclassing or assigning a new function on a ConversionTable instance.
 
     Really, it's :ref:`pretty intuitive <conversion-table-example>`.
 
@@ -214,11 +214,11 @@ Converter
 
     .. automethod:: convert
 
-    .. method:: genericValue(value)
+    .. method:: generic_value(value)
 
         convert values for which no specific `.Converter` is supplied
 
-    .. method:: genericItem(key, value)
+    .. method:: generic_item(key, value)
 
         convert items for which no specific `.Converter` is supplied
 
@@ -230,7 +230,7 @@ Converter
 
     .. automethod:: get
 
-    .. automethod:: getAll
+    .. automethod:: get_all
 
     .. automethod:: add
 
@@ -265,7 +265,7 @@ Loggers should not be created directly by users; use the global :data:`.log` ins
 
         bind fields for :term:`structured logging`. ``kwargs`` are interpreted as names/values of fields.
 
-    .. method:: fieldsDict(d) -> bound Logger
+    .. method:: fields_dict(d) -> bound Logger
 
         bind fields for structured logging. Use this instead of `.fields` if you have keys which are not valid Python identifiers.
 
@@ -287,7 +287,7 @@ Loggers should not be created directly by users; use the global :data:`.log` ins
 
         convenience method for :term:`structured logging`. Calls :meth:`.fields` and emits at `.info`
 
-    .. method:: structDict(d) -> bound Logger
+    .. method:: struct_dict(d) -> bound Logger
 
         convenience method for :term:`structured logging`. Use instead of `.struct` if you have keys which are not valid Python identifiers.
 
@@ -345,7 +345,7 @@ Message
     The constructor takes a dict of ``options`` to control message creation.  In addition to :attr:`.suppress_newlines`, the following options are recognized:
 
         :trace: control traceback inclusion.  Either a traceback tuple, or one of the strings ``always``, ``error``, in which case a traceback will be extracted from the current stack frame.
-        :style: the style of template used for ``format_spec``. One of ``braces``, ``percent``, ``dollar``.
+        :style: the style of template used for ``format_spec``. One of ``braces``, ``percent``, ``dollar``. The aliases ``{}``, ``%`` and ``$`` are also supported.
 
     Any callables passed in ``fields``, ``args`` or ``kwargs`` will be called and the returned value used instead. See :ref:`dynamic messages <dynamic-messages>`.
 

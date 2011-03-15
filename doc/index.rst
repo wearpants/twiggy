@@ -16,7 +16,7 @@ Twiggy is a more Pythonic logger.
 .. doctest:: demo
 
     >>> log.name('frank').fields(number=42).info("hello {who}, it's a {} day", 'sunny', who='world')
-    INFO:frank:number=42:hello world, it's a sunny day
+    INFO:frank:number=42|hello world, it's a sunny day
 
 :author: `Peter Fein <http://i.wearpants.org>`_
 :email: pfein@pobox.com
@@ -58,5 +58,7 @@ Documentation
     configuration
     reference_guide
     api
+    testing
     glossary
     changelog
+    contributors

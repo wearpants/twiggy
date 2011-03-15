@@ -109,6 +109,23 @@ and shirt'''
                     kwargs={'who':"Funnypants\nand shirt"},
                     )
 
+    def test_braces_alias(self):
+        opts = Message._default_options.copy()
+        opts['style'] = '{}'
+
+        m = Message(twiggy.levels.DEBUG,
+                    "Hello {who}",
+                    {'shirt':42, 'name': 'jose'},
+                    opts,
+                    args=(),
+                    kwargs={'who':"Funnypants"},
+                    )
+
+        assert m.fields == {'shirt':42, 'name': 'jose', 'level':twiggy.levels.DEBUG}
+        assert m.traceback is None
+
+        assert m.text == "Hello Funnypants"
+
     def test_dollar_style(self):
         opts = Message._default_options.copy()
         opts['style'] = 'dollar'
@@ -123,6 +140,19 @@ and shirt'''
 
         assert m.text == "Hello Funnypants"
 
+    def test_dollar_alias(self):
+        opts = Message._default_options.copy()
+        opts['style'] = '$'
+
+        m = Message(twiggy.levels.DEBUG,
+                    "Hello $who",
+                    {},
+                    opts,
+                    args=[],
+                    kwargs={'who':"Funnypants"},
+                    )
+
+        assert m.text == "Hello Funnypants"
 
     def test_dollar_style_bad(self):
         opts = Message._default_options.copy()
@@ -177,6 +207,20 @@ and shirt'''
                         args=["Mister"],
                         kwargs={'who':"Funnypants\nand shirt"},
                         )
+
+    def test_percent_alias(self):
+        opts = Message._default_options.copy()
+        opts['style'] = '%'
+
+        m = Message(twiggy.levels.DEBUG,
+                    "Hello %s",
+                    {},
+                    opts,
+                    args=["Funnypants"],
+                    kwargs={}
+                    )
+
+        assert m.text == "Hello Funnypants"
 
     def test_callables(self):
         m = Message(twiggy.levels.DEBUG,

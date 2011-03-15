@@ -7,9 +7,9 @@ import twiggy as _twiggy
 
 class LoggerTestBase(object):
     """common tests for loggers"""
-    def test_fieldsDict(self):
+    def test_fields_dict(self):
         d={42:42}
-        log = self.log.fieldsDict(d)
+        log = self.log.fields_dict(d)
         assert log is not self.log
         assert log._fields == d
         assert log._fields is not d
@@ -185,9 +185,9 @@ class LoggerTestCase(LoggerTestBase, unittest.TestCase):
         self.output.close()
         self.emitters.clear()
     
-    def test_structDict(self):
+    def test_struct_dict(self):
         d={42:42}
-        log = self.log.structDict(d)
+        log = self.log.struct_dict(d)
         assert len(self.messages) == 1
         m = self.messages.pop()
         self.assertDictContainsSubset(d, m.fields)
