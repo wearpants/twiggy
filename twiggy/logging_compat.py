@@ -20,10 +20,11 @@ __all__ = ["basicConfig", "hijack", "restore",
 import sys
 import logging as orig_logging
 from threading import Lock
+
 from .lib.converter import ConversionTable, drop
 from .formats import LineFormat
 from .outputs import Output
-from . import log, levels
+from . import levels, log
 from .levels import *
 
 def basicConfig(**kwargs):
@@ -63,8 +64,12 @@ class FakeLogger(object):
     info = log_func_decorator(INFO)
     warn = warning = log_func_decorator(WARNING)
     error = log_func_decorator(ERROR)
-    critical = log_func_decorator(CRITICAL)
-    
+    critical = fatal = log_func_decorator(CRITICAL)
+
+    def exception(self, *args, **kwargs):
+        kwargs['exc_info'] = True
+        self.error(*args, **kwargs)
+
     def setLevel(self, level):
         self._logger.min_level = level
 
@@ -74,7 +79,10 @@ class FakeLogger(object):
 
     def getEffectiveLevel(self):
         return self.level
-    
+
+    def isEnabledFor(self, level):
+        return level >= self.level
+
     def log(self, level, format_spec, *args, **kwargs):
         """
         Log with a given level, for including exception info

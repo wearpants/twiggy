@@ -1,11 +1,14 @@
+import os
 import sys
-import logging as orig_logging
 from unittest import TestCase
+sys.modules.pop('twiggy', None)
+os.environ.pop('TWIGGY_UNDER_TEST', None) # we need globals!!
 from twiggy import logging_compat, addEmitters, log
 from twiggy.outputs import ListOutput
 from twiggy.logging_compat import (hijack, restore, basicConfig,
                                    getLogger, root, DEBUG, INFO, ERROR,
-                                   LoggingBridgeOutput, LoggingBridgeFormat)
+                                   LoggingBridgeOutput, LoggingBridgeFormat,
+                                   orig_logging)
 
 class HijackTest(TestCase):
 
@@ -61,7 +64,20 @@ class TestFakeLogger(TestCase):
             
     def test_percent(self):
         self.failUnlessEqual(self.logger._logger._options["style"], "percent")
-            
+
+    def test_exception(self):
+        try:
+            1/0
+        except:
+            self.logger.exception("spam")
+        self.failUnless("ZeroDivisionError" in self.messages[0].traceback)
+
+    def test_isEnabledFor(self):
+        self.logger.setLevel(INFO)
+        self.failIf(self.logger.isEnabledFor(DEBUG))
+        self.logger.setLevel(DEBUG)
+        self.failUnless(self.logger.isEnabledFor(DEBUG))
+
     def test_log_no_exc_info(self):
         self.logger.info("nothing", exc_info=True)
         self.failUnlessEqual(self.messages[0].traceback, None)
