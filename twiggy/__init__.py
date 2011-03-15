@@ -1,4 +1,4 @@
-__all__=['log', 'emitters', 'addEmitters', 'filters', 'formats', 'outputs', 'levels', 'quickSetup']
+__all__=['log', 'emitters', 'addEmitters', 'devel_log', 'filters', 'formats', 'outputs', 'levels', 'quickSetup']
 import time
 import sys
 import os
