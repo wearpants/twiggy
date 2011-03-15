@@ -7,3 +7,6 @@ MANIFEST
 doc/_build/*
 wingdbstub.py
 .coverage
+
+htmlcov/*
+*.pyc
