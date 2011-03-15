@@ -19,6 +19,7 @@ __all__ = ["basicConfig", "hijack", "restore",
 
 import sys
 import logging as orig_logging
+from threading import Lock
 from .lib.converter import ConversionTable, drop
 from .formats import LineFormat
 from .outputs import Output
@@ -89,10 +90,12 @@ class FakeLogger(object):
 root = FakeLogger(log.options(style="percent"))
 
 _logger_cache = {} # name to logger
+_logger_cache_lock = Lock()
 def getLogger(name=None):
     if name is not None:
-        if name not in _logger_cache:
-            _logger_cache[name] = FakeLogger(log.name(name).options(style="percent"))
+        with _logger_cache_lock:
+            if name not in _logger_cache:
+                _logger_cache[name] = FakeLogger(log.name(name).options(style="percent"))
         return _logger_cache[name]
     return root
 

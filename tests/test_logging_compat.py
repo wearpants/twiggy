@@ -58,7 +58,10 @@ class TestFakeLogger(TestCase):
         for level in [INFO, ERROR]:
             self.logger.setLevel(level)
             self.failUnlessEqual(self.logger.level, level)
-
+            
+    def test_percent(self):
+        self.failUnlessEqual(self.logger._logger._options["style"], "percent")
+            
     def test_log_no_exc_info(self):
         self.logger.info("nothing", exc_info=True)
         self.failUnlessEqual(self.messages[0].traceback, None)
