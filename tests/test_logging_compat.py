@@ -5,7 +5,7 @@ from twiggy import logging_compat, addEmitters, log
 from twiggy.outputs import ListOutput
 from twiggy.logging_compat import (hijack, restore, basicConfig,
                                    getLogger, root, DEBUG, INFO, ERROR,
-                                   LoggingBridgeOutput)
+                                   LoggingBridgeOutput, LoggingBridgeFormat)
 
 class HijackTest(TestCase):
 
@@ -84,7 +84,16 @@ class TestFakeLogger(TestCase):
         
 class TestLoggingBridge(TestCase):
     
-    def test_sanity(self):
+    def test_format(self):
         logger = log.name("spam")
-        addEmitters(("spam", DEBUG, None, LoggingBridgeOutput()))
-        logger.error("BLBLBLB")
+        list_output = ListOutput(format=LoggingBridgeFormat())
+        messages = list_output.messages
+        addEmitters(("spam", DEBUG, None, list_output))
+        logger.error("eggs")
+        self.failUnlessEqual(messages[0], (':eggs\n', ERROR, 'spam'))
+        
+    def test_sanity(self):
+        logger = log.name("decoy")
+        addEmitters(("decoy", DEBUG, None, LoggingBridgeOutput()))
+        logger.error("spam")
+        logger.notice("eggs")

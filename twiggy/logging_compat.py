@@ -1,12 +1,21 @@
-"""g
+"""
 This module allows replacing stdlib's logging module with twiggy,
 it implements the following interface:
 
+logging's interface:
   getLogger - returns a logger that supports debug/info/error etc'.
-  root - the root logger, or just 'log' in twiggy.
+  root - the root logger.
+  basicConfig - raises an Exception.
+
+hijack interface:
+  hijack - for 'import logging' to import twiggy.
+  restore - for restoring the original logging module.
+
+logging bridge:
+  LoggingBridgeOutput - an output that bridges log messages to stdlib's logging.  
 """
-__all__ = ["hijack", "restore", # patching
-           "getLogger", "root", "LoggingBridgeOutput"] # API
+__all__ = ["basicConfig", "hijack", "restore",
+           "getLogger", "root", "LoggingBridgeOutput"]
 
 import sys
 import logging as orig_logging
@@ -33,7 +42,17 @@ def log_func_decorator(level):
     return new_func
 
 class FakeLogger(object):
+    """
+    This class emulates stlib's logging.Logger,
+    it translates calls to twiggy's log system.
     
+    usage:
+      getLogger("spam").error("eggs")
+    
+    translates to:
+      log.name("spam").error("eggs")
+    """
+
     __slots__ = ["_logger"]
 
     def __init__(self, logger):
@@ -56,6 +75,10 @@ class FakeLogger(object):
         return self.level
     
     def log(self, level, format_spec, *args, **kwargs):
+        """
+        Log with a given level, for including exception info
+        call with exc_info=True.
+        """
         logger = self._logger
         if kwargs.pop("exc_info", False):
             logger = logger.trace("error")
@@ -81,7 +104,11 @@ logging_bridge_converter.genericItem = "{0}={1}".format
 logging_bridge_converter.aggregate = ':'.join
 
 class LoggingBridgeFormat(LineFormat):
-
+    """
+    This logging bridge uses a converter that doesn't display a level, time and name.
+    thats because users of stdlib's logging usually setup formatters that display this info.
+    """
+    
     def __init__(self, *args, **kwargs):
         super(LoggingBridgeFormat, self).__init__(conversion=logging_bridge_converter, 
                                                   *args, **kwargs)
@@ -92,8 +119,21 @@ class LoggingBridgeFormat(LineFormat):
                 msg.name)
 
 class LoggingBridgeOutput(Output):
+    """
+    usage:
+      twiggy.addEmitters(("spam", DEBUG, None, LoggingBridgeOutput()))
+    
+    This output provides a translation between twiggy's:
+      log.name("spam").info("eggs")
+    into logging's:
+      logging.getLogger("spam").info("eggs")
 
-    # for levels in twiggy the aren't in stdlib's logging    
+    We translate a logging level to a twiggy level by name or 
+    by a fallback map. and get logging's logger by the name
+    of twiggy's logger.
+    """
+
+    # for levels in twiggy that aren't in stdlib's logging    
     FALLBACK_MAP = { NOTICE : orig_logging.WARNING,
                      DISABLED : orig_logging.NOTSET }
 
