@@ -22,9 +22,9 @@ Twiggy is a more Pythonic logger.
 :email: pfein@pobox.com
 :homepage: http://twiggy.wearpants.org/
 :hosting: http://hg.wearpants.org/twiggy/
-:IRC: irc://irc.freenode.net/#wearpants
+:IRC: `irc://irc.freenode.net/#wearpants <http://irc.lc/freenode/wearpants/>`_
 :license: `BSD <http://www.opensource.org/licenses/bsd-license.php>`_
-:Python: 2.7
+:Python: 2.6
 
 Twiggy was born at `Pycon 2010 <http://us.pycon.org/2010/>`_ after I whined about the standard library's `logging <http://docs.python.org/library/logging.html>`_ and Jesse Noller "invited" me to do something about it.
 
