@@ -40,7 +40,7 @@ class IntegrationTestCase(unittest.TestCase):
         twiggy.log.debug("oh hi")
         twiggy.log.name("second").info("do you like cheese?")
         twiggy.log.name("second.child").fields(cheese="hate").warning("No")
-        twiggy.log.name("first").error("Can you do {}", something)
+        twiggy.log.name("first").error("Can you do {0}", something)
         twiggy.log.name("bob").debug("I wear pants")
         
         try:

@@ -106,7 +106,7 @@ googleanalytics_id = "UA-3052036-8"
 # docttest support
 
 log_output_template = \
-""".. testsetup:: {}
+""".. testsetup:: {0}
 
     import sys
     from twiggy import quickSetup, log

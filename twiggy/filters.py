@@ -60,7 +60,7 @@ class Emitter(object):
 
     def __init__(self, min_level, filter, output):
         if not isinstance(min_level, levels.LogLevel):
-            raise ValueError("Unknown min_level: {}".format(min_level))
+            raise ValueError("Unknown min_level: {0}".format(min_level))
 
         self.min_level = min_level
         self.filter = filter

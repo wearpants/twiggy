@@ -113,18 +113,18 @@ class ConversionTableTestCase(unittest.TestCase):
 
     def test_convert(self):
         ct = ConversionTable([
-            ("joe", "I wear {}".format, convItem),
-            ("frank", "You wear {}".format, convItem)])
+            ("joe", "I wear {0}".format, convItem),
+            ("frank", "You wear {0}".format, convItem)])
         
-        ct.genericValue = "Someone wears {}".format
+        ct.genericValue = "Someone wears {0}".format
         
         d = ct.convert({'joe':'pants', 'frank':'shirt', 'bob':'shoes'})
         assert d == {'joe': "I wear pants", 'frank': "You wear shirt", 'bob': "Someone wears shoes"}
 
     def test_drop(self):
         ct = ConversionTable([
-            ("joe", "I wear {}".format, convItem),
-            ("frank", "You wear {}".format, lambda k, v: None)])
+            ("joe", "I wear {0}".format, convItem),
+            ("frank", "You wear {0}".format, lambda k, v: None)])
         
         ct.genericItem = lambda k, v: None
         

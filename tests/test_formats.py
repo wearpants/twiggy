@@ -73,7 +73,7 @@ class FormatTestCase(unittest.TestCase):
         fmt = formats.LineFormat(separator='|', conversion=formats.line_conversion)
         
         opts = message.Message._default_options.copy()       
-        msg = message.Message(levels.INFO, "I wear {}", self.fields, opts, ['pants'], {})       
+        msg = message.Message(levels.INFO, "I wear {0}", self.fields, opts, ['pants'], {})       
         assert fmt(msg) == '2010-10-28T02:15:57Z:INFO:mylog:pants=42|I wear pants\n'
         
     def test_suppress_newline_true(self):
@@ -82,7 +82,7 @@ class FormatTestCase(unittest.TestCase):
         
         opts = message.Message._default_options.copy()       
         opts['suppress_newlines'] = True
-        msg = message.Message(levels.INFO, "I wear {}\nDo you?", self.fields, opts, ['pants'], {})       
+        msg = message.Message(levels.INFO, "I wear {0}\nDo you?", self.fields, opts, ['pants'], {})       
         s = fmt(msg)
 
         assert s == '2010-10-28T02:15:57Z:INFO:mylog:pants=42|I wear pants\\nDo you?\n', repr(s)
@@ -93,7 +93,7 @@ class FormatTestCase(unittest.TestCase):
         
         opts = message.Message._default_options.copy()       
         opts['suppress_newlines'] = False
-        msg = message.Message(levels.INFO, "I wear {}\nDo you?", self.fields, opts, ['pants'], {})       
+        msg = message.Message(levels.INFO, "I wear {0}\nDo you?", self.fields, opts, ['pants'], {})       
         s = fmt(msg)
         assert s == '2010-10-28T02:15:57Z:INFO:mylog:pants=42|I wear pants\nDo you?\n', repr(s)
         
@@ -108,7 +108,7 @@ class FormatTestCase(unittest.TestCase):
         try:
             1/0
         except:
-            msg = message.Message(levels.INFO, "I wear {}", self.fields, opts, ['pants'], {})       
+            msg = message.Message(levels.INFO, "I wear {0}", self.fields, opts, ['pants'], {})       
         
         s = fmt(msg)
         l = s.split('\n')
@@ -128,7 +128,7 @@ class FormatTestCase(unittest.TestCase):
         try:
             1/0
         except:
-            msg = message.Message(levels.INFO, "I wear {}", self.fields, opts, ['pants'], {})       
+            msg = message.Message(levels.INFO, "I wear {0}", self.fields, opts, ['pants'], {})       
         
         s = fmt(msg)
         l = s.split('\n')

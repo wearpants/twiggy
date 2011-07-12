@@ -20,7 +20,7 @@ class Converter(object):
     def __repr__(self):
         # XXX perhaps poke around in convertValue/convertItem to see if we can extract a meaningful
         # `"some_string".format`? eh.
-        return "<Converter({!r})>".format(self.key)
+        return "<Converter({0!r})>".format(self.key)
 
 class ConversionTable(list):
     """Converts dictionaries using Converters"""
@@ -74,7 +74,7 @@ class ConversionTable(list):
         missing = required - avail
 
         if missing:
-            raise ValueError("Missing fields {}".format(list(missing)))
+            raise ValueError("Missing fields {0}".format(list(missing)))
 
         l = []
         for c in self:

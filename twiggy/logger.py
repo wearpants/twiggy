@@ -249,7 +249,7 @@ class Logger(BaseLogger):
             try:
                 include = emitter.filter(msg)
             except StandardError:
-                _twiggy.internal_log.info("Error filtering with emitter {}. Filter: {} Message: {!r}",
+                _twiggy.internal_log.info("Error filtering with emitter {0}. Filter: {1} Message: {2!r}",
                                           name, repr(emitter.filter), msg)
                 include = True # output anyway if error
             

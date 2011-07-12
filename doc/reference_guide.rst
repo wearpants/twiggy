@@ -18,7 +18,7 @@ Any functions in message args/fields are called and the value substitued.
     >>> from twiggy.lib import thread_name
     >>> thread_name()
     'MainThread'
-    >>> log.fields(pid=os.getpid).info("I'm in thread {}", thread_name)
+    >>> log.fields(pid=os.getpid).info("I'm in thread {0}", thread_name)
     INFO:pid=...:I'm in thread MainThread
 
 This can be useful with partially-bound loggers, which lets us do some cool stuff. Here's a proxy class that logs which thread accesses attributes.
@@ -33,7 +33,7 @@ This can be useful with partially-bound loggers, which lets us do some cool stuf
             self.__log = log.name("tracker").fields(obj_id=id(obj), thread=thread_name)
             self.__log.debug("started tracking")
         def __getattr__(self, attr):
-            self.__log.debug("accessed {}", attr)
+            self.__log.debug("accessed {0}", attr)
             return getattr(self.__obj, attr)
     
     class Bunch(object):
@@ -127,10 +127,10 @@ In addition to :attr:`~.BaseLogger.min_level`, loggers also have a :attr:`~.Logg
 
     # in mylib:
     for i in xrange(1000000):
-        log.warning("blah blah {}", 42)
+        log.warning("blah blah {0}", 42)
 
     # in twiggy_setup: turn off stupidness
-    mylib.log.filter = lambda format_spec: format_spec != "blah blah {}"
+    mylib.log.filter = lambda format_spec: format_spec != "blah blah {0}"
 
 Note that using a filter this way is an optimization - in general, application code should use :data:`emitters` instead.
 
@@ -159,7 +159,7 @@ Use :meth:`.fields` to include key-value data in a message instead of embedding 
     log.fields(key1='a', key2='b').info("stuff happenend")
 
     # not this:
-    log.info("stuff happened. key1: {} key2: {}", 'a', 'b')
+    log.info("stuff happened. key1: {0} key2: {1}", 'a', 'b')
 
 
 **********************
@@ -291,7 +291,7 @@ The :attr:`format <.Output._format>` callable is Output-specific; it should take
    
     # format height value with two decimal places
     # show as "<key> is <value>"
-    conversion.add('height', '{:.2f}'.format, "{0} is {1}".format)
+    conversion.add('height', '{0:.2f}'.format, "{0} is {1}".format)
    
     # separate fields in final output by colons
     conversion.aggregate = ':'.join
