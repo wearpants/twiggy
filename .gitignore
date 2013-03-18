@@ -1,11 +1,9 @@
-syntax: glob
-
-dist
+/dist/
 MANIFEST
 *.wpr
 *.pyc
 
-doc/_build/*
+/doc/_build/
 wingdbstub.py
 .coverage
-htmlcov/*
+/htmlcov/
