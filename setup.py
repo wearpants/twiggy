@@ -27,5 +27,5 @@ setup(name='Twiggy',
       "Development Status :: 5 - Production/Stable",
       "Intended Audience :: Developers",
       "License :: OSI Approved :: BSD License",],
-      long_description=open('README').read(),
+      long_description=open('README.rst').read(),
       )
