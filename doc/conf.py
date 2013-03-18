@@ -46,7 +46,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'Twiggy'
-copyright = u'2010, Peter Fein'
+copyright = u'2013, Peter Fein'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -101,7 +101,7 @@ pygments_style = 'sphinx'
 
 # -- Various custom options ----------------------------------------------------
 
-googleanalytics_id = "UA-3052036-8"
+googleanalytics_id = "UA-3052036-13"
 
 # docttest support
 
@@ -195,7 +195,7 @@ htmlhelp_basename = 'Twiggydoc'
 html_show_copyright = True
 html_context = {'author_name': u'Peter Fein',
                 'author_link': u'http://i.wearpants.org',
-                'copyright_year': u'2010'}
+                'copyright_year': u'2013'}
 
 # -- Options for LaTeX output --------------------------------------------------
 
