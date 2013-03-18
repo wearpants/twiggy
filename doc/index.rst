@@ -20,7 +20,7 @@ Twiggy is a more Pythonic logger.
 
 :author: `Peter Fein <http://i.wearpants.org>`_
 :email: pete@wearpants.org
-:twitter: `@petecode <https://twitter.com/petecode>`
+:twitter: `@petecode <https://twitter.com/petecode>`_
 :homepage: http://twiggy.wearpants.org/
 :hosting: https://github.com/wearpants/twiggy
 :IRC: `irc://irc.freenode.net/#twiggy <http://irc.lc/freenode/twiggy/>`_
