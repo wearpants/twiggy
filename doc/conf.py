@@ -22,7 +22,15 @@ sys.path.append(os.path.abspath('..'))
 
 # Add any Sphinx extension module names here, as strings. They can be extensions
 # coming with Sphinx (named 'sphinx.ext.*') or your custom ones.
-extensions = ['sphinx.ext.autodoc', 'sphinx.ext.doctest', 'sphinx.ext.todo', 'sphinx.ext.coverage',] #'sphinxcontrib.googleanalytics']
+extensions = ['sphinx.ext.autodoc', 'sphinx.ext.doctest', 'sphinx.ext.todo', 'sphinx.ext.coverage']
+
+try:
+    import sphinxcontrib.googleanalytics
+except ImportError:
+    import warnings
+    warnings.warn("Couldn't import 'sphinxcontrib.googleanalytics")
+else:
+    extensions.append('sphinxcontrib.googleanalytics')
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
@@ -38,7 +46,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'Twiggy'
-copyright = u'2010, Peter Fein'
+copyright = u'2013, Peter Fein'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -93,12 +101,12 @@ pygments_style = 'sphinx'
 
 # -- Various custom options ----------------------------------------------------
 
-googleanalytics_id = "UA-3052036-8"
+googleanalytics_id = "UA-3052036-13"
 
 # docttest support
 
 log_output_template = \
-""".. testsetup:: {}
+""".. testsetup:: {0}
 
     import sys
     from twiggy import quick_setup, log
@@ -187,7 +195,7 @@ htmlhelp_basename = 'Twiggydoc'
 html_show_copyright = True
 html_context = {'author_name': u'Peter Fein',
                 'author_link': u'http://i.wearpants.org',
-                'copyright_year': u'2010'}
+                'copyright_year': u'2013'}
 
 # -- Options for LaTeX output --------------------------------------------------
 

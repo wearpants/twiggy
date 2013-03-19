@@ -15,16 +15,17 @@ Twiggy is a more Pythonic logger.
 
 .. doctest:: demo
 
-    >>> log.name('frank').fields(number=42).info("hello {who}, it's a {} day", 'sunny', who='world')
-    INFO:frank:number=42|hello world, it's a sunny day
+    >>> log.name('frank').fields(number=42).info("hello {who}, it's a {0} day", 'sunny', who='world')
+    INFO:frank:number=42:hello world, it's a sunny day
 
 :author: `Peter Fein <http://i.wearpants.org>`_
-:email: pfein@pobox.com
+:email: pete@wearpants.org
+:twitter: `@petecode <https://twitter.com/petecode>`_
 :homepage: http://twiggy.wearpants.org/
-:hosting: http://hg.wearpants.org/twiggy/
-:IRC: irc://irc.freenode.net/#wearpants
+:hosting: https://github.com/wearpants/twiggy
+:IRC: `irc://irc.freenode.net/#twiggy <http://irc.lc/freenode/twiggy/>`_
 :license: `BSD <http://www.opensource.org/licenses/bsd-license.php>`_
-:Python: 2.7
+:Python: 2.6, 2.7
 
 Twiggy was born at `Pycon 2010 <http://us.pycon.org/2010/>`_ after I whined about the standard library's `logging <http://docs.python.org/library/logging.html>`_ and Jesse Noller "invited" me to do something about it.
 
@@ -36,7 +37,7 @@ Install straight with distutils from the `Cheeseshop <http://pypi.python.org/pyp
 
 Get the latest version::
 
-    hg clone http://hg.wearpants.org/twiggy twiggy
+    git clone https://github.com/wearpants/twiggy.git
 
 *************************************
 Why Twiggy Should Be Your New Logger

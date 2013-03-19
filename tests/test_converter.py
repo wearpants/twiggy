@@ -1,6 +1,13 @@
-import unittest
-
-from twiggy.lib.converter import Converter, ConversionTable, same_value, same_item, drop
+import sys
+if sys.version_info >= (2, 7):
+    import unittest
+else:
+    try: 
+        import unittest2 as unittest
+    except ImportError:
+        raise RuntimeError("unittest2 is required for Python < 2.7")
+        
+from twiggy.lib.converter import Converter, ConversionTable
 
 def conv_val(x):
     return x
@@ -123,19 +130,18 @@ class ConversionTableTestCase(unittest.TestCase):
 
     def test_convert(self):
         ct = ConversionTable([
-            ("joe", "I wear {}".format, same_item),
-            ("frank", "You wear {}".format, same_item),
-            ("bill", same_value, same_item)])
+            ("joe", "I wear {0}".format, convItem),
+            ("frank", "You wear {0}".format, convItem)])
         
-        ct.generic_value = "Someone wears {}".format
+        ct.genericValue = "Someone wears {0}".format
         
         d = ct.convert({'joe':'pants', 'frank':'shirt', 'bill': 'naked', 'bob':'shoes'})
         assert d == {'joe': "I wear pants", 'frank': "You wear shirt", 'bob': "Someone wears shoes", 'bill':"naked"}
 
     def test_drop(self):
         ct = ConversionTable([
-            ("joe", "I wear {}".format, conv_item),
-            ("frank", "You wear {}".format, drop)])
+            ("joe", "I wear {0}".format, convItem),
+            ("frank", "You wear {0}".format, lambda k, v: None)])
         
         ct.generic_item = drop
         

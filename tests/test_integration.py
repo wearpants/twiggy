@@ -1,4 +1,11 @@
-import unittest
+import sys
+if sys.version_info >= (2, 7):
+    import unittest
+else:
+    try: 
+        import unittest2 as unittest
+    except ImportError:
+        raise RuntimeError("unittest2 is required for Python < 2.7")
 import twiggy
 import StringIO
 import time
@@ -33,7 +40,7 @@ class IntegrationTestCase(unittest.TestCase):
         twiggy.log.debug("oh hi")
         twiggy.log.name("second").info("do you like cheese?")
         twiggy.log.name("second.child").fields(cheese="hate").warning("No")
-        twiggy.log.name("first").error("Can you do {}", something)
+        twiggy.log.name("first").error("Can you do {0}", something)
         twiggy.log.name("bob").debug("I wear pants")
         
         try:

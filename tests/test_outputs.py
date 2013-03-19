@@ -1,4 +1,11 @@
-import unittest
+import sys
+if sys.version_info >= (2, 7):
+    import unittest
+else:
+    try: 
+        import unittest2 as unittest
+    except ImportError:
+        raise RuntimeError("unittest2 is required for Python < 2.7")
 import tempfile
 import os
 import StringIO

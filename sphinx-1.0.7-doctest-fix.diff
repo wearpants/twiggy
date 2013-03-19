@@ -1,0 +1,12 @@
+--- sphinx/ext/doctest.py.bak	2011-07-12 17:47:17.442219796 -0500
++++ sphinx/ext/doctest.py	2011-07-12 17:50:41.312518817 -0500
+@@ -265,6 +265,9 @@
+                                                 optionflags=self.opt)
+         self.test_runner = SphinxDocTestRunner(verbose=False,
+                                                optionflags=self.opt)
++       
++        self.test_runner._fakeout = self.setup_runner._fakeout
++        
+         if self.config.doctest_test_doctest_blocks:
+             def condition(node):
+                 return (isinstance(node, (nodes.literal_block, nodes.comment))

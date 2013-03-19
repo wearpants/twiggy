@@ -5,4 +5,4 @@ recursive-include doc/_templates *.html .keep
 recursive-include twiggy *.py
 recursive-include tests *.py
 include scripts/*.py scripts/*.sh 
-include VERSION LICENSE sitecustomize.py .coveragerc
+include README.rst VERSION LICENSE sitecustomize.py .coveragerc
