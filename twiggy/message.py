@@ -7,7 +7,7 @@ from string import Template
 class Message(object):
     """A log message.  All attributes are read-only."""
 
-    __slots__ = ['fields', 'suppress_newlines', 'traceback', 'text']
+    __slots__ = ['fields', 'suppress_newlines', 'traceback', 'raw_traceback', 'text']
 
     #: default option values. Don't change these!
     _default_options = {'suppress_newlines' : True,
@@ -31,25 +31,7 @@ class Message(object):
         self.suppress_newlines = options['suppress_newlines']
         self.fields['level'] = level
 
-        ## format traceback
-        # XXX this needs some cleanup/branch consolidation
-        trace = options['trace']
-        if isinstance(trace, tuple) and len(trace) == 3:
-            self.traceback = "\n".join(traceback.format_exception(*trace))
-        elif trace == "error":
-            tb = sys.exc_info()
-            if tb[0] is None:
-                self.traceback = None
-            else:
-                self.traceback = traceback.format_exc()
-        elif trace == "always":
-            raise NotImplementedError
-            # XXX build a traceback using getframe
-            # XXX maybe an option to just provide current frame info instead of full stack?
-        elif trace is not None:
-            raise ValueError("bad trace {0!r}".format(trace))
-        else:
-            self.traceback = None
+        self.raw_traceback, self.traceback = self._format_traceback(options['trace'])
 
         style = options['style']
 
@@ -96,6 +78,33 @@ class Message(object):
             assert False, "impossible style"
 
         self.text = s
+
+    def _format_traceback(self, trace):
+        """Returns tuple of (raw_traceback, formatted_traceback) or None, None
+        """
+        # XXX this needs some cleanup/branch consolidation
+        raw_traceback = None
+        formatted_traceback = None
+        
+        if isinstance(trace, tuple) and len(trace) == 3:
+            raw_traceback = trace
+        elif trace == "error":
+            raw_traceback = sys.exc_info()
+            if raw_traceback[0] is None:
+                raw_traceback = None
+        elif trace == "always":
+            raise NotImplementedError
+            # XXX build a traceback using getframe
+            # XXX maybe an option to just provide current frame info instead of full stack?
+        elif trace is not None:
+            raise ValueError("bad trace {0!r}".format(trace))
+
+        if raw_traceback:
+            formatted_traceback = "\n".join(traceback.format_exception(*raw_traceback))
+
+        return raw_traceback, formatted_traceback
+
+
 
     @property
     def name(self):
