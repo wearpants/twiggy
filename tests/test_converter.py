@@ -7,7 +7,7 @@ else:
     except ImportError:
         raise RuntimeError("unittest2 is required for Python < 2.7")
         
-from twiggy.lib.converter import Converter, ConversionTable
+from twiggy.lib.converter import Converter, ConversionTable, same_item, same_value, drop
 
 def conv_val(x):
     return x
@@ -130,17 +130,17 @@ class ConversionTableTestCase(unittest.TestCase):
 
     def test_convert(self):
         ct = ConversionTable([
-            ("joe", "I wear {0}".format, convItem),
-            ("frank", "You wear {0}".format, convItem)])
+            ("joe", "I wear {0}".format, conv_item),
+            ("frank", "You wear {0}".format, conv_item)])
         
-        ct.genericValue = "Someone wears {0}".format
+        ct.generic_value = "Someone wears {0}".format
         
-        d = ct.convert({'joe':'pants', 'frank':'shirt', 'bill': 'naked', 'bob':'shoes'})
-        assert d == {'joe': "I wear pants", 'frank': "You wear shirt", 'bob': "Someone wears shoes", 'bill':"naked"}
+        d = ct.convert({'joe':'pants', 'frank':'shirt', 'bob':'shoes'})
+        self.assertDictEqual(d, {'joe': "I wear pants", 'frank': "You wear shirt", 'bob': "Someone wears shoes"})
 
     def test_drop(self):
         ct = ConversionTable([
-            ("joe", "I wear {0}".format, convItem),
+            ("joe", "I wear {0}".format, conv_item),
             ("frank", "You wear {0}".format, lambda k, v: None)])
         
         ct.generic_item = drop
