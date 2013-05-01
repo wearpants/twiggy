@@ -1,8 +1,7 @@
 import os
 import sys
 from unittest import TestCase
-sys.modules.pop('twiggy', None)
-os.environ.pop('TWIGGY_UNDER_TEST', None) # we need globals!!
+
 from twiggy import logging_compat, add_emitters, log
 from twiggy.outputs import ListOutput
 from twiggy.logging_compat import (hijack, restore, basicConfig,
