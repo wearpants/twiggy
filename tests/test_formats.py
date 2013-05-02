@@ -80,22 +80,28 @@ class FormatTestCase(unittest.TestCase):
         
         fmt = formats.LineFormat(separator='|', conversion=formats.line_conversion)
         
+        fields = self.fields.copy()
+        fields['shirt'] = 'extra\nlarge'
+        
         opts = message.Message._default_options.copy()       
         opts['suppress_newlines'] = True
-        msg = message.Message(levels.INFO, "I wear {0}\nDo you?", self.fields, opts, ['pants'], {})       
+        msg = message.Message(levels.INFO, "I wear {0}\nDo you?", fields, opts, ['pants'], {})       
         s = fmt(msg)
 
-        assert s == '2010-10-28T02:15:57Z:INFO:mylog:pants=42|I wear pants\\nDo you?\n', repr(s)
+        assert s == '2010-10-28T02:15:57Z:INFO:mylog:pants=42:shirt=extra\\nlarge|I wear pants\\nDo you?\n', repr(s)
     
     def test_suppress_newline_false(self):
         
         fmt = formats.LineFormat(separator='|', conversion=formats.line_conversion)
         
+        fields = self.fields.copy()
+        fields['shirt'] = 'extra\nlarge'        
+        
         opts = message.Message._default_options.copy()       
         opts['suppress_newlines'] = False
-        msg = message.Message(levels.INFO, "I wear {0}\nDo you?", self.fields, opts, ['pants'], {})       
+        msg = message.Message(levels.INFO, "I wear {0}\nDo you?", fields, opts, ['pants'], {})       
         s = fmt(msg)
-        assert s == '2010-10-28T02:15:57Z:INFO:mylog:pants=42|I wear pants\nDo you?\n', repr(s)
+        assert s == '2010-10-28T02:15:57Z:INFO:mylog:pants=42:shirt=extra\nlarge|I wear pants\nDo you?\n', repr(s)
         
     
     def test_trace(self):

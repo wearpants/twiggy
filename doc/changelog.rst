@@ -14,6 +14,12 @@ Changelog
 - add logging_compat module for compatibility with stlib's logging
 
 ******************************
+0.4.6
+******************************
+*Unreleased*
+- also suppress newlines in fields output
+
+******************************
 0.4.5
 ******************************
 *03/18/2013*
