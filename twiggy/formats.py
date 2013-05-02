@@ -55,7 +55,10 @@ class LineFormat(object):
 
     def format_fields(self, msg):
         """format the fields of a message"""
-        return self.conversion.convert(msg.fields)
+        fields_text = self.conversion.convert(msg.fields)
+        if msg.suppress_newlines:
+            fields_text = fields_text.replace('\n', '\\n')
+        return fields_text
 
 ## some useful default objects
 
