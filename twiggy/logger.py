@@ -139,7 +139,7 @@ class InternalLogger(BaseLogger):
         try:
             try:
                 msg = Message(level, format_spec, self._fields.copy(), self._options.copy(), args, kwargs)
-            except StandardError:
+            except Exception:
                 msg = None
                 raise
             else:
@@ -231,7 +231,7 @@ class Logger(BaseLogger):
 
         try:
             if not self.filter(format_spec): return
-        except StandardError:
+        except Exception:
             _twiggy.internal_log.info("Error in Logger filtering with {0} on {1}", repr(self.filter), format_spec)
             # just continue emitting in face of filter error
 
@@ -243,7 +243,7 @@ class Logger(BaseLogger):
 
         try:
             msg = Message(level, format_spec, self._fields.copy(), self._options.copy(), args, kwargs)
-        except StandardError:
+        except Exception:
             # XXX use .fields() instead?
             _twiggy.internal_log.info("Error formatting message level: {0!r}, format: {1!r}, fields: {2!r}, "\
                                       "options: {3!r}, args: {4!r}, kwargs: {5!r}",
@@ -255,7 +255,7 @@ class Logger(BaseLogger):
         for name, emitter in sorted(potential_emitters):
             try:
                 include = emitter.filter(msg)
-            except StandardError:
+            except Exception:
                 _twiggy.internal_log.info("Error filtering with emitter {0}. Filter: {1} Message: {2!r}",
                                           name, repr(emitter.filter), msg)
                 include = True # output anyway if error
@@ -265,5 +265,5 @@ class Logger(BaseLogger):
         for o in outputs:
             try:
                 o.output(msg)
-            except StandardError:
+            except Exception:
                 _twiggy.internal_log.warning("Error outputting with {0!r}. Message: {1!r}", o, msg)
