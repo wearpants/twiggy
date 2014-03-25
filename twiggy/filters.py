@@ -1,6 +1,7 @@
-import levels
 import fnmatch
 import re
+
+from . import levels
 
 __re_type = type(re.compile('foo')) # XXX is there a canonical place for this?
 

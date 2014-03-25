@@ -1,9 +1,9 @@
 from .message import Message
 from .lib import iso8601time
 import twiggy as _twiggy
-import levels
-import outputs
-import formats
+from . import levels
+from . import outputs
+from . import formats
 
 import warnings
 import sys
