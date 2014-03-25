@@ -302,7 +302,7 @@ and shirt'''
                 )
 
         assert m.traceback.startswith('Traceback (most recent call last):')
-        assert m.traceback.endswith('ZeroDivisionError: integer division or modulo by zero\n')
+        assert 'ZeroDivisionError:' in m.traceback
 
     def test_trace_tuple(self):
         opts = Message._default_options.copy()
@@ -320,4 +320,4 @@ and shirt'''
                 )
 
         assert m.traceback.startswith('Traceback (most recent call last):')
-        assert m.traceback.endswith('ZeroDivisionError: integer division or modulo by zero\n')
+        assert 'ZeroDivisionError:' in m.traceback
