@@ -4,5 +4,7 @@ python:
   - 2.7
   - pypy
 install: python setup.py install
-before_script: pip install pytest
+before_script:
+  - pip install pytest
+  - if [[ $TRAVIS_PYTHON_VERSION == '2.6' ]]; then pip install unittest2; fi
 script: TWIGGY_UNDER_TEST=1 py.test --tb=short -v tests/
