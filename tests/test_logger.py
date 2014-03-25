@@ -1,3 +1,4 @@
+import re
 import sys
 if sys.version_info >= (2, 7):
     import unittest
@@ -286,7 +287,7 @@ class LoggerTrapTestCase(unittest.TestCase):
         assert "Traceback" in m.traceback
         assert "THUNK" in m.traceback
         assert "Error in Logger filtering" in m.text
-        assert "<function bad_filter" in m.text
+        assert re.search("<function .*bad_filter", m.text)
                 
     def test_trap_bad_msg(self):
         def go_boom():
@@ -307,7 +308,7 @@ class LoggerTrapTestCase(unittest.TestCase):
         assert "Traceback" in m.traceback
         assert "BOOM" in m.traceback
         assert "Error formatting message" in m.text
-        assert "<function go_boom" in m.text
+        assert re.search("<function .*go_boom", m.text)
     
     def test_trap_output(self):
         class BorkedOutput(outputs.ListOutput):
@@ -342,7 +343,9 @@ class LoggerTrapTestCase(unittest.TestCase):
         print(m.traceback)
 
         assert m.level == levels.WARNING
-        assert "Error outputting with <tests.test_logger.BorkedOutput" in m.text
+        assert re.search(
+            "Error outputting with <tests.test_logger.*BorkedOutput",
+            m.text)
         assert "Traceback" in m.traceback
         assert "BORK" in m.traceback
         
@@ -387,7 +390,7 @@ class LoggerTrapTestCase(unittest.TestCase):
 
         assert m.level == levels.INFO
         assert "Error filtering with emitter before" in m.text
-        assert "<function go_boom" in m.text
+        assert re.search("<function .*go_boom", m.text)
         assert "Traceback" in m.traceback
         assert "BOOM" in m.traceback
         
