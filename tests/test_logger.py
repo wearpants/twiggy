@@ -277,9 +277,9 @@ class LoggerTrapTestCase(unittest.TestCase):
         assert len(self.internal_messages) == 1
         m = self.internal_messages.pop()
         
-        print m.text
-        print m.traceback
-        print _twiggy.internal_log._options
+        print(m.text)
+        print(m.traceback)
+        print(_twiggy.internal_log._options)
         
         assert m.level == levels.INFO
         assert m.name == 'twiggy.internal'
@@ -298,9 +298,9 @@ class LoggerTrapTestCase(unittest.TestCase):
         assert len(self.internal_messages) == 1
         m = self.internal_messages.pop()
         
-        print m.text
-        print m.traceback
-        print _twiggy.internal_log._options
+        print(m.text)
+        print(m.traceback)
+        print(_twiggy.internal_log._options)
         
         assert m.level == levels.INFO
         assert m.name == 'twiggy.internal'
@@ -338,8 +338,8 @@ class LoggerTrapTestCase(unittest.TestCase):
         assert len(self.internal_messages) == 1
         m = self.internal_messages.pop()
 
-        print m.text
-        print m.traceback
+        print(m.text)
+        print(m.traceback)
 
         assert m.level == levels.WARNING
         assert "Error outputting with <tests.test_logger.BorkedOutput" in m.text
@@ -382,8 +382,8 @@ class LoggerTrapTestCase(unittest.TestCase):
         assert len(self.internal_messages) == 1
         m = self.internal_messages.pop()
 
-        print m.text
-        print m.traceback
+        print(m.text)
+        print(m.traceback)
 
         assert m.level == levels.INFO
         assert "Error filtering with emitter before" in m.text

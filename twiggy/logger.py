@@ -1,3 +1,4 @@
+from __future__ import print_function
 from .message import Message
 from .lib import iso8601time
 import twiggy as _twiggy
@@ -143,9 +144,9 @@ class InternalLogger(BaseLogger):
                 raise
             else:
                 self.output.output(msg)
-        except StandardError:
-            print>>sys.stderr, iso8601time(), "Error in twiggy internal log! Something is serioulsy broken."
-            print>>sys.stderr, "Offending message:", repr(msg)
+        except Exception:
+            print(iso8601time(), "Error in twiggy internal log! Something is serioulsy broken.", file=sys.stderr)
+            print("Offending message:", repr(msg), file=sys.stderr)
             traceback.print_exc(file = sys.stderr)
 
 class Logger(BaseLogger):

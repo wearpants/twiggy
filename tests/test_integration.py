@@ -1,3 +1,4 @@
+from __future__ import print_function
 import sys
 if sys.version_info >= (2, 7):
     import unittest
@@ -48,13 +49,13 @@ class IntegrationTestCase(unittest.TestCase):
         except:
             twiggy.log.trace().critical("Went boom")
 
-        print "***************** everything **********************"
-        print everything.stream.getvalue(),
-        print "****************** out 1 **************************"
-        print out1.stream.getvalue(),
-        print "****************** out 2 **************************"
-        print out2.stream.getvalue(),       
-        print "***************************************************"
+        print("***************** everything **********************")
+        print(everything.stream.getvalue(), end=' ')
+        print("****************** out 1 **************************")
+        print(out1.stream.getvalue(), end=' ')
+        print("****************** out 2 **************************")
+        print(out2.stream.getvalue(), end=' ')       
+        print("***************************************************")
         
 
         # XXX this should really be done with a regex, but I'm feeling lazy
