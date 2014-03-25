@@ -8,9 +8,9 @@ else:
         raise RuntimeError("unittest2 is required for Python < 2.7")
 import tempfile
 import os
-import StringIO
 
 from twiggy import outputs, formats
+from twiggy.compat import StringIO
 
 from . import make_mesg, when
 
@@ -75,7 +75,7 @@ class FileOutputTestCase(unittest.TestCase):
 class StreamOutputTest(unittest.TestCase):
     
     def test_stream_output(self):
-        sio = StringIO.StringIO()
+        sio = StringIO()
         o = outputs.StreamOutput(formats.shell_format, sio)
         o.output(m)
         o.close()

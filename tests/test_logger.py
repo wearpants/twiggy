@@ -7,9 +7,9 @@ else:
     except ImportError:
         raise RuntimeError("unittest2 is required for Python < 2.7")
 import sys
-import StringIO
 
 from twiggy import logger, outputs, levels, filters
+from twiggy.compat import StringIO
 import twiggy as _twiggy
 
 class LoggerTestBase(object):
@@ -132,7 +132,7 @@ class InternalLoggerTest(LoggerTestBase, unittest.TestCase):
         assert log.min_level == self.log.min_level
 
     def test_trap_msg(self):
-        sio = StringIO.StringIO()
+        sio = StringIO()
 
         def cleanup(stderr):
             sys.stderr = stderr
@@ -159,7 +159,7 @@ class InternalLoggerTest(LoggerTestBase, unittest.TestCase):
 
         out = BorkedOutput(close_atexit = False)
 
-        sio = StringIO.StringIO()
+        sio = StringIO()
 
         def cleanup(stderr, output):
             sys.stderr = stderr

@@ -5,6 +5,7 @@ import twiggy as _twiggy
 from . import levels
 from . import outputs
 from . import formats
+from .compat import iteritems
 
 import warnings
 import sys
@@ -236,7 +237,7 @@ class Logger(BaseLogger):
             # just continue emitting in face of filter error
 
         # XXX should we trap here too b/c of "Dictionary changed size during iteration" (or other rare errors?)
-        potential_emitters = [(name, emitter) for name, emitter in self._emitters.iteritems()
+        potential_emitters = [(name, emitter) for name, emitter in iteritems(self._emitters)
                               if level >= emitter.min_level]
 
         if not potential_emitters: return

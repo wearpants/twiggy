@@ -8,10 +8,10 @@ else:
     except ImportError:
         raise RuntimeError("unittest2 is required for Python < 2.7")
 import twiggy
-import StringIO
 import time
 
 from . import when
+from twiggy.compat import StringIO
 
 def fake_gmtime():
     return when
@@ -26,9 +26,9 @@ class IntegrationTestCase(unittest.TestCase):
         twiggy._del_globals()
 
     def test_integration(self):
-        everything = twiggy.outputs.StreamOutput(stream=StringIO.StringIO(), format=twiggy.formats.line_format)
-        out1 = twiggy.outputs.StreamOutput(stream=StringIO.StringIO(), format=twiggy.formats.line_format)
-        out2 = twiggy.outputs.StreamOutput(stream=StringIO.StringIO(), format=twiggy.formats.line_format)
+        everything = twiggy.outputs.StreamOutput(stream=StringIO(), format=twiggy.formats.line_format)
+        out1 = twiggy.outputs.StreamOutput(stream=StringIO(), format=twiggy.formats.line_format)
+        out2 = twiggy.outputs.StreamOutput(stream=StringIO(), format=twiggy.formats.line_format)
         
         twiggy.add_emitters(('*', twiggy.levels.DEBUG, None, everything),
                            ('first', twiggy.levels.INFO, None, out1),
