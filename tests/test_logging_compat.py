@@ -2,12 +2,13 @@ import os
 import sys
 from unittest import TestCase
 
-from twiggy import logging_compat, add_emitters, log
-from twiggy.outputs import ListOutput
-from twiggy.logging_compat import (hijack, restore, basicConfig,
-                                   getLogger, root, DEBUG, INFO, ERROR,
-                                   LoggingBridgeOutput, LoggingBridgeFormat,
-                                   orig_logging)
+def setup_module():
+    from twiggy import _populate_globals
+    _populate_globals()
+
+def teardown_module():
+    from twiggy import _del_globals
+    _del_globals()
 
 class HijackTest(TestCase):
 
@@ -16,21 +17,25 @@ class HijackTest(TestCase):
         
     def verify_orig(self):
         import logging
+        from twiggy.logging_compat import orig_logging
         self.compare_modules(logging, orig_logging)
         
     def verify_comp(self):
         import logging
+        from twiggy import logging_compat
         self.compare_modules(logging, logging_compat)
 
     def tearDown(self):
         sys.modules.pop('logging', None)
 
     def test_hijack(self):
+        from twiggy.logging_compat import hijack
         self.verify_orig()
         hijack()
         self.verify_comp()
 
     def test_restore(self):
+        from twiggy.logging_compat import hijack, restore
         hijack()
         restore()
         self.verify_orig()
@@ -38,18 +43,24 @@ class HijackTest(TestCase):
 class TestGetLogger(TestCase):
     
     def test_name(self):
+        from twiggy.logging_compat import getLogger
         self.failUnlessEqual(getLogger("spam")._logger._fields["name"], "spam")
     
     def test_root(self):
+        from twiggy.logging_compat import getLogger, root
         self.failUnlessEqual(getLogger(), root)
 
     def test_cache(self):
+        from twiggy.logging_compat import getLogger
         eggs = getLogger("eggs")
         self.failUnless(getLogger("eggs") is eggs)
         
 class TestFakeLogger(TestCase):
     
     def setUp(self):
+        from twiggy import add_emitters
+        from twiggy.logging_compat import getLogger, DEBUG
+        from twiggy.outputs import ListOutput
         self.logger = getLogger("spam")
         self.logger.setLevel(DEBUG)
         self.list_output = ListOutput()
@@ -57,6 +68,7 @@ class TestFakeLogger(TestCase):
         add_emitters(("spam", DEBUG, None, self.list_output))
 
     def test_level(self):
+        from twiggy.logging_compat import INFO, ERROR
         for level in [INFO, ERROR]:
             self.logger.setLevel(level)
             self.failUnlessEqual(self.logger.level, level)
@@ -72,6 +84,7 @@ class TestFakeLogger(TestCase):
         self.failUnless("ZeroDivisionError" in self.messages[0].traceback)
 
     def test_isEnabledFor(self):
+        from twiggy.logging_compat import INFO, DEBUG
         self.logger.setLevel(INFO)
         self.failIf(self.logger.isEnabledFor(DEBUG))
         self.logger.setLevel(DEBUG)
@@ -89,9 +102,11 @@ class TestFakeLogger(TestCase):
         self.failUnless("ZeroDivisionError" in self.messages[0].traceback)
         
     def test_basicConfig(self):
+        from twiggy.logging_compat import basicConfig
         self.failUnlessRaises(RuntimeError, basicConfig)
 
     def test_log(self):
+        from twiggy.logging_compat import INFO, ERROR
         for index, level in enumerate((INFO, ERROR)):
             self.logger.log(level, "spam")
             self.failUnlessEqual(self.messages[index].text, "spam")
@@ -103,6 +118,10 @@ class TestFakeLogger(TestCase):
 class TestLoggingBridge(TestCase):
     
     def test_format(self):
+        from twiggy import add_emitters
+        from twiggy import log
+        from twiggy.logging_compat import LoggingBridgeFormat, DEBUG, ERROR
+        from twiggy.outputs import ListOutput
         logger = log.name("spam")
         list_output = ListOutput(format=LoggingBridgeFormat())
         messages = list_output.messages
@@ -111,6 +130,8 @@ class TestLoggingBridge(TestCase):
         self.failUnlessEqual(messages[0], ('|eggs\n', ERROR, 'spam'))
         
     def test_sanity(self):
+        from twiggy import add_emitters, log
+        from twiggy.logging_compat import LoggingBridgeOutput, DEBUG
         logger = log.name("decoy")
         add_emitters(("decoy", DEBUG, None, LoggingBridgeOutput()))
         logger.error("spam")
