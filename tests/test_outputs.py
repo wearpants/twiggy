@@ -41,7 +41,7 @@ class FileOutputTestCase(unittest.TestCase):
     def make_output(self, msg_buffer, locked):
         cls = outputs.FileOutput if locked else UnlockedFileOutput
         
-        return cls(name = self.fname, format = formats.shell_format, buffering = 0,
+        return cls(name = self.fname, format = formats.shell_format, buffering = 1,
                    msg_buffer = msg_buffer, close_atexit=False)
                                          
     def test_sync(self):
