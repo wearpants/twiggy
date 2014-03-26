@@ -1,9 +1,11 @@
+from __future__ import print_function
 from .message import Message
 from .lib import iso8601time
 import twiggy as _twiggy
-import levels
-import outputs
-import formats
+from . import levels
+from . import outputs
+from . import formats
+from .compat import iteritems
 
 import warnings
 import sys
@@ -138,14 +140,14 @@ class InternalLogger(BaseLogger):
         try:
             try:
                 msg = Message(level, format_spec, self._fields.copy(), self._options.copy(), args, kwargs)
-            except StandardError:
+            except Exception:
                 msg = None
                 raise
             else:
                 self.output.output(msg)
-        except StandardError:
-            print>>sys.stderr, iso8601time(), "Error in twiggy internal log! Something is serioulsy broken."
-            print>>sys.stderr, "Offending message:", repr(msg)
+        except Exception:
+            print(iso8601time(), "Error in twiggy internal log! Something is serioulsy broken.", file=sys.stderr)
+            print("Offending message:", repr(msg), file=sys.stderr)
             traceback.print_exc(file = sys.stderr)
 
 class Logger(BaseLogger):
@@ -230,19 +232,19 @@ class Logger(BaseLogger):
 
         try:
             if not self.filter(format_spec): return
-        except StandardError:
+        except Exception:
             _twiggy.internal_log.info("Error in Logger filtering with {0} on {1}", repr(self.filter), format_spec)
             # just continue emitting in face of filter error
 
         # XXX should we trap here too b/c of "Dictionary changed size during iteration" (or other rare errors?)
-        potential_emitters = [(name, emitter) for name, emitter in self._emitters.iteritems()
+        potential_emitters = [(name, emitter) for name, emitter in iteritems(self._emitters)
                               if level >= emitter.min_level]
 
         if not potential_emitters: return
 
         try:
             msg = Message(level, format_spec, self._fields.copy(), self._options.copy(), args, kwargs)
-        except StandardError:
+        except Exception:
             # XXX use .fields() instead?
             _twiggy.internal_log.info("Error formatting message level: {0!r}, format: {1!r}, fields: {2!r}, "\
                                       "options: {3!r}, args: {4!r}, kwargs: {5!r}",
@@ -254,7 +256,7 @@ class Logger(BaseLogger):
         for name, emitter in sorted(potential_emitters):
             try:
                 include = emitter.filter(msg)
-            except StandardError:
+            except Exception:
                 _twiggy.internal_log.info("Error filtering with emitter {0}. Filter: {1} Message: {2!r}",
                                           name, repr(emitter.filter), msg)
                 include = True # output anyway if error
@@ -264,5 +266,5 @@ class Logger(BaseLogger):
         for o in outputs:
             try:
                 o.output(msg)
-            except StandardError:
+            except Exception:
                 _twiggy.internal_log.warning("Error outputting with {0!r}. Message: {1!r}", o, msg)

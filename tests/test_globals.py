@@ -80,7 +80,7 @@ class GlobalsTestCase(unittest.TestCase):
     def test_quick_setup_file(self):
 
         fname = tempfile.mktemp()
-        print fname
+        print(fname)
         
         @self.addCleanup      
         def cleanup():

@@ -1,6 +1,8 @@
-import levels
 import fnmatch
 import re
+
+from . import levels
+from . import compat
 
 __re_type = type(re.compile('foo')) # XXX is there a canonical place for this?
 
@@ -11,7 +13,7 @@ def msg_filter(x):
         return lambda msg: True
     elif isinstance(x, bool):
         return lambda msg: x
-    elif isinstance(x, basestring):
+    elif isinstance(x, compat.string_types):
         return regex_wrapper(re.compile(x))
     elif isinstance(x, __re_type):
         return regex_wrapper(x)
