@@ -36,18 +36,18 @@ emit.critical = emit(levels.CRITICAL)
 class BaseLogger(object):
     """Base class for loggers"""
 
+    __slots__ = ['_fields', '_options', 'min_level', '__valid_options']
+    _message_cls = Message
 
-    __slots__ = ['_fields', '_options', 'min_level']
-
-    __valid_options = set(Message._default_options)
 
     def __init__(self, fields = None, options = None, min_level = None):
         """Constructor for internal module use only, basically.
 
         ``fields`` and ``options`` will be copied.
         """
+        self.__valid_options = set(self._message_cls._default_options)
         self._fields = fields.copy() if fields is not None else {}
-        self._options = options.copy() if options is not None else Message._default_options.copy()
+        self._options = options.copy() if options is not None else self._message_cls._default_options.copy()
         self.min_level = min_level if min_level is not None else levels.DEBUG
 
     def _clone(self):
@@ -137,7 +137,7 @@ class InternalLogger(BaseLogger):
         if level < self.min_level: return
         try:
             try:
-                msg = Message(level, format_spec, self._fields.copy(), self._options.copy(), args, kwargs)
+                msg = self._message_cls(level, format_spec, self._fields.copy(), self._options.copy(), args, kwargs)
             except StandardError:
                 msg = None
                 raise
@@ -241,7 +241,7 @@ class Logger(BaseLogger):
         if not potential_emitters: return
 
         try:
-            msg = Message(level, format_spec, self._fields.copy(), self._options.copy(), args, kwargs)
+            msg = self._message_cls(level, format_spec, self._fields.copy(), self._options.copy(), args, kwargs)
         except StandardError:
             # XXX use .fields() instead?
             _twiggy.internal_log.info("Error formatting message level: {0!r}, format: {1!r}, fields: {2!r}, "\
