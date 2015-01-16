@@ -2,6 +2,8 @@ Twiggy is a Pythonic logger.
 
 .. code-block:: pycon
 
+    >>> from twiggy import quick_setup, log
+    >>> quick_setup()
     >>> log.name('frank') \
     ...    .fields(number=42) \
     ...    .info('hello {who}, it's a {0} day',
