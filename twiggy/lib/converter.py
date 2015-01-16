@@ -1,5 +1,8 @@
 import copy
 
+from twiggy.compat import iterkeys
+
+
 class Converter(object):
     """Holder for `.ConversionTable` items
 
@@ -69,7 +72,7 @@ class ConversionTable(list):
         # XXX I could be much faster & efficient!
         # XXX I have written this pattern at least 10 times
         converts = set(x.key for x in self)
-        avail = set(d.iterkeys())
+        avail = set(iterkeys(d))
         required = set(x.key for x in self if x.required)
         missing = required - avail
 

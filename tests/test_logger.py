@@ -1,3 +1,4 @@
+import re
 import sys
 if sys.version_info >= (2, 7):
     import unittest
@@ -7,9 +8,9 @@ else:
     except ImportError:
         raise RuntimeError("unittest2 is required for Python < 2.7")
 import sys
-import StringIO
 
 from twiggy import logger, outputs, levels, filters
+from twiggy.compat import StringIO
 import twiggy as _twiggy
 
 class LoggerTestBase(object):
@@ -125,7 +126,7 @@ class InternalLoggerTest(LoggerTestBase, unittest.TestCase):
         assert log.min_level == self.log.min_level
 
     def test_trap_msg(self):
-        sio = StringIO.StringIO()
+        sio = StringIO()
 
         def cleanup(stderr):
             sys.stderr = stderr
@@ -152,7 +153,7 @@ class InternalLoggerTest(LoggerTestBase, unittest.TestCase):
 
         out = BorkedOutput(close_atexit = False)
 
-        sio = StringIO.StringIO()
+        sio = StringIO()
 
         def cleanup(stderr, output):
             sys.stderr = stderr
@@ -270,16 +271,16 @@ class LoggerTrapTestCase(unittest.TestCase):
         assert len(self.internal_messages) == 1
         m = self.internal_messages.pop()
         
-        print m.text
-        print m.traceback
-        print _twiggy.internal_log._options
+        print(m.text)
+        print(m.traceback)
+        print(_twiggy.internal_log._options)
         
         assert m.level == levels.INFO
         assert m.name == 'twiggy.internal'
         assert "Traceback" in m.traceback
         assert "THUNK" in m.traceback
         assert "Error in Logger filtering" in m.text
-        assert "<function bad_filter" in m.text
+        assert re.search("<function .*bad_filter", m.text)
                 
     def test_trap_bad_msg(self):
         def go_boom():
@@ -291,16 +292,16 @@ class LoggerTrapTestCase(unittest.TestCase):
         assert len(self.internal_messages) == 1
         m = self.internal_messages.pop()
         
-        print m.text
-        print m.traceback
-        print _twiggy.internal_log._options
+        print(m.text)
+        print(m.traceback)
+        print(_twiggy.internal_log._options)
         
         assert m.level == levels.INFO
         assert m.name == 'twiggy.internal'
         assert "Traceback" in m.traceback
         assert "BOOM" in m.traceback
         assert "Error formatting message" in m.text
-        assert "<function go_boom" in m.text
+        assert re.search("<function .*go_boom", m.text)
     
     def test_trap_output(self):
         class BorkedOutput(outputs.ListOutput):
@@ -331,11 +332,13 @@ class LoggerTrapTestCase(unittest.TestCase):
         assert len(self.internal_messages) == 1
         m = self.internal_messages.pop()
 
-        print m.text
-        print m.traceback
+        print(m.text)
+        print(m.traceback)
 
         assert m.level == levels.WARNING
-        assert "Error outputting with <tests.test_logger.BorkedOutput" in m.text
+        assert re.search(
+            "Error outputting with <tests.test_logger.*BorkedOutput",
+            m.text)
         assert "Traceback" in m.traceback
         assert "BORK" in m.traceback
         
@@ -375,12 +378,12 @@ class LoggerTrapTestCase(unittest.TestCase):
         assert len(self.internal_messages) == 1
         m = self.internal_messages.pop()
 
-        print m.text
-        print m.traceback
+        print(m.text)
+        print(m.traceback)
 
         assert m.level == levels.INFO
         assert "Error filtering with emitter before" in m.text
-        assert "<function go_boom" in m.text
+        assert re.search("<function .*go_boom", m.text)
         assert "Traceback" in m.traceback
         assert "BOOM" in m.traceback
         

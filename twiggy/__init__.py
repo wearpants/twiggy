@@ -3,11 +3,11 @@ import time
 import sys
 import os
 
-import logger
-import filters
-import formats
-import outputs
-import levels
+from . import logger
+from . import filters
+from . import formats
+from . import outputs
+from . import levels
 
 
 ## globals creation is wrapped in a function so that we can do sane testing

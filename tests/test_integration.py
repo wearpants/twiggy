@@ -1,3 +1,4 @@
+from __future__ import print_function
 import sys
 if sys.version_info >= (2, 7):
     import unittest
@@ -7,10 +8,10 @@ else:
     except ImportError:
         raise RuntimeError("unittest2 is required for Python < 2.7")
 import twiggy
-import StringIO
 import time
 
 from . import when
+from twiggy.compat import StringIO
 
 def fake_gmtime():
     return when
@@ -25,9 +26,9 @@ class IntegrationTestCase(unittest.TestCase):
         twiggy._del_globals()
 
     def test_integration(self):
-        everything = twiggy.outputs.StreamOutput(stream=StringIO.StringIO(), format=twiggy.formats.line_format)
-        out1 = twiggy.outputs.StreamOutput(stream=StringIO.StringIO(), format=twiggy.formats.line_format)
-        out2 = twiggy.outputs.StreamOutput(stream=StringIO.StringIO(), format=twiggy.formats.line_format)
+        everything = twiggy.outputs.StreamOutput(stream=StringIO(), format=twiggy.formats.line_format)
+        out1 = twiggy.outputs.StreamOutput(stream=StringIO(), format=twiggy.formats.line_format)
+        out2 = twiggy.outputs.StreamOutput(stream=StringIO(), format=twiggy.formats.line_format)
         
         twiggy.addEmitters(('*', twiggy.levels.DEBUG, None, everything),
                            ('first', twiggy.levels.INFO, None, out1),
@@ -48,13 +49,13 @@ class IntegrationTestCase(unittest.TestCase):
         except:
             twiggy.log.trace().critical("Went boom")
 
-        print "***************** everything **********************"
-        print everything.stream.getvalue(),
-        print "****************** out 1 **************************"
-        print out1.stream.getvalue(),
-        print "****************** out 2 **************************"
-        print out2.stream.getvalue(),       
-        print "***************************************************"
+        print("***************** everything **********************")
+        print(everything.stream.getvalue(), end=' ')
+        print("****************** out 1 **************************")
+        print(out1.stream.getvalue(), end=' ')
+        print("****************** out 2 **************************")
+        print(out2.stream.getvalue(), end=' ')       
+        print("***************************************************")
         
 
         # XXX this should really be done with a regex, but I'm feeling lazy
