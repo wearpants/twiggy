@@ -1,13 +1,15 @@
-sudo: false
 language: python
-python:
-  - 2.6
-  - 2.7
-  - pypy
-  - 3.3
-  - 3.4
-install: python setup.py install
-before_script:
-  - pip install pytest
-  - if [[ $TRAVIS_PYTHON_VERSION == '2.6' ]]; then pip install unittest2; fi
-script: TWIGGY_UNDER_TEST=1 py.test --tb=short -v tests/
+
+sudo: false
+env:
+  - TOXENV=py26
+  - TOXENV=py27
+  - TOXENV=py33
+  - TOXENV=py34
+  - TOXENV=pypy
+
+install:
+  - travis_retry pip install tox
+
+script:
+  - tox
