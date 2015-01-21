@@ -54,7 +54,7 @@ A ``twiggy_setup`` function should create ouputs and use the :func:`add_emitters
     >>> sorted(emitters.keys())
     ['alice', 'betty', 'brian.*']
 
-In this example, we create two log destinations: ``alice.log`` and ``bob.log``.  alice will recieve all messages, and bob will receive two sets of messages:
+In this example, we create two log destinations: ``alice.log`` and ``bob.log``.  alice will receive all messages, and bob will receive two sets of messages:
 
 * messages with the name field equal to ``betty`` and level >= ``INFO``
 * messages with the name field glob-matching ``brian.*``
