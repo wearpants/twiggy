@@ -1,3 +1,12 @@
+Twiggy
+=================================
+
+.. image:: https://img.shields.io/pypi/v/twiggy.svg
+    :target: https://pypi.python.org/pypi/twiggy
+
+.. image:: https://img.shields.io/travis/wearpants/twiggy.svg
+    :target: https://travis-ci.org/wearpants/twiggy
+
 Twiggy is a Pythonic logger.
 
 .. code-block:: python
