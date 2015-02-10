@@ -1,9 +1,10 @@
 Twiggy
 =================================
 
-.. image:: https://img.shields.io/pypi/v/twiggy.svg
-    :target: https://pypi.python.org/pypi/twiggy
-
+.. image:: https://pypip.in/version/twiggy/badge.svg?style=flat
+    :target: https://pypi.python.org/pypi/twiggy/
+    :alt: Latest Version
+    
 .. image:: https://img.shields.io/travis/wearpants/twiggy.svg
     :target: https://travis-ci.org/wearpants/twiggy
 
