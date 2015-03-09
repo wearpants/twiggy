@@ -4,6 +4,9 @@ import sys
 import traceback
 from string import Template
 
+from .compat import iteritems
+
+
 class Message(object):
     """A log message.  All attributes are read-only."""
 
@@ -60,11 +63,11 @@ class Message(object):
         ## and substituting into `format_spec`.
 
         ## call any callables
-        for k, v in fields.iteritems():
+        for k, v in iteritems(fields):
             if callable(v):
                 fields[k] = v()
 
-        for k, v in kwargs.iteritems():
+        for k, v in iteritems(kwargs):
             if callable(v):
                 kwargs[k] = v()
 

@@ -1,15 +1,19 @@
+from __future__ import print_function
 from .message import Message
 from .lib import iso8601time
 import twiggy as _twiggy
-import levels
-import outputs
-import formats
+from . import levels
+from . import outputs
+from . import formats
+from .compat import iteritems
 
 import warnings
 import sys
 import time
 import traceback
 from functools import wraps
+
+StandardError = Exception
 
 def emit(level):
     """a decorator that emits at `level <.LogLevel>` after calling the method. The method
@@ -138,8 +142,8 @@ class InternalLogger(BaseLogger):
             else:
                 self.output.output(msg)
         except StandardError:
-            print>>sys.stderr, iso8601time(), "Error in twiggy internal log! Something is serioulsy broken."
-            print>>sys.stderr, "Offending message:", repr(msg)
+            print(iso8601time(), "Error in twiggy internal log! Something is serioulsy broken.", file=sys.stderr)
+            print("Offending message:", repr(msg), file=sys.stderr)
             traceback.print_exc(file = sys.stderr)
 
 class Logger(BaseLogger):
@@ -229,7 +233,7 @@ class Logger(BaseLogger):
             # just continue emitting in face of filter error
 
         # XXX should we trap here too b/c of "Dictionary changed size during iteration" (or other rare errors?)
-        potential_emitters = [(name, emitter) for name, emitter in self._emitters.iteritems()
+        potential_emitters = [(name, emitter) for name, emitter in iteritems(self._emitters)
                               if level >= emitter.min_level]
 
         if not potential_emitters: return
