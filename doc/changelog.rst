@@ -13,6 +13,11 @@ Changelog
 - PEP8 name compliance
 - add logging_compat module for compatibility with stlib's logging
 
+0.4.7
+******************************
+*03/09/2015*
+- add missing classifiers to setup.py
+
 ******************************
 0.4.6
 ******************************
