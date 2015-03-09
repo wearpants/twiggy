@@ -16,8 +16,9 @@ Changelog
 ******************************
 0.4.6
 ******************************
-*XXX Unreleased*
+*03/09/2015*
 - also suppress newlines in fields output
+- Python 3 support
 
 ******************************
 0.4.5
