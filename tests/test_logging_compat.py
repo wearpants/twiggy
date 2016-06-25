@@ -2,11 +2,11 @@ import os
 import sys
 from unittest import TestCase
 
-def setup_module():
+def setUpModule():
     from twiggy import _populate_globals
     _populate_globals()
 
-def teardown_module():
+def tearDownModule():
     from twiggy import _del_globals
     _del_globals()
 
