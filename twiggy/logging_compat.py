@@ -132,7 +132,7 @@ class LoggingBridgeFormat(LineFormat):
 class LoggingBridgeOutput(Output):
     """
     usage:
-      twiggy.addEmitters(("spam", DEBUG, None, LoggingBridgeOutput()))
+      twiggy.add_emitters(("spam", DEBUG, None, LoggingBridgeOutput()))
     
     This output provides a translation between twiggy's:
       log.name("spam").info("eggs")

@@ -1,4 +1,4 @@
-__all__=['log', 'emitters', 'add_emitters', 'devel_log', 'filters', 'formats', 'outputs', 'levels', 'quick_setup', 'quickSetup']
+__all__=['log', 'emitters', 'add_emitters', 'addEmitters', 'devel_log', 'filters', 'formats', 'outputs', 'levels', 'quick_setup', 'quickSetup']
 import time
 import warnings
 import sys
@@ -63,7 +63,7 @@ def quick_setup(min_level=levels.DEBUG, file = None, msg_buffer = 0):
 
 def quickSetup(*args, **kwargs):
     warnings.warn(
-        "twiggy.quickSetup deprecated in favor of twiggy.quick_setup",
+        "twiggy.quickSetup is deprecated in favor of twiggy.quick_setup",
         DeprecationWarning, stacklevel=2)
     return quick_setup(*args, **kwargs)
 
@@ -73,3 +73,9 @@ def add_emitters(*tuples):
     """
     for name, min_level, filter, output in tuples:
         emitters[name] = filters.Emitter(min_level, filter, output)
+
+def addEmitters(*args, **kwargs):
+    warnings.warn(
+        "twiggy.addEmitters is deprecated in favor of twiggy.add_emitters",
+        DeprecationWarning, stacklevel=2)
+    return add_emitters(*args, **kwargs)
