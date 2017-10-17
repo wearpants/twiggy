@@ -22,8 +22,8 @@ Twiggy is a Pythonic logger.
     INFO:frank:number=42:hello world, it's a sunny day
 
 You should use Twiggy because it is awesome. For more information, read the
-`documentation <http://twiggy.wearpants.org>`_ or `see this blog post
-<http://blog.wearpants.org/meet-twiggy>`_.
+`documentation <https://twiggy.readthedocs.io/en/latest/>`_ or `see this blog post
+<https://wearpants.org/petecode/meet-twiggy/>`_.
 
 Note that `master` is currently in flux and may be broken. Please use the
 maint-0.4_ branch for stable development/forks.
