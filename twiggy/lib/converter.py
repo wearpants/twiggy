@@ -5,13 +5,16 @@ def same_value(v):
     """return the value unchanged"""
     return v
 
+
 def same_item(k, v):
     """return the item unchanged"""
     return k, v
 
+
 def drop(k, v):
     """return None, indicating the item should be dropped"""
     return None
+
 
 class Converter(object):
     """Holder for `.ConversionTable` items
@@ -24,7 +27,7 @@ class Converter(object):
 
     __slots__ = ['key', 'convert_value', 'convert_item', 'required']
 
-    def __init__(self, key, convert_value, convert_item, required = False):
+    def __init__(self, key, convert_value, convert_item, required=False):
         self.key = key
         self.convert_value = convert_value
         self.convert_item = convert_item
@@ -34,6 +37,7 @@ class Converter(object):
         # XXX perhaps poke around in convert_value/convert_item to see if we can extract a meaningful
         # `"some_string".format`? eh.
         return "<Converter({0!r})>".format(self.key)
+
 
 class ConversionTable(list):
     """Converts dictionaries using Converters"""
@@ -46,7 +50,8 @@ class ConversionTable(list):
         """
 
         super(ConversionTable, self).__init__([])
-        if seq is None: return
+        if seq is None:
+            return
         for i in seq:
             if isinstance(i, Converter):
                 self.append(i)
@@ -56,7 +61,6 @@ class ConversionTable(list):
                 self.add(**i)
             else:
                 raise ValueError("Bad converter: {0!r}".format(i))
-
         # XXX cache converts & requireds below
 
     @staticmethod

@@ -1,19 +1,23 @@
 import sys
+
+from twiggy.lib.converter import Converter, ConversionTable, same_item, same_value, drop
+
 if sys.version_info >= (2, 7):
     import unittest
 else:
-    try: 
+    try:
         import unittest2 as unittest
     except ImportError:
         raise RuntimeError("unittest2 is required for Python < 2.7")
-        
-from twiggy.lib.converter import Converter, ConversionTable, same_item, same_value, drop
+
 
 def conv_val(x):
     return x
 
+
 def conv_item(x, y):
     return x, y
+
 
 class HelperTestCase(unittest.TestCase):
 
@@ -27,16 +31,18 @@ class HelperTestCase(unittest.TestCase):
     def test_same_item(self):
         o1 = object()
         o2 = object()
-        
-        x1, x2 = same_item(o1, o2) 
+
+        x1, x2 = same_item(o1, o2)
         assert o1 is x1
         assert o2 is x2
+
 
 class ConverterTestCase(unittest.TestCase):
 
     def test_repr(self):
         c = Converter("pants", conv_val, conv_item)
         assert repr(c) == "<Converter('pants')>"
+
 
 class ConversionTableTestCase(unittest.TestCase):
 
@@ -112,13 +118,12 @@ class ConversionTableTestCase(unittest.TestCase):
 
     def test_get(self):
         c = Converter("pants", conv_val, conv_item)
-        
+
         ct = ConversionTable([c,
                               ("shirt", conv_val, conv_item, True)])
 
         assert ct.get("belt") is None
         assert ct.get("pants") is c
-
 
     def test_get_all_no_match(self):
         ct = ConversionTable([("pants", conv_val, conv_item),
@@ -132,30 +137,29 @@ class ConversionTableTestCase(unittest.TestCase):
         ct = ConversionTable([
             ("joe", "I wear {0}".format, conv_item),
             ("frank", "You wear {0}".format, conv_item)])
-        
+
         ct.generic_value = "Someone wears {0}".format
-        
-        d = ct.convert({'joe':'pants', 'frank':'shirt', 'bob':'shoes'})
+
+        d = ct.convert({'joe': 'pants', 'frank': 'shirt', 'bob': 'shoes'})
         self.assertDictEqual(d, {'joe': "I wear pants", 'frank': "You wear shirt", 'bob': "Someone wears shoes"})
 
     def test_drop(self):
         ct = ConversionTable([
             ("joe", "I wear {0}".format, conv_item),
             ("frank", "You wear {0}".format, lambda k, v: None)])
-        
-        ct.generic_item = drop
-        
-        d = ct.convert({'joe':'pants', 'frank':'shirt', 'bob':'shoes'})
-        assert d == {'joe': "I wear pants"}
 
+        ct.generic_item = drop
+
+        d = ct.convert({'joe': 'pants', 'frank': 'shirt', 'bob': 'shoes'})
+        assert d == {'joe': "I wear pants"}
 
     def test_generic(self):
         c = Converter("pants", conv_val, conv_item)
         ct = ConversionTable([c])
-        assert ct.convert({'shirt':42}) == {'shirt':42}
+        assert ct.convert({'shirt': 42}) == {'shirt': 42}
 
     def test_missing(self):
         c = Converter("pants", conv_val, conv_item, True)
         ct = ConversionTable([c])
         with self.assertRaises(ValueError):
-            ct.convert({'shirt':42}) == {'shirt':42}
+            ct.convert({'shirt': 42}) == {'shirt': 42}

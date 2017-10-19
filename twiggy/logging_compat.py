@@ -12,11 +12,8 @@ hijack interface:
   restore - for restoring the original logging module.
 
 logging bridge:
-  LoggingBridgeOutput - an output that bridges log messages to stdlib's logging.  
+  LoggingBridgeOutput - an output that bridges log messages to stdlib's logging.
 """
-__all__ = ["basicConfig", "hijack", "restore",
-           "getLogger", "root", "LoggingBridgeOutput"]
-
 import sys
 import logging as orig_logging
 from threading import Lock
@@ -27,30 +24,39 @@ from .outputs import Output
 from . import levels, log
 from .levels import DEBUG, INFO, WARNING, ERROR, CRITICAL, NOTICE, DISABLED
 
+
+__all__ = ["basicConfig", "hijack", "restore",
+           "getLogger", "root", "LoggingBridgeOutput"]
+
+
 def basicConfig(**kwargs):
     raise RuntimeError("Twiggy doesn't support logging's basicConfig")
+
 
 def hijack():
     """Replace the original module with the compatibility module."""
     sys.modules["logging"] = sys.modules[__name__]
 
+
 def restore():
     """Replace the compatibility module with the original module."""
     sys.modules["logging"] = orig_logging
 
+
 def log_func_decorator(level):
     def new_func(self, *args, **kwargs):
-        return self.log(level, *args, **kwargs)
+        return self.log(level, * args, ** kwargs)
     return new_func
+
 
 class FakeLogger(object):
     """
     This class emulates stlib's logging.Logger,
     it translates calls to twiggy's log system.
-    
+
     usage:
       getLogger("spam").error("eggs")
-    
+
     translates to:
       log.name("spam").error("eggs")
     """
@@ -95,10 +101,13 @@ class FakeLogger(object):
             raise ValueError("Unknown level: {0}".format(level))
         logger._emit(level, format_spec, args, kwargs)
 
+
 root = FakeLogger(log.options(style="percent"))
 
-_logger_cache = {} # name to logger
+_logger_cache = {}  # name to logger
 _logger_cache_lock = Lock()
+
+
 def getLogger(name=None):
     if name is not None:
         with _logger_cache_lock:
@@ -107,57 +116,60 @@ def getLogger(name=None):
         return _logger_cache[name]
     return root
 
-logging_bridge_converter = ConversionTable([('time', lambda x:x, drop),
-                                            ('name', lambda x:x, drop),
-                                            ('level', lambda x:x, drop)])
+
+logging_bridge_converter = ConversionTable([('time', lambda x: x, drop),
+                                            ('name', lambda x: x, drop),
+                                            ('level', lambda x: x, drop)])
 logging_bridge_converter.genericValue = str
 logging_bridge_converter.genericItem = "{0}={1}".format
 logging_bridge_converter.aggregate = ':'.join
+
 
 class LoggingBridgeFormat(LineFormat):
     """
     This logging bridge uses a converter that doesn't display a level, time and name.
     thats because users of stdlib's logging usually setup formatters that display this info.
     """
-    
+
     def __init__(self, *args, **kwargs):
-        super(LoggingBridgeFormat, self).__init__(conversion=logging_bridge_converter, 
-                                                  *args, **kwargs)
-    
+        super(LoggingBridgeFormat, self).__init__(conversion=logging_bridge_converter,
+                                                  * args, ** kwargs)
+
     def __call__(self, msg):
         return (super(LoggingBridgeFormat, self).__call__(msg),
                 msg.level,
                 msg.name)
 
+
 class LoggingBridgeOutput(Output):
     """
     usage:
       twiggy.add_emitters(("spam", DEBUG, None, LoggingBridgeOutput()))
-    
+
     This output provides a translation between twiggy's:
       log.name("spam").info("eggs")
     into logging's:
       logging.getLogger("spam").info("eggs")
 
-    We translate a logging level to a twiggy level by name or 
+    We translate a logging level to a twiggy level by name or
     by a fallback map. and get logging's logger by the name
     of twiggy's logger.
     """
 
-    # for levels in twiggy that aren't in stdlib's logging    
-    FALLBACK_MAP = { NOTICE : orig_logging.WARNING,
-                     DISABLED : orig_logging.NOTSET }
+    # for levels in twiggy that aren't in stdlib's logging
+    FALLBACK_MAP = {NOTICE: orig_logging.WARNING,
+                    DISABLED: orig_logging.NOTSET}
 
     def __init__(self, *args, **kwargs):
         super(LoggingBridgeOutput, self).__init__(format=LoggingBridgeFormat(),
-                                                  *args, **kwargs)
+                                                  * args, ** kwargs)
 
     def _open(self):
         pass
 
     def _close(self):
         pass
-    
+
     def _write(self, args):
         text, level, name = args
         logging_level = getattr(orig_logging, str(level), None)

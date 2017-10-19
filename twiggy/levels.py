@@ -2,6 +2,7 @@
 Levels include (increasing severity): ``DEBUG``, ``INFO``, ``NOTICE``, ``WARNING``, ``ERROR``, ``CRITICAL``, ``DISABLED``
 """
 
+
 class LogLevel(object):
     """A log level. Users should *not* create new instances.
 
@@ -20,7 +21,7 @@ class LogLevel(object):
         return self.__name
 
     def __repr__(self):
-        return "<LogLevel %s>"%self.__name
+        return "<LogLevel %s>" % self.__name
 
     def __lt__(self, other):
         if not isinstance(other, LogLevel):
@@ -61,9 +62,11 @@ class LogLevel(object):
     def __hash__(self):
         return hash(self.__value)
 
+
 def name2level(name):
     """return a `LogLevel` from a case-insensitve string"""
     return LogLevel._name2levels[name.upper()]
+
 
 DEBUG = LogLevel('DEBUG', 1)
 INFO = LogLevel('INFO', 2)

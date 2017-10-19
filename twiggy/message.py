@@ -1,10 +1,11 @@
-__all__ = ['Message']
-
 import sys
 import traceback
 from string import Template
 
 from six import iteritems
+
+
+__all__ = ['Message']
 
 
 class Message(object):
@@ -13,10 +14,9 @@ class Message(object):
     __slots__ = ['fields', 'suppress_newlines', 'traceback', 'text']
 
     #: default option values. Don't change these!
-    _default_options = {'suppress_newlines' : True,
-                        'trace' : None,
+    _default_options = {'suppress_newlines': True,
+                        'trace': None,
                         'style': 'braces'}
-
     # XXX I need a __repr__!
 
     def __init__(self, level, format_spec, fields, options,
@@ -34,7 +34,7 @@ class Message(object):
         self.suppress_newlines = options['suppress_newlines']
         self.fields['level'] = level
 
-        ## format traceback
+        # format traceback
         # XXX this needs some cleanup/branch consolidation
         trace = options['trace']
         if isinstance(trace, tuple) and len(trace) == 3:
@@ -56,18 +56,18 @@ class Message(object):
 
         style = options['style']
 
-        style_aliases = {'braces':'braces', 'dollar':'dollar',
-                'percent':'percent', '{}':'braces', '$':'dollar',
-                '%':'percent'}
+        style_aliases = {'braces': 'braces', 'dollar': 'dollar',
+                         'percent': 'percent', '{}': 'braces', '$': 'dollar',
+                         '%': 'percent'}
         try:
             style = style_aliases[style]
         except KeyError:
             raise ValueError("Bad format spec style {0!r}".format(style))
 
-        ## Populate `text` by calling callables in `fields`, `args` and `kwargs`,
-        ## and substituting into `format_spec`.
+        # Populate `text` by calling callables in `fields`, `args` and `kwargs`,
+        # and substituting into `format_spec`.
 
-        ## call any callables
+        # call any callables
         for k, v in iteritems(fields):
             if callable(v):
                 fields[k] = v()
@@ -78,7 +78,7 @@ class Message(object):
 
         args = tuple(v() if callable(v) else v for v in args)
 
-        ## substitute
+        # substitute
         if format_spec == '':
             self.text = ''
             return
