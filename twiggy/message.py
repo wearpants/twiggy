@@ -4,7 +4,8 @@ import sys
 import traceback
 from string import Template
 
-from .compat import iteritems
+from six import iteritems
+
 
 class Message(object):
     """A log message.  All attributes are read-only."""

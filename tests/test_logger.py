@@ -7,11 +7,12 @@ else:
         import unittest2 as unittest
     except ImportError:
         raise RuntimeError("unittest2 is required for Python < 2.7")
-import sys
 
-from twiggy import logger, outputs, levels, filters
-from twiggy.compat import StringIO
+from six import StringIO
+
 import twiggy as _twiggy
+from twiggy import logger, outputs, levels, filters
+
 
 class LoggerTestBase(object):
     """common tests for loggers"""

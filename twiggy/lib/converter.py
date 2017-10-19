@@ -1,6 +1,5 @@
 import copy
 
-from twiggy.compat import iterkeys
 
 def same_value(v):
     """return the value unchanged"""
@@ -83,7 +82,7 @@ class ConversionTable(list):
         # XXX I could be much faster & efficient!
         # XXX I have written this pattern at least 10 times
         converts = set(x.key for x in self)
-        avail = set(iterkeys(d))
+        avail = set(k for k in d)
         required = set(x.key for x in self if x.required)
         missing = required - avail
 

@@ -1,17 +1,20 @@
 from __future__ import print_function
-from .message import Message
-from .lib import iso8601time
-import twiggy as _twiggy
-from . import levels
-from . import outputs
-from . import formats
-from .compat import iteritems
 
-import warnings
 import sys
 import time
 import traceback
+import warnings
 from functools import wraps
+
+from six import iteritems
+
+import twiggy as _twiggy
+from . import formats
+from . import levels
+from . import outputs
+from .lib import iso8601time
+from .message import Message
+
 
 def emit(level):
     """a decorator that emits at `level <.LogLevel>` after calling the method. The method
