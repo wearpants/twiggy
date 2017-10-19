@@ -75,7 +75,7 @@ class ConversionTableTestCase(unittest.TestCase):
 
     def test_init_bad(self):
         with self.assertRaises(ValueError):
-            ct = ConversionTable(['oops'])
+            ConversionTable(['oops'])
 
     def test_copy(self):
         ct = ConversionTable([("pants", conv_val, conv_item),

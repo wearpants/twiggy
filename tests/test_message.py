@@ -166,7 +166,7 @@ and shirt'''
         opts['style'] = 'dollar'
 
         with self.assertRaises(ValueError):
-            m = Message(twiggy.levels.DEBUG,
+            Message(twiggy.levels.DEBUG,
                         "Hello $who",
                         {},
                         opts,
@@ -207,7 +207,7 @@ and shirt'''
         opts['style'] = 'percent'
 
         with self.assertRaises(ValueError):
-            m = Message(twiggy.levels.DEBUG,
+            Message(twiggy.levels.DEBUG,
                         "Hello %s %(who)s",
                         {},
                         opts,
@@ -262,7 +262,7 @@ and shirt'''
         opts['trace'] = 'kaboom'
 
         with self.assertRaises(ValueError):
-            m = Message(twiggy.levels.DEBUG,
+            Message(twiggy.levels.DEBUG,
                 "Hello {0} {who}",
                 {'shirt': lambda: 42, 'name': 'jose'},
                 opts,

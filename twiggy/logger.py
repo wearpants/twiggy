@@ -1,7 +1,6 @@
 from __future__ import print_function
 
 import sys
-import time
 import traceback
 import warnings
 from functools import wraps
@@ -9,9 +8,7 @@ from functools import wraps
 from six import iteritems
 
 import twiggy as _twiggy
-from . import formats
 from . import levels
-from . import outputs
 from .lib import iso8601time
 from .message import Message
 
