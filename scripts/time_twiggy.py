@@ -19,4 +19,4 @@ log=twiggy.log.name('donjuan')
 """))
 os.remove(fname)
 
-print "{0:.3f} sec for {1:n} loops".format(t, loops)
+print("{0:.3f} sec for {1:n} loops".format(t, loops))

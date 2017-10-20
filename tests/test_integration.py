@@ -1,7 +1,6 @@
 from __future__ import print_function
 
 import sys
-import time
 if sys.version_info >= (2, 7):
     import unittest
 else:

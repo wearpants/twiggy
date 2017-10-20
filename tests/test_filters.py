@@ -9,7 +9,7 @@ else:
 
 import re
 
-from twiggy import filters, message, levels
+from twiggy import filters, levels
 
 from . import make_mesg
 
@@ -59,7 +59,7 @@ class MsgFilterTestCase(unittest.TestCase):
 
     def test_bad_arg(self):
         with self.assertRaises(ValueError):
-            f = filters.msg_filter(42)
+            filters.msg_filter(42)
 
     def test_list(self):
         re1 = "^Hello.*$"

@@ -43,7 +43,7 @@ class LoggerTestBase(object):
 
     def test_bad_options(self):
         with self.assertRaises(ValueError):
-            log = self.log.options(boom=True)
+            self.log.options(boom=True)
 
     def test_trace(self):
         log = self.log.trace('error')
@@ -196,7 +196,7 @@ class LoggerTestCase(LoggerTestBase, unittest.TestCase):
     
     def test_struct_dict(self):
         d={42:42}
-        log = self.log.struct_dict(d)
+        self.log.struct_dict(d)
         assert len(self.messages) == 1
         m = self.messages.pop()
         self.assertDictContainsSubset(d, m.fields)
@@ -208,7 +208,7 @@ class LoggerTestCase(LoggerTestBase, unittest.TestCase):
         # in test_clone, but that's starting to get redundant
 
     def test_fields(self):
-        log = self.log.struct(x=42)
+        self.log.struct(x=42)
         assert len(self.messages) == 1
         m = self.messages.pop()
         self.assertDictContainsSubset({'x':42}, m.fields)

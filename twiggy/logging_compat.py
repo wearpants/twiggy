@@ -25,7 +25,7 @@ from .lib.converter import ConversionTable, drop
 from .formats import LineFormat
 from .outputs import Output
 from . import levels, log
-from .levels import *
+from .levels import DEBUG, INFO, WARNING, ERROR, CRITICAL, NOTICE, DISABLED
 
 def basicConfig(**kwargs):
     raise RuntimeError("Twiggy doesn't support logging's basicConfig")
