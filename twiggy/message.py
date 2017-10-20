@@ -23,11 +23,13 @@ class Message(object):
                  args, kwargs):
         """
         :arg LogLevel level: the level of the message
-        :arg string format_spec: the human-readable message template. Should match the ``style`` in options.
+        :arg string format_spec: the human-readable message template. Should match the ``style``
+            in options.
         :arg dict fields: dictionary of fields for :ref:`structured logging <structured-logging>`
         :arg tuple args: substitution arguments for ``format_spec``.
         :arg dict kwargs: substitution keyword arguments for ``format_spec``.
-        :arg dict options: a dictionary of :ref:`options <message-options>` to control message creation.
+        :arg dict options: a dictionary of :ref:`options <message-options>` to control message
+            creation.
         """
 
         self.fields = fields

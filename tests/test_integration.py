@@ -32,13 +32,14 @@ class IntegrationTestCase(unittest.TestCase):
         twiggy._del_globals()
 
     def test_integration(self):
-        everything = twiggy.outputs.StreamOutput(stream=StringIO(), format=twiggy.formats.line_format)
+        all_ = twiggy.outputs.StreamOutput(stream=StringIO(), format=twiggy.formats.line_format)
         out1 = twiggy.outputs.StreamOutput(stream=StringIO(), format=twiggy.formats.line_format)
         out2 = twiggy.outputs.StreamOutput(stream=StringIO(), format=twiggy.formats.line_format)
 
-        twiggy.add_emitters(('*', twiggy.levels.DEBUG, None, everything),
+        twiggy.add_emitters(('*', twiggy.levels.DEBUG, None, all_),
                             ('first', twiggy.levels.INFO, None, out1),
-                            ('second', twiggy.levels.DEBUG, twiggy.filters.glob_names('second.*'), out2),
+                            ('second', twiggy.levels.DEBUG,
+                             twiggy.filters.glob_names('second.*'), out2),
                             ('first-filter', twiggy.levels.DEBUG, ".*pants.*", out1))
 
         def something():
@@ -55,8 +56,8 @@ class IntegrationTestCase(unittest.TestCase):
         except:
             twiggy.log.trace().critical("Went boom")
 
-        print("***************** everything **********************")
-        print(everything.stream.getvalue(), end=' ')
+        print("****************** all_ ***************************")
+        print(all_.stream.getvalue(), end=' ')
         print("****************** out 1 **************************")
         print(out1.stream.getvalue(), end=' ')
         print("****************** out 2 **************************")
@@ -72,9 +73,8 @@ class IntegrationTestCase(unittest.TestCase):
 2010-10-28T02:15:57Z:CRITICAL|Went boom
 TRACE Traceback (most recent call last):
 """)
-        exception_line_re = re.compile(r'TRACE   File'
-                                       ' "/[^"]*/tests/test_integration.py",'
-                                       ' line [0-9]+,')
+        exception_line_re = re.compile(r'TRACE   File "/[^"]*/tests/test_integration.py",'
+                                       r' line [0-9]+,')
         assert exception_line_re.search(out1.stream.getvalue())
         assert out1.stream.getvalue().endswith(
             """TRACE     raise RuntimeError("Oh Noes!")

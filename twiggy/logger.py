@@ -126,7 +126,10 @@ class BaseLogger(object):
 
 
 class InternalLogger(BaseLogger):
-    """Special-purpose logger for internal uses. Sends messages directly to output, bypassing :data:`.emitters`.
+    """
+    Special-purpose logger for internal uses
+
+    Sends messages directly to output, bypassing :data:`.emitters`.
 
     :ivar `Output` output: an output to write to
     """
@@ -148,14 +151,16 @@ class InternalLogger(BaseLogger):
             return
         try:
             try:
-                msg = Message(level, format_spec, self._fields.copy(), self._options.copy(), args, kwargs)
+                msg = Message(level, format_spec, self._fields.copy(), self._options.copy(),
+                              args, kwargs)
             except Exception:
                 msg = None
                 raise
             else:
                 self.output.output(msg)
         except Exception:
-            print(iso8601time(), "Error in twiggy internal log! Something is seriously broken.", file=sys.stderr)
+            print(iso8601time(), "Error in twiggy internal log! Something is seriously broken.",
+                  file=sys.stderr)
             print("Offending message:", repr(msg), file=sys.stderr)
             traceback.print_exc(file=sys.stderr)
 
@@ -175,7 +180,8 @@ class Logger(BaseLogger):
         :arg func: the function to add
         :arg string name: the name to add it under. If None, use the function's name.
         """
-        warnings.warn("Use of features is currently discouraged, pending refactoring", RuntimeWarning)
+        warnings.warn("Use of features is currently discouraged, pending refactoring",
+                      RuntimeWarning)
         name = name if name is not None else func.__name__
         setattr(cls, name, func)
 
@@ -187,7 +193,8 @@ class Logger(BaseLogger):
 
         :arg string name: the name of the feature to disable.
         """
-        warnings.warn("Use of features is currently discouraged, pending refactoring", RuntimeWarning)
+        warnings.warn("Use of features is currently discouraged, pending refactoring",
+                      RuntimeWarning)
         # get func directly from class dict - we don't want an unbound method.
         setattr(cls, name, cls.__dict__['_feature_noop'])
 
@@ -197,7 +204,8 @@ class Logger(BaseLogger):
 
         :arg string name: the name of the feature to remove
         """
-        warnings.warn("Use of features is currently discouraged, pending refactoring", RuntimeWarning)
+        warnings.warn("Use of features is currently discouraged, pending refactoring",
+                      RuntimeWarning)
         delattr(cls, name)
 
     def __init__(self, fields=None, options=None, emitters=None,
@@ -247,10 +255,12 @@ class Logger(BaseLogger):
             if not self.filter(format_spec):
                 return
         except Exception:
-            _twiggy.internal_log.info("Error in Logger filtering with {0} on {1}", repr(self.filter), format_spec)
+            _twiggy.internal_log.info("Error in Logger filtering with {0} on {1}",
+                                      repr(self.filter), format_spec)
             # just continue emitting in face of filter error
 
-            # XXX should we trap here too b/c of "Dictionary changed size during iteration" (or other rare errors?)
+            # XXX should we trap here too b/c of "Dictionary changed size during iteration" (or
+            # other rare errors?)
         potential_emitters = [(name, emitter) for name, emitter in iteritems(self._emitters)
                               if level >= emitter.min_level]
 
@@ -258,11 +268,12 @@ class Logger(BaseLogger):
             return
 
         try:
-            msg = Message(level, format_spec, self._fields.copy(), self._options.copy(), args, kwargs)
+            msg = Message(level, format_spec, self._fields.copy(), self._options.copy(),
+                          args, kwargs)
         except Exception:
             # XXX use .fields() instead?
-            _twiggy.internal_log.info("Error formatting message level: {0!r}, format: {1!r}, fields: {2!r}, "
-                                      "options: {3!r}, args: {4!r}, kwargs: {5!r}",
+            _twiggy.internal_log.info("Error formatting message level: {0!r}, format: {1!r},"
+                                      " fields: {2!r}, options: {3!r}, args: {4!r}, kwargs: {5!r}",
                                       level, format_spec, self._fields, self._options, args, kwargs)
             return
 
@@ -272,8 +283,8 @@ class Logger(BaseLogger):
             try:
                 include = emitter.filter(msg)
             except Exception:
-                _twiggy.internal_log.info("Error filtering with emitter {0}. Filter: {1} Message: {2!r}",
-                                          name, repr(emitter.filter), msg)
+                _twiggy.internal_log.info("Error filtering with emitter {0}. Filter: {1}"
+                                          " Message: {2!r}", name, repr(emitter.filter), msg)
                 include = True  # output anyway if error
 
             if include:

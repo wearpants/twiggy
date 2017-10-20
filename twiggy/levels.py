@@ -1,5 +1,6 @@
 """
-Levels include (increasing severity): ``DEBUG``, ``INFO``, ``NOTICE``, ``WARNING``, ``ERROR``, ``CRITICAL``, ``DISABLED``
+Levels include (increasing severity): ``DEBUG``, ``INFO``, ``NOTICE``, ``WARNING``, ``ERROR``,
+``CRITICAL``, ``DISABLED``
 """
 
 

@@ -141,7 +141,9 @@ class ConversionTableTestCase(unittest.TestCase):
         ct.generic_value = "Someone wears {0}".format
 
         d = ct.convert({'joe': 'pants', 'frank': 'shirt', 'bob': 'shoes'})
-        self.assertDictEqual(d, {'joe': "I wear pants", 'frank': "You wear shirt", 'bob': "Someone wears shoes"})
+        self.assertDictEqual(d, {'joe': "I wear pants",
+                                 'frank': "You wear shirt",
+                                 'bob': "Someone wears shoes"})
 
     def test_drop(self):
         ct = ConversionTable([

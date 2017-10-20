@@ -45,7 +45,14 @@ def regex_wrapper(regexp):
 
 
 def names(*names):
-    """returns a filter, which gives True if the messsage's name equals any of those provided"""
+    """
+    Returns a filter which matches message names against exact strings
+
+    :args names: Any number of arguments are accepted.  Each one should be a string which can
+        exactly match a message's name.
+    :returns: A filter function.  The function returns True if the msg name is the same as one of
+        the names provided here.
+    """
     names_set = set(names)
 
     def set_names_filter(msg):
@@ -55,7 +62,14 @@ def names(*names):
 
 
 def glob_names(*names):
-    """returns a filter, which gives True if the messsage's name globs those provided."""
+    """
+    Return a filter which matches message names based on a list of globs
+
+    :args names: Any number of arguments are accepted.  Each one should be a glob pattern which can
+        match a message's name.
+    :returns: A filter function.  The function returns True if the msg name matches one of the glob
+        patterns provided here.
+    """
     # copied from fnmatch.fnmatchcase - for speed
     patterns = [re.compile(fnmatch.translate(pat)) for pat in names]
 

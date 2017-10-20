@@ -21,7 +21,7 @@ class Converter(object):
 
     :ivar key: the key to apply the conversion to
     :ivar function convert_value: one-argument function to convert the value
-    :ivar function convert_item: two-argument function converting the key & converted value
+    :ivar function convert_item: two-argument function converting the key and converted value
     :ivar bool required: is the item required to present. Items are optional by default.
     """
 
@@ -34,8 +34,8 @@ class Converter(object):
         self.required = required
 
     def __repr__(self):
-        # XXX perhaps poke around in convert_value/convert_item to see if we can extract a meaningful
-        # `"some_string".format`? eh.
+        # XXX perhaps poke around in convert_value/convert_item to see if we can extract
+        # a meaningful `"some_string".format`? eh.
         return "<Converter({0!r})>".format(self.key)
 
 
@@ -46,7 +46,8 @@ class ConversionTable(list):
         """
         :arg seq: a sequence of Converters
 
-        You may also pass 3-or-4 item arg tuples or kwarg dicts (which will be used to create `Converters <.Converter>`)
+        You may also pass 3-or-4 item arg tuples or kwarg dicts (which will be used to create
+        `Converters <.Converter>`)
         """
 
         super(ConversionTable, self).__init__([])
@@ -122,7 +123,11 @@ class ConversionTable(list):
         return [c for c in self if c.key == key]
 
     def add(self, *args, **kwargs):
-        """Append a `.Converter`. ``args`` & ``kwargs`` will be passed through to its constructor"""
+        """
+        Append a `.Converter`.
+
+        ``args`` & ``kwargs`` will be passed through to its constructor
+        """
         self.append(Converter(*args, **kwargs))
 
     def delete(self, key):

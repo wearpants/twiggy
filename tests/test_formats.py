@@ -24,7 +24,8 @@ class ConversionsTestCase(unittest.TestCase):
 
     def test_line_conversion(self):
         d = self.fields.copy()
-        assert formats.line_format.conversion.convert(d) == '2010-10-28T02:15:57Z:INFO:mylog:pants=42'
+        assert formats.line_format.conversion.convert(d) == \
+            '2010-10-28T02:15:57Z:INFO:mylog:pants=42'
 
         del d['pants']
         assert formats.line_format.conversion.convert(d) == '2010-10-28T02:15:57Z:INFO:mylog'
@@ -64,7 +65,8 @@ class FormatTestCase(unittest.TestCase):
         assert my_format.separator == formats.line_format.separator
         assert my_format.traceback_prefix == formats.line_format.traceback_prefix
 
-        # XXX it'd be nice to test the guts of the conversion for equality, but Converters don't support that
+        # XXX it'd be nice to test the guts of the conversion for equality, but
+        # Converters don't support that
         assert my_format.conversion is not formats.line_format.conversion
 
     def test_basic(self):
@@ -87,7 +89,8 @@ class FormatTestCase(unittest.TestCase):
         msg = message.Message(levels.INFO, "I wear {0}\nDo you?", fields, opts, ['pants'], {})
         s = fmt(msg)
 
-        assert s == '2010-10-28T02:15:57Z:INFO:mylog:pants=42:shirt=extra\\nlarge|I wear pants\\nDo you?\n', repr(s)
+        assert s == '2010-10-28T02:15:57Z:INFO:mylog:pants=42:shirt=extra\\nlarge|' \
+            'I wear pants\\nDo you?\n', repr(s)
 
     def test_suppress_newline_false(self):
 
@@ -100,7 +103,8 @@ class FormatTestCase(unittest.TestCase):
         opts['suppress_newlines'] = False
         msg = message.Message(levels.INFO, "I wear {0}\nDo you?", fields, opts, ['pants'], {})
         s = fmt(msg)
-        assert s == '2010-10-28T02:15:57Z:INFO:mylog:pants=42:shirt=extra\nlarge|I wear pants\nDo you?\n', repr(s)
+        assert s == '2010-10-28T02:15:57Z:INFO:mylog:pants=42:shirt=extra\nlarge|' \
+            'I wear pants\nDo you?\n', repr(s)
 
     def test_trace(self):
 
@@ -124,7 +128,8 @@ class FormatTestCase(unittest.TestCase):
 
     def test_trace_fold(self):
 
-        fmt = formats.LineFormat(separator='|', traceback_prefix='\\n', conversion=formats.line_conversion)
+        fmt = formats.LineFormat(separator='|', traceback_prefix='\\n',
+                                 conversion=formats.line_conversion)
 
         opts = message.Message._default_options.copy()
         opts['trace'] = 'error'

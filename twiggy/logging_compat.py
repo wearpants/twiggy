@@ -3,16 +3,19 @@ This module allows replacing stdlib's logging module with twiggy,
 it implements the following interface:
 
 logging's interface:
-  getLogger - returns a logger that supports debug/info/error etc'.
-  root - the root logger.
-  basicConfig - raises an Exception.
+
+    :getLogger: returns a logger that supports debug/info/error etc'.
+    :root: the root logger.
+    :basicConfig: raises an Exception.
 
 hijack interface:
-  hijack - for 'import logging' to import twiggy.
-  restore - for restoring the original logging module.
+
+    :hijack: for 'import logging' to import twiggy.
+    :restore: for restoring the original logging module.
 
 logging bridge:
-  LoggingBridgeOutput - an output that bridges log messages to stdlib's logging.
+
+    :LoggingBridgeOutput: an output that bridges log messages to stdlib's logging.
 """
 import sys
 import logging as orig_logging
@@ -127,13 +130,13 @@ logging_bridge_converter.aggregate = ':'.join
 
 class LoggingBridgeFormat(LineFormat):
     """
-    This logging bridge uses a converter that doesn't display a level, time and name.
-    thats because users of stdlib's logging usually setup formatters that display this info.
+    This logging bridge uses a converter that doesn't display a level, time and name.  That's
+    because users of stdlib's logging usually setup formatters that display this info.
     """
 
     def __init__(self, *args, **kwargs):
         super(LoggingBridgeFormat, self).__init__(conversion=logging_bridge_converter,
-                                                  * args, ** kwargs)
+                                                  *args, **kwargs)
 
     def __call__(self, msg):
         return (super(LoggingBridgeFormat, self).__call__(msg),

@@ -17,7 +17,8 @@ class Output(object):
     def __init__(self, format=None, close_atexit=True):
         """
         :arg format format: the format to use. If None, return the message unchanged.
-        :arg bool close_atexit: should :meth:`.close` be registered with :mod:`atexit`. If False, the user is responsible for closing the output.
+        :arg bool close_atexit: should :meth:`.close` be registered with :mod:`atexit`. If False,
+            the user is responsible for closing the output.
         """
         self._format = format if format is not None else self._noop_format
         self._sync_init()
