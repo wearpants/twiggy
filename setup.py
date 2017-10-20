@@ -20,6 +20,7 @@ setup(name='Twiggy',
       author_email='pete@wearpants.org',
       url='http://twiggy.wearpants.org',
       packages=['twiggy', 'twiggy.lib', 'twiggy.features'],
+      install_requires=['six'],
       license = "BSD",
       classifiers = [
       "Topic :: System :: Logging",

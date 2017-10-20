@@ -1,5 +1,7 @@
 from __future__ import print_function
+
 import sys
+import time
 if sys.version_info >= (2, 7):
     import unittest
 else:
@@ -7,11 +9,13 @@ else:
         import unittest2 as unittest
     except ImportError:
         raise RuntimeError("unittest2 is required for Python < 2.7")
+
+from six import StringIO
+
 import twiggy
-import time
 
 from . import when
-from twiggy.compat import StringIO
+
 
 def fake_gmtime():
     return when
