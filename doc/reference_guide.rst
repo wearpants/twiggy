@@ -19,7 +19,7 @@ Any functions in message args/fields are called and the value substitued.
     >>> thread_name()
     'MainThread'
     >>> log.fields(pid=os.getpid).info("I'm in thread {0}", thread_name)
-    INFO:pid=...:I'm in thread MainThread
+    INFO:pid=...|I'm in thread MainThread
 
 This can be useful with partially-bound loggers, which lets us do some cool stuff. Here's a proxy class that logs which thread accesses attributes.
 
@@ -74,7 +74,7 @@ Features!
     >>> s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     >>> s.connect(('www.python.org', 80))
     >>> log.socket(s).debug("connected")
-    DEBUG:host=dinsdale.python.org:ip_addr=82.94.164.162:port=80:service=www|connected
+    DEBUG:host=...:ip_addr=...:port=80:service=http|connected
     >>> # turn off the feature - the name is still available
     ... log.disableFeature('socket')
     >>> log.socket(s).debug("connected")
@@ -82,7 +82,7 @@ Features!
     >>> # use a different implementation
     ... log.addFeature(socket_feature.socket_minimal, 'socket')
     >>> log.socket(s).debug("connected")
-    DEBUG:ip_addr=82.94.164.162:port=80|connected
+    DEBUG:ip_addr=...:port=80|connected
 
 .. _never-raises:
 
@@ -223,7 +223,7 @@ Features can also emit messages as usual.  Do not return from these methods.::
 
 .. _wsgi-support:
 
-If the feature should add fields *and* emit in the same step (like :meth:`.struct`), use the :func:`.emit` decorators.  Here's a prototype feature that dumps information about a `WSGI environ <http://www.python.org/dev/peps/pep-0333/#environ-variables>`_.::
+If the feature should add fields *and* emit in the same step (like :meth:`.struct`), use the :func:`.emit` decorators.  Here's a prototype feature that dumps information about a `WSGI environ <https://www.python.org/dev/peps/pep-0333/#environ-variables>`_.::
 
     from twiggy.logger import emit
 
@@ -305,7 +305,7 @@ The :attr:`format <.Output._format>` callable is Output-specific; it should take
     conversion.generic_item = "{0}={1}".format
     
     # convert!
-    print conversion.convert(fields)
+    print(conversion.convert(fields))
 
 .. testoutput::
 

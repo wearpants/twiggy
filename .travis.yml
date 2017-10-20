@@ -26,6 +26,8 @@ matrix:
       env: TOXENV=py3pyflakes
     - python: 2.7
       env: TOXENV=py2pyflakes
+    - python: 3.6
+      env: TOXENV=doc
 
 install:
   - travis_retry pip install tox
