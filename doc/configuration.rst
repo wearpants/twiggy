@@ -4,15 +4,29 @@ Configuring Output
 
 .. currentmodule:: twiggy
 
-This part discusses how to configure twiggy's output of messages.  You should do this once, near the start of your application's ``__main__``.
+This part discusses how to configure twiggy's output of messages.  You should do this once, near the
+start of your application's ``__main__``.  It's particularly important to set up Twiggy *before
+spawning new processes*.
+
+.. _quick-setup:
 
 *******************
 Quick Setup
 *******************
-To quickly configure output, use the `quick_setup` function.  Quick setup is limited to sending all messages to a file or ``sys.stderr``.  A timestamp will be prefixed when logging to a file.
 
-.. autofunction:: quick_setup
-    :noindex:
+:func:`quick_setup` quickly configures output with reasonable defaults and minimal customizability.
+Use it when you don't need a lot of customizability or as the default configuration that the user
+can override via configuration and if you use :ref:`dict_config`.
+
+The defaults will emit log messages of ``DEBUG`` level or higher to ``stderr``:
+
+.. testcode:: quick-setup
+
+    from twiggy import quick_setup
+    quick_setup()
+
+.. seealso:: The API docs for complete information on :func:`quick_setup`'s parameters.
+
 
 .. _twiggy-setup:
 
@@ -24,11 +38,21 @@ twiggy_setup.py
     from twiggy import emitters
     emitters.clear()
 
-Twiggy's output side features modern, loosely coupled design.
+Twiggy's output side features modern, loosely coupled design.  The easiest way to understand what
+that means is to look at how to configure twiggy programmatically.
 
-By convention, your configuration lives in a file in your application called ``twiggy_setup.py``, in a function called ``twiggy_setup()``. You can of course put your configuration elsewhere, but using a separate module makes integration with configuration management systems easy.  You should import and run ``twiggy_setup`` near the top of your application.  It's particularly important to set up Twiggy *before spawning new processes*.
+.. note::
+    In the past, the convention was to configure twiggy programmatically in a separate file in your
+    application called ``twiggy_setup.py`` in a function called ``twiggy_setup()``.  This allowed
+    sites to override the configuration via their configuration management systems by replacing the
+    file.  In Twiggy 0.5 and later, the :ref:`dict_config` function provides a more natural way
+    for you to let user's override the logging configuration using a config file so you don't have
+    to follow the naming convention if you use :ref:`dict_config` for your users.
 
-A ``twiggy_setup`` function should create ouputs and use the :func:`add_emitters` convenience function to link those outputs to the :data:`log`.
+Programmatically configuring Twiggy involves creating an :ref:`output <outputs>` which defines where the log
+messages will be sent and then creating an :class:`.Emitter` which associates a subset of your
+application's logs with the output.  Here's what an example ``twiggy_setup()`` function would look
+like:
 
 .. testcode:: twiggy-setup
 
@@ -47,17 +71,29 @@ A ``twiggy_setup`` function should create ouputs and use the :func:`add_emitters
     # near the top of your __main__
     twiggy_setup()
 
-:func:`add_emitters` populates the :data:`emitters` dictionary:
+In this example, we create two log :ref:`outputs`: ``alice_output`` and ``bob_output``.  These
+outputs are :class:`twiggy.outputs.FileOutput`s.  They tell twiggy to write messages directed to
+that output into the named file.  In this case, ``alice.log`` and ``bob.log``.  All outputs have
+a formatter associated with them.  The formatter is responsible for turning Twiggy's
+:ref:`structured-logging` calls into a suitable form for the output.  In this example, both
+``alice_output`` and ``bob_output`` use :func:`twiggy.formats.line_format` to format their
+messages.
+
+:class:`.Emitters` associate :ref:`outputs` with a set of messages via :mod:`.levels` and
+:ref:`filters`.  Here we configure three emitters to two outputs.  ``alice_output`` will receive all
+messages and ``bob_output`` will receive two sets of messages:
+
+* messages with the name field equal to ``betty`` and level >= ``INFO``
+* messages with the name field glob-matching ``brian.*``
+
+The convenience function, :func:`add_emitters`, takes the emitter information as a tuple of emitter
+name, minimum log level, optional filters, and the output that the logs should be written to.  It
+creates the :class:`.Emitters` from that information and populates the :data:`emitters` dictionary:
 
 .. doctest:: twiggy-setup
 
     >>> sorted(emitters.keys())
     ['alice', 'betty', 'brian.*']
-
-In this example, we create two log destinations: ``alice.log`` and ``bob.log``.  alice will receive all messages, and bob will receive two sets of messages:
-
-* messages with the name field equal to ``betty`` and level >= ``INFO``
-* messages with the name field glob-matching ``brian.*``
 
 :class:`Emitters <.Emitter>` can be removed by deleting them from this dict. :attr:`~.Emitter.filter` and :attr:`~.Emitter.min_level` may be modified during the running of the application, but outputs *cannot* be changed.  Instead, remove the emitter and re-add it.
 
@@ -70,7 +106,12 @@ In this example, we create two log destinations: ``alice.log`` and ``bob.log``. 
     >>> # remove entirely
     ... del emitters['alice']
 
-We'll examine the various parts in more detail.
+We'll examine the various parts in more detail below.
+
+.. note:: Remember to import and run ``twiggy_setup`` near the top of your application.
+
+
+.. _outputs:
 
 **************************
 Outputs
@@ -85,6 +126,8 @@ Many outputs can be configured to use a separate, dedicated process to log messa
 
 .. warning: There is a slight, but non-zero, chance that messages may be lost if something goes awry with the child process.
 
+.. _formats:
+
 *********************
 Formats
 *********************
@@ -95,7 +138,7 @@ Line-oriented formatting
 :class:`.LineFormat` formats messages for text-oriented outputs such as a file or standard error. It uses a `.ConversionTable` to stringify the arbitrary fields in a message. To customize, copy the default :data:`.line_format` and modify:
 
 .. testsetup:: line-format
-    
+
     from twiggy import *
     emitters.clear()
 
@@ -111,6 +154,9 @@ Line-oriented formatting
 
     # output messages with name 'memory' to stderr
     add_emitters(('memory', levels.DEBUG, filters.names('memory'), outputs.StreamOutput(format = my_format)))
+
+
+.. _filters:
 
 ***************************
 Filtering Output
@@ -133,3 +179,223 @@ The messages output by an emitter are determined by its :attr:`~.Emitter.min_lev
     e.filter = ["^mem.y$", lambda msg: msg.fields['address'] > 0xDECAF]
 
 .. seealso:: Available :mod:`.filters`
+
+
+.. _dict_config:
+
+*******************
+dict_config()
+*******************
+.. testsetup:: dict_config
+
+    from twiggy import emitters
+    emitters.clear()
+
+Twiggy 0.5 features a new convenience method, :func:`.dict_config` for configuring
+:class:`Emitters <.Emitter>`.  It lets you specify configuration as a dictionary with the
+configuration information and then pass the dictionary to :func:`twiggy.dict_config` to set things
+up.  The dictionary can be constructed programmatically, loaded from a configuration file, or
+hardcoded into an application.  This allows the programmer to easily set defaults and allow the user
+to override those from a configuration file.  Here's an example:
+
+.. testcode:: dict_config
+
+    from twiggy import dict_config
+
+    twiggy_config = {'version': '1.0',
+                     'outputs': {
+                        'alice_output': {
+                            'output': 'twiggy.outputs.FileOutput',
+                            'args': ['alice.log']
+                        },
+                        'bob_output': {
+                            'output': 'twiggy.outputs.FileOutput',
+                            'args': ['bob.log'],
+                            'format': 'twiggy.formats.line_format'
+                        }
+                     },
+                     'emitters': {
+                        'alice': {
+                            'level': 'DEBUG',
+                            'output_name': 'alice_output'
+                        },
+                        'betty': {
+                            'level': 'INFO',
+                            'filters': [ {
+                                'filter': 'twiggy.filters.names',
+                                'args': ['betty']
+                                }
+                            ],
+                            'output_name': 'bob_output'
+                        },
+                        'brian.*': {
+                            'level': 'DEBUG',
+                            'filters': [ {
+                                'filter': 'twiggy.filters.glob_names',
+                                'args': ['brian.*']
+                                }
+                            ],
+                            'output_name': 'bob_output'
+                        }
+                    }
+                }
+
+    dict_config(twiggy_config)
+
+In this example, the programmer creates a twiggy configuration in the application's code and uses it
+to configure twiggy.  The configuration closely mirrors the objects that were created in the
+:ref:`twiggy-setup` section.  The ``outputs`` field contains definitions of ``alice_output`` and
+``bob_output`` that write to the ``alice.log`` and ``bob.log`` files respectively.  The ``emitters``
+field defines three emitters, their levels and filters to output to the 
+
+The configuration should be done near the start of your application.  It's
+particularly important to set up Twiggy *before spawning new processes*.
+
+With this configuration, :func:`twiggy.dict_config` will create two log destinations (:ref:`outputs`):
+``alice.log`` and ``bob.log``.  These :ref:`outputs` are  then associated with the set of messages
+that they will receive in the ``emitters`` section.  :file:`alice.log` will receive all messages and
+:file:`bob.log` will receive two sets of messages:
+
+* messages with the name field equal to ``betty`` and level >= ``INFO``
+* messages with the name field glob-matching ``brian.*``
+
+See the :ref:`twiggy_config_schema` documentation for details of what each of the fields in the
+configuration dictionary mean.
+
+
+User Overrides
+==============
+
+Each site that runs an application is likely to have different views on where they want the
+application to log to.  With Twiggy's `dict_config` it is easy to let the user override the
+configuration specified by the program.  For instance, the application could have a yaml
+configuration file with a ``logging_config`` section which contains a Twiggy Config.  Allowing the
+site to override the default with the configuration from the config file is as simple as running
+this code after loading the defaults::
+
+    import yaml
+    config = yaml.safe_load('config_file.yml')
+    if 'logging_config' in config:
+        try:
+            twiggy.dict_config(config['logging_config'])
+        except Exception as e:
+            print('User provided logging configuration was flawed: {0}'.format(e))
+
+
+.. _twiggy_config_schema:
+
+Twiggy Config Schema
+====================
+
+The dict taken by :func:`twiggy.dict_config` may contain the following keys:
+
+version
+    Set to the value representing the schema version as a string.  Currently, the only valid value
+    is "1.0".
+
+incremental
+    (*Optional*) If True, the dictionary will update any existing configuration.  If False, this
+    will override any existing configuration.  This allows user defined logging configuration to
+    decide whether to override the logging configuration set be the application or merely supplement
+    it.  The default is False.
+
+outputs
+    (*Optional*) Mapping of output names to outputs. Outputs consist of
+
+    output
+        A :class:`twiggy.outputs.Output` or the string representation with which to import
+        a :class:`~twiggy.outputs.Output`.  For instance, to use the builtin,
+        :class:`twiggy.outputs.FileOutput` either set output directly to the class or the string
+        ``twiggy.outputs.FileOutput``.
+
+    args
+        (*Optional*) A list of arguments to pass to the :class:`Twiggy.outputs.Output` class
+        constructor.  For instance, :class:`~twiggy.outputs.FileOutput` takes the filename of a file
+        to log to.  So ``args`` could be set to: ``["logfile.log"]``.
+
+    kwargs
+        (*Optional*) A dict of keyword arguments to pass to the :class:`Twiggy.outputs.Output` class
+        constructor.  For instance, :class:`~twiggy.outputs.StreamOutput` takes a stream as
+        a keyword argument so ``kwargs`` could be set to: ``{"stream": "ext://sys.stdout"}``.
+
+    format
+        (*Optional*) A formatter function which transforms the log message for the output.  This can
+        either be a string name of the formatter of the formatter itself. The default is
+        :func:`twiggy.formats.line_format`
+
+    If both ``outputs`` and ``emitters`` are None and `incremental` is False then
+    :data:`twiggy.emitters` will be cleared.
+
+emitters
+    (*Optional*) Mapping of emitter names to emitters.  Emitters consist of:
+
+    level
+        String name of the log level at which log messages will be passed to this emitter.
+        May be one of (In order of severity) ``CRITICAL``, ``ERROR``, ``WARNING``, ``NOTICE``,
+        ``INFO``, ``DEBUG``, ``DISABLED``.
+
+    output_name
+        The name of an output in this configuration dict.
+
+    filters
+        (*Optional*) A list of filters which filter out messages which will go to this emitter.
+        Each filter is a mapping which consists of:
+
+        filter
+            Name for a twiggy filter function.  This can either be a string name for the function or
+            the function itself.
+
+        args
+            (*Optional*) A list of arguments to pass to the :class:`Twiggy.outputs.Output` class
+            constructor.  For instance, :class:`~twiggy.outputs.FileOutput` takes the filename of a file
+            to log to.  So ``args`` could be set to: ``["logfile.log"]``.
+
+        kwargs
+            (*Optional*) A dict of keyword arguments to pass to the :class:`Twiggy.outputs.Output` class
+            constructor.  For instance, :class:`~twiggy.outputs.StreamOutput` takes a stream as
+            a keyword argument so ``kwargs`` could be set to: ``{"stream": "ext://sys.stdout"}``.
+
+    If both ``emitters`` and ``output`` are None and `incremental` is False then
+    :data:`twiggy.emitters` will be cleared.
+
+Sometimes you want to have an entry in ``args`` or ``kwargs`` that is a python object.  For
+instance, :class:`~twiggy.outputs.StreamOutput` takes a stream keyword argument so you may want to
+give ``sys.stdout`` to it.  If you are writing the configuration in Python code you can simply
+include the actual object in the field.  However, if you are writing in a text configuration file,
+you need another way to specify this.  Twiggy allows you to prefix the string with ``ext://`` in
+this case.  When Twiggy sees that the string starts with ``ext://`` it will strip off the prefix and
+then try to import an object with the rest of the name.
+
+Here's an example config that you might find in a YAML config file:
+
+.. code-block:: yaml
+
+    version: '1.0'
+    outputs:
+        alice_output:
+            output: 'twiggy.outputs.FileOutput'
+            args:
+                - 'alice.log'
+        bob_output:
+            output: 'twiggy.outputs.StreamOutput'
+            kwargs:
+                stream: 'ext://sys.stdout'
+            format: 'twiggy.formats.line_format'
+    emitters:
+        alice:
+            level: 'DEBUG'
+            output_name: 'alice_output'
+        betty:
+            level: 'INFO'
+            filters:
+                filter: 'twiggy.filters.names'
+                args:
+                    - 'betty'
+            output_name: 'bob_output'
+        brian.*:
+            levels: 'DEBUG'
+            filters:
+                filter: 'twiggy.filters.glob_names'
+                args:
+                    -'brian.*'
+            output_name: 'bob_output'

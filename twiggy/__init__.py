@@ -8,10 +8,11 @@ from . import filters
 from . import formats
 from . import outputs
 from . import levels
+from .lib.validators import _validate_config
 
 
 __all__ = ['log', 'emitters', 'add_emitters', 'addEmitters', 'devel_log', 'filters', 'formats',
-           'outputs', 'levels', 'quick_setup', 'quickSetup']
+           'outputs', 'levels', 'quick_setup', 'quickSetup', 'dict_config']
 
 
 # globals creation is wrapped in a function so that we can do sane testing
@@ -54,6 +55,10 @@ if not os.environ.get('TWIGGY_UNDER_TEST', None):  # pragma: no cover
 def quick_setup(min_level=levels.DEBUG, file=None, msg_buffer=0):
     """Quickly set up `emitters`.
 
+    quick_setup() quickly sets up logging with reasonable defaults and minimal customizablity.
+    Quick setup is limited to sending all messages to a file, ``sys.stdout`` or ``sys.stderr``.
+    A timestamp will be prefixed when logging to a file.
+
     :arg `.LogLevel` min_level: lowest message level to cause output
     :arg string file: filename to log to, or ``sys.stdout``, or ``sys.stderr``.  ``None`` means
         standard error.
@@ -77,6 +82,47 @@ def quickSetup(*args, **kwargs):
         "twiggy.quickSetup is deprecated in favor of twiggy.quick_setup",
         DeprecationWarning, stacklevel=2)
     return quick_setup(*args, **kwargs)
+
+
+def dict_config(config):
+    """
+    Configure twiggy logging via a dictionary
+
+    :arg config: a dictionary which configures twiggy's outputs and emitters.  See
+        :attr:`TWIGGY_CONFIG_SCHEMA` for details of the format of the dict.
+
+    .. seealso:: :ref:`dict_config` for a thorough explaination of the outputs and emitters
+        concepts from the dictionary
+
+    .. versionadded: 0.5
+    """
+    try:
+        cfg = _validate_config(config)
+    except ValueError as e:
+        internal_log.warning("Error parsing twiggy setup: {0}", e)
+        # XXX Looks like twiggy does not generate fatal errors on setup.  Instead it generates
+        # errors on usage. (If this changes, could re-raise exception here)
+        return
+
+    cfg_outputs = {}
+    for name, output in cfg['outputs'].items():
+        output['kwargs']['format'] = output['format']
+        cfg_outputs[name] = output['output'](*output['args'], **output['kwargs'])
+
+    cfg_emitters = []
+    for name, emitter in cfg['emitters'].items():
+        if not emitter['filters']:
+            filters = None
+        else:
+            filters = []
+            for filter_ in emitter['filters']:
+                filters.append(filter_['filter'](*filter_['args'], **filter_['kwargs']))
+
+        cfg_emitters.append((name, emitter['level'], filters, cfg_outputs[emitter['output_name']]))
+
+    if not cfg['incremental']:
+        emitters.clear()
+    add_emitters(*cfg_emitters)
 
 
 def add_emitters(*tuples):
