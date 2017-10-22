@@ -5,35 +5,39 @@ def same_value(v):
     """return the value unchanged"""
     return v
 
+
 def same_item(k, v):
     """return the item unchanged"""
     return k, v
 
+
 def drop(k, v):
     """return None, indicating the item should be dropped"""
     return None
+
 
 class Converter(object):
     """Holder for `.ConversionTable` items
 
     :ivar key: the key to apply the conversion to
     :ivar function convert_value: one-argument function to convert the value
-    :ivar function convert_item: two-argument function converting the key & converted value
+    :ivar function convert_item: two-argument function converting the key and converted value
     :ivar bool required: is the item required to present. Items are optional by default.
     """
 
     __slots__ = ['key', 'convert_value', 'convert_item', 'required']
 
-    def __init__(self, key, convert_value, convert_item, required = False):
+    def __init__(self, key, convert_value, convert_item, required=False):
         self.key = key
         self.convert_value = convert_value
         self.convert_item = convert_item
         self.required = required
 
     def __repr__(self):
-        # XXX perhaps poke around in convert_value/convert_item to see if we can extract a meaningful
-        # `"some_string".format`? eh.
+        # XXX perhaps poke around in convert_value/convert_item to see if we can extract
+        # a meaningful `"some_string".format`? eh.
         return "<Converter({0!r})>".format(self.key)
+
 
 class ConversionTable(list):
     """Converts dictionaries using Converters"""
@@ -42,11 +46,13 @@ class ConversionTable(list):
         """
         :arg seq: a sequence of Converters
 
-        You may also pass 3-or-4 item arg tuples or kwarg dicts (which will be used to create `Converters <.Converter>`)
+        You may also pass 3-or-4 item arg tuples or kwarg dicts (which will be used to create
+        `Converters <.Converter>`)
         """
 
         super(ConversionTable, self).__init__([])
-        if seq is None: return
+        if seq is None:
+            return
         for i in seq:
             if isinstance(i, Converter):
                 self.append(i)
@@ -56,7 +62,6 @@ class ConversionTable(list):
                 self.add(**i)
             else:
                 raise ValueError("Bad converter: {0!r}".format(i))
-
         # XXX cache converts & requireds below
 
     @staticmethod
@@ -118,7 +123,11 @@ class ConversionTable(list):
         return [c for c in self if c.key == key]
 
     def add(self, *args, **kwargs):
-        """Append a `.Converter`. ``args`` & ``kwargs`` will be passed through to its constructor"""
+        """
+        Append a `.Converter`.
+
+        ``args`` & ``kwargs`` will be passed through to its constructor
+        """
         self.append(Converter(*args, **kwargs))
 
     def delete(self, key):

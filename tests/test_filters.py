@@ -1,22 +1,23 @@
 import sys
-if sys.version_info >= (2, 7):
-    import unittest
-else:
-    try: 
-        import unittest2 as unittest
-    except ImportError:
-        raise RuntimeError("unittest2 is required for Python < 2.7")
-
 import re
 
 from twiggy import filters, levels
 
 from . import make_mesg
 
+if sys.version_info >= (2, 7):
+    import unittest
+else:
+    try:
+        import unittest2 as unittest
+    except ImportError:
+        raise RuntimeError("unittest2 is required for Python < 2.7")
+
+
 m = make_mesg()
 
-class MsgFilterTestCase(unittest.TestCase):
 
+class MsgFilterTestCase(unittest.TestCase):
     # XXX more robust testing of the exact type/func.__name__ of the returned f
     # might be nice (instead of just callable), but eh.
 
@@ -52,10 +53,13 @@ class MsgFilterTestCase(unittest.TestCase):
         assert callable(f)
         assert not f(m)
 
+    @staticmethod
+    def _always_true(mesg):
+        return True
+
     def test_callable(self):
-        my_func = lambda mesg: True
-        f = filters.msg_filter(my_func)
-        assert f is my_func
+        f = filters.msg_filter(self._always_true)
+        assert f is self._always_true
 
     def test_bad_arg(self):
         with self.assertRaises(ValueError):
@@ -68,7 +72,7 @@ class MsgFilterTestCase(unittest.TestCase):
         f = filters.msg_filter(l)
         assert callable(f)
         assert f(m)
-        
+
         re3 = "^.*Sillyhead$"
         l = (re1, re3)
         f = filters.msg_filter(l)
@@ -83,7 +87,7 @@ class MsgFilterTestCase(unittest.TestCase):
         f = filters.msg_filter(l)
         assert callable(f)
         assert f(m)
-        
+
     def test_single_list(self):
         re1 = "^Hello.*$"
         l = [re1]
@@ -107,6 +111,7 @@ class namesTestCase(unittest.TestCase):
 
         assert filters.glob_names("jo*", "frank")(m)
         assert not filters.glob_names("*bob", "frank")(m)
+
 
 class EmitterTestCase(unittest.TestCase):
 
