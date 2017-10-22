@@ -28,3 +28,14 @@ install:
 
 script:
   - tox
+
+deploy:
+  provider: pypi
+  distributions: "sdist bdist_wheel"
+  on:
+    branch: master
+    tags: true
+  server: https://test.pypi.org/legacy/
+  user: twiggy-uploader
+  password:
+    secure: V+SEJ++XHtLQGTpuoIm1jIKzCAnSQIuEt8G26YsCkWiZPifUIkfGT4UutGUh+dU0qZu2GOZPY4kpO0UdZvZrPaj1545krBJX3TMgnL0Z6l8Pj0fzQB6Z8/NDZKpNsaZAOcyXP02rXoodeFJrxT4DBUjqZgd6UutxQdlMzsNiurCcTnQTWUrvBm9WTbSIwHO41Go8Ay3E33s2Q6BvyB8DDEzh4YzqWHJU0Vo5tKS/i5zGXNBSCMopeP8VoYisfmYg6mCqBwa03siokKeBk3Zwp1TQcG19Egz8wzLoUNY56HTD/CCTo+7wt/ryOC8bjrxVVAV5WzETf6J4XXEuOYaoOlazccHA/nGKL2pDrFDXdR+J3+mclUESk8Feh01XpYBPfRNkJgVyCQm/c1C43VlFd6aZEiZFNjWb4iwnYEd951gf4NmLoQWM9H11sQPLHDCvEYCJdDdtgVU4Hy6JQrkXZYfPXWHq8D8JlPU42oWp4MIVlr4zFXDIoKYjpSAGJO20NmuSmE3lFdYpNcJWUo2cTFKb2M+KLkd49aCWrCrjAnM5WYyucjzv0VoHBBF+i2zGx9mPfzgWSFxqtJQAW2lv4KkIc0sENSDZvR5vMVvOnhiUuaKgQdotzEfnNXh0ojHS8qCxB1Ux6KKwYR54nX0vX/XdI03msdJKy1QB4nkrvdc=

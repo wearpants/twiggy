@@ -1,6 +1,10 @@
 #!/usr/bin/env python
 
-from distutils.core import setup
+try:
+    # Have to use setuptools to build wheels
+    from setuptools import setup
+except ImporError:
+    from distutils.core import setup
 import os.path
 import sys
 
