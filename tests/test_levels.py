@@ -1,14 +1,15 @@
 import sys
+
+from twiggy import levels
+
 if sys.version_info >= (2, 7):
     import unittest
 else:
-    try: 
+    try:
         import unittest2 as unittest
     except ImportError:
         raise RuntimeError("unittest2 is required for Python < 2.7")
-import sys
 
-from twiggy import levels
 
 class LevelTestCase(unittest.TestCase):
 
@@ -76,13 +77,13 @@ class LevelTestCase(unittest.TestCase):
         assert levels.DISABLED != levels.CRITICAL
 
     def test_dict_key(self):
-        d={levels.DEBUG:42}
+        d = {levels.DEBUG: 42}
         assert d[levels.DEBUG] == 42
 
     def test_bogus_not_equals(self):
         assert levels.DEBUG != 1
 
-    @unittest.skipIf(sys.version_info < (3,), "Python 2.x comparisons are insane")
+    @unittest.skipIf(sys.version_info < (3, ), "Python 2.x comparisons are insane")
     def test_bogus_compare(self):
         # XXX is there a comparable test for 2.x?
         with self.assertRaises(TypeError):

@@ -1,24 +1,27 @@
 import sys
 from unittest import TestCase
 
+
 def setUpModule():
     from twiggy import _populate_globals
     _populate_globals()
+
 
 def tearDownModule():
     from twiggy import _del_globals
     _del_globals()
 
+
 class HijackTest(TestCase):
 
     def compare_modules(self, m1, m2):
         self.failUnlessEqual(m1.__name__, m2.__name__)
-        
+
     def verify_orig(self):
         import logging
         from twiggy.logging_compat import orig_logging
         self.compare_modules(logging, orig_logging)
-        
+
     def verify_comp(self):
         import logging
         from twiggy import logging_compat
@@ -39,12 +42,13 @@ class HijackTest(TestCase):
         restore()
         self.verify_orig()
 
+
 class TestGetLogger(TestCase):
-    
+
     def test_name(self):
         from twiggy.logging_compat import getLogger
         self.failUnlessEqual(getLogger("spam")._logger._fields["name"], "spam")
-    
+
     def test_root(self):
         from twiggy.logging_compat import getLogger, root
         self.failUnlessEqual(getLogger(), root)
@@ -53,9 +57,10 @@ class TestGetLogger(TestCase):
         from twiggy.logging_compat import getLogger
         eggs = getLogger("eggs")
         self.failUnless(getLogger("eggs") is eggs)
-        
+
+
 class TestFakeLogger(TestCase):
-    
+
     def setUp(self):
         from twiggy import add_emitters
         from twiggy.logging_compat import getLogger, DEBUG
@@ -71,13 +76,13 @@ class TestFakeLogger(TestCase):
         for level in [INFO, ERROR]:
             self.logger.setLevel(level)
             self.failUnlessEqual(self.logger.level, level)
-            
+
     def test_percent(self):
         self.failUnlessEqual(self.logger._logger._options["style"], "percent")
 
     def test_exception(self):
         try:
-            1/0
+            1 / 0
         except:
             self.logger.exception("spam")
         self.failUnless("ZeroDivisionError" in self.messages[0].traceback)
@@ -95,11 +100,11 @@ class TestFakeLogger(TestCase):
 
     def test_log_exc_info(self):
         try:
-            1/0
+            1 / 0
         except:
             self.logger.error("exception", exc_info=True)
         self.failUnless("ZeroDivisionError" in self.messages[0].traceback)
-        
+
     def test_basicConfig(self):
         from twiggy.logging_compat import basicConfig
         self.failUnlessRaises(RuntimeError, basicConfig)
@@ -113,9 +118,10 @@ class TestFakeLogger(TestCase):
 
     def test_log_bad_level(self):
         self.failUnlessRaises(ValueError, self.logger.log, "illegal level", "eggs")
-        
+
+
 class TestLoggingBridge(TestCase):
-    
+
     def test_format(self):
         from twiggy import add_emitters
         from twiggy import log
@@ -127,7 +133,7 @@ class TestLoggingBridge(TestCase):
         add_emitters(("spam", DEBUG, None, list_output))
         logger.error("eggs")
         self.failUnlessEqual(messages[0], ('|eggs\n', ERROR, 'spam'))
-        
+
     def test_sanity(self):
         from twiggy import add_emitters, log
         from twiggy.logging_compat import LoggingBridgeOutput, DEBUG
