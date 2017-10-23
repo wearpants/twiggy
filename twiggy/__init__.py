@@ -47,7 +47,7 @@ def _del_globals():
     del __fields, log, emitters, __internal_format, __internal_output, internal_log, devel_log
 
 
-if 'TWIGGY_UNDER_TEST' not in os.environ:  # pragma: no cover
+if not os.environ.get('TWIGGY_UNDER_TEST', None):  # pragma: no cover
     _populate_globals()
 
 

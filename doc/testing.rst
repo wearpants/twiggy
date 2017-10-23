@@ -13,11 +13,11 @@ The following need to be installed prior to testing:
 
 * Python 2.7.1 or greater.
 
-* The `coverage <http://pypi.python.org/pypi/coverage>`_ module.
+* The `coverage <https://pypi.python.org/pypi/coverage>`_ module.
 
-* `sphinx <http://sphinx.pocoo.org/>`_ 1.0.8 or greater. You'll need to get and build the `sphinx source <https://bitbucket.org/birkenfeld/sphinx/>`_.
+* `sphinx <http://www.sphinx-doc.org/en/stable/>`_ 1.0.8 or greater. You'll need to get and build the `sphinx source <https://bitbucket.org/birkenfeld/sphinx/>`_.
 
-* `Twiggy source <http://hg.wearpants.org/twiggy/>`_.
+* `Twiggy source <https://github.com/wearpants/twiggy/>`_.
 
 *******************
 Running Tests

@@ -34,12 +34,12 @@ It works out of the box, using typical :mod:`.levels`. Arbitrary levels are *not
     >>> log.error('OMFG! Pants on fire!')
     ERROR|OMFG! Pants on fire!
 
-The log can handle messages in several styles of :ref:`format strings<alternate-styles>`, defaulting to `new-style <http://docs.python.org/library/string.html#format-string-syntax>`_.
+The log can handle messages in several styles of :ref:`format strings<alternate-styles>`, defaulting to `new-style <https://docs.python.org/3/library/string.html#format-string-syntax>`_.
 
 .. doctest:: magic-log
 
     >>> log.info('I wear {0} on my {where}', 'pants', where='legs')
-    INFO:I wear pants on my legs
+    INFO|I wear pants on my legs
 
 You can name your loggers.
 
@@ -77,7 +77,8 @@ Exceptions are prefixed by ``TRACE``. By default, :meth:`tracing <.trace>` will 
     WARNING|oh noes
     TRACE Traceback (most recent call last):
     TRACE   File "<doctest better-output[...]>", line 2, in <module>
-    TRACE ZeroDivisionError: integer division or modulo by zero
+    TRACE     1/0
+    TRACE ZeroDivisionError: division by zero
 
 .. seealso:: :ref:`How to fold exceptions to a single line<folding-exceptions>`
 
@@ -98,7 +99,7 @@ It makes :term:`structured logging` easy. In the past, fielded data was stuffed 
 .. doctest:: structured-logging
 
     >>> log.info('Going for a walk. path: {0} roads: {1}', "less traveled", 42)
-    INFO:Going for a walk. path: less traveled roads: 42
+    INFO|Going for a walk. path: less traveled roads: 42
 
 Instead, you can use :meth:`.fields` to add arbitrary key-value pairs.  Output is easily parseable.
 
