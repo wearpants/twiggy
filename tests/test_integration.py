@@ -53,7 +53,7 @@ class IntegrationTestCase(unittest.TestCase):
 
         try:
             raise RuntimeError("Oh Noes!")
-        except:
+        except RuntimeError:
             twiggy.log.trace().critical("Went boom")
 
         print("****************** all_ ***************************")

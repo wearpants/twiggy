@@ -83,7 +83,7 @@ class TestFakeLogger(TestCase):
     def test_exception(self):
         try:
             1 / 0
-        except:
+        except ZeroDivisionError:
             self.logger.exception("spam")
         self.failUnless("ZeroDivisionError" in self.messages[0].traceback)
 
@@ -101,7 +101,7 @@ class TestFakeLogger(TestCase):
     def test_log_exc_info(self):
         try:
             1 / 0
-        except:
+        except ZeroDivisionError:
             self.logger.error("exception", exc_info=True)
         self.failUnless("ZeroDivisionError" in self.messages[0].traceback)
 

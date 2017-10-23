@@ -115,16 +115,16 @@ class FormatTestCase(unittest.TestCase):
 
         try:
             1 / 0
-        except:
+        except ZeroDivisionError:
             msg = message.Message(levels.INFO, "I wear {0}", self.fields, opts, ['pants'], {})
 
         s = fmt(msg)
-        l = s.split('\n')
-        assert len(l) == 6
-        for i in l[1:-1]:
+        lines = s.split('\n')
+        assert len(lines) == 6
+        for i in lines[1:-1]:
             assert i.startswith('TRACE')
 
-        assert l[0] == '2010-10-28T02:15:57Z:INFO:mylog:pants=42|I wear pants'
+        assert lines[0] == '2010-10-28T02:15:57Z:INFO:mylog:pants=42|I wear pants'
 
     def test_trace_fold(self):
 
@@ -136,9 +136,9 @@ class FormatTestCase(unittest.TestCase):
 
         try:
             1 / 0
-        except:
+        except ZeroDivisionError:
             msg = message.Message(levels.INFO, "I wear {0}", self.fields, opts, ['pants'], {})
 
         s = fmt(msg)
-        l = s.split('\n')
-        assert len(l) == 2
+        lines = s.split('\n')
+        assert len(lines) == 2

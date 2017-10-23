@@ -68,14 +68,14 @@ class MsgFilterTestCase(unittest.TestCase):
     def test_list(self):
         re1 = "^Hello.*$"
         re2 = "^.*Funnypants$"
-        l = [re1, re2]
-        f = filters.msg_filter(l)
+        filter_list = [re1, re2]
+        f = filters.msg_filter(filter_list)
         assert callable(f)
         assert f(m)
 
         re3 = "^.*Sillyhead$"
-        l = (re1, re3)
-        f = filters.msg_filter(l)
+        filter_tuple = (re1, re3)
+        f = filters.msg_filter(filter_tuple)
         assert callable(f)
         assert not f(m)
 
@@ -83,15 +83,15 @@ class MsgFilterTestCase(unittest.TestCase):
         # not encouraged as it's equivalent, but let's support it anyway
         re1 = "^Hello.*$"
         re2 = "^.*Funnypants$"
-        l = [re1, [re2]]
-        f = filters.msg_filter(l)
+        filter_list = [re1, [re2]]
+        f = filters.msg_filter(filter_list)
         assert callable(f)
         assert f(m)
 
     def test_single_list(self):
         re1 = "^Hello.*$"
-        l = [re1]
-        f = filters.msg_filter(l)
+        filter_list = [re1]
+        f = filters.msg_filter(filter_list)
         assert callable(f)
         assert f(m)
 

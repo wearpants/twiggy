@@ -37,7 +37,7 @@ class FileOutputTestCase(unittest.TestCase):
     def tearDown(self):
         try:
             os.remove(self.fname)
-        except:
+        except Exception:
             pass
 
         del self.fname
