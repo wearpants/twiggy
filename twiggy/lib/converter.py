@@ -94,19 +94,19 @@ class ConversionTable(list):
         if missing:
             raise ValueError("Missing fields {0}".format(list(missing)))
 
-        l = []
+        item_list = []
         for c in self:
             if c.key in d:
                 item = c.convert_item(c.key, c.convert_value(d[c.key]))
                 if item is not None:
-                    l.append(item)
+                    item_list.append(item)
 
         for key in sorted(avail - converts):
             item = self.generic_item(key, self.generic_value(d[key]))
             if item is not None:
-                l.append(item)
+                item_list.append(item)
 
-        return self.aggregate(l)
+        return self.aggregate(item_list)
 
     def copy(self):
         """make an independent copy of this ConversionTable"""

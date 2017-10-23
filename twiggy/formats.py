@@ -48,9 +48,9 @@ class LineFormat(object):
         """format the traceback part of a message"""
         if msg.traceback is not None:
             # XXX this could be faster
-            l = msg.traceback.split('\n')
-            l = [""] + l[:-1]
-            return self.traceback_prefix.join(l)
+            lines = msg.traceback.split('\n')
+            lines = [""] + lines[:-1]
+            return self.traceback_prefix.join(lines)
         else:
             return ""
 

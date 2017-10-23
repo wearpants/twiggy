@@ -106,13 +106,13 @@ class ConversionTableTestCase(unittest.TestCase):
         ct = ConversionTable([c1, c2, c3])
 
         assert ct.get('pants') is c1
-        l = ct.get_all('pants')
-        assert l[0] is c1
-        assert l[1] is c2
+        item_list = ct.get_all('pants')
+        assert item_list[0] is c1
+        assert item_list[1] is c2
 
         ct.delete('pants')
-        l = ct.get_all('pants')
-        assert not l
+        item_list = ct.get_all('pants')
+        assert not item_list
         assert len(ct) == 1
         assert ct[0] is c3
 
@@ -129,9 +129,9 @@ class ConversionTableTestCase(unittest.TestCase):
         ct = ConversionTable([("pants", conv_val, conv_item),
                               ("shirt", conv_val, conv_item, True)])
 
-        l = ct.get_all("belt")
-        assert isinstance(l, list)
-        assert not l
+        item_list = ct.get_all("belt")
+        assert isinstance(item_list, list)
+        assert not item_list
 
     def test_convert(self):
         ct = ConversionTable([
