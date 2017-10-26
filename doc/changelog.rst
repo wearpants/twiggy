@@ -11,7 +11,7 @@ Changelog
 - add sameValue, sameItem, drop helper functions to lib.converter
 - support {}, %, $ as style aliases.
 - PEP8 name compliance
-- add logging_compat module for compatibility with stlib's logging
+- add logging_compat module for compatibility with stdlib's logging
 
 ******************************
 0.4.7
