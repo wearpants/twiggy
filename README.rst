@@ -1,14 +1,20 @@
 Twiggy
 =================================
+Twiggy is a Pythonic logger.
 
-.. image:: https://pypip.in/version/twiggy/badge.svg?style=flat
+.. image:: https://img.shields.io/pypi/v/twiggy.svg
     :target: https://pypi.python.org/pypi/twiggy/
     :alt: Latest Version
     
 .. image:: https://img.shields.io/travis/wearpants/twiggy.svg
     :target: https://travis-ci.org/wearpants/twiggy
 
-Twiggy is a Pythonic logger.
+.. image:: 	https://img.shields.io/readthedocs/twiggy/stable.svg
+    :target: http://twiggy.readthedocs.io/en/stable/
+    :alt: Documentation
+    
+ 
+
 
 .. code-block:: pycon
 
