@@ -14,9 +14,9 @@ spawning new processes*.
 Quick Setup
 *******************
 
-:func:`quick_setup` quickly configures output with reasonable defaults and minimal customizability.
-Use it when you don't need a lot of customizability or as the default configuration that the user
-can override via configuration and if you use :ref:`dict_config`.
+:func:`quick_setup` quickly configures output with reasonable defaults. Use it when you don't need
+a lot of customizability or as the default configuration that the user can override via
+programatic configuration or :ref:`dict_config`.
 
 The defaults will emit log messages of ``DEBUG`` level or higher to ``stderr``:
 
@@ -42,12 +42,11 @@ Twiggy's output side features modern, loosely coupled design.  The easiest way t
 that means is to look at how to configure twiggy programmatically.
 
 .. note::
-    In the past, the convention was to configure twiggy programmatically in a separate file in your
+    Prior to Twiggy 0.5, by convention twiggy was programmatically set up in a separate file in your
     application called ``twiggy_setup.py`` in a function called ``twiggy_setup()``.  This allowed
     sites to override the configuration via their configuration management systems by replacing the
     file.  In Twiggy 0.5 and later, the :ref:`dict_config` function provides a more natural way
-    for you to let user's override the logging configuration using a config file so you don't have
-    to follow the naming convention if you use :ref:`dict_config` for your users.
+    for to allow users to override the logging configuration using a config file.
 
 Programmatically configuring Twiggy involves creating an :ref:`output <outputs>` which defines where the log
 messages will be sent and then creating an :class:`.Emitter` which associates a subset of your
@@ -73,7 +72,7 @@ like:
 
 In this example, we create two log :ref:`outputs`: ``alice_output`` and ``bob_output``.  These
 outputs are :class:`twiggy.outputs.FileOutput`s.  They tell twiggy to write messages directed to
-that output into the named file.  In this case, ``alice.log`` and ``bob.log``.  All outputs have
+the output into the named file, in this case, ``alice.log`` and ``bob.log``.  All outputs have
 a formatter associated with them.  The formatter is responsible for turning Twiggy's
 :ref:`structured-logging` calls into a suitable form for the output.  In this example, both
 ``alice_output`` and ``bob_output`` use :func:`twiggy.formats.line_format` to format their
@@ -192,11 +191,10 @@ dict_config()
     emitters.clear()
 
 Twiggy 0.5 features a new convenience method, :func:`.dict_config` for configuring
-:class:`Emitters <.Emitter>`.  It lets you specify configuration as a dictionary with the
-configuration information and then pass the dictionary to :func:`twiggy.dict_config` to set things
-up.  The dictionary can be constructed programmatically, loaded from a configuration file, or
-hardcoded into an application.  This allows the programmer to easily set defaults and allow the user
-to override those from a configuration file.  Here's an example:
+:class:`Emitters <.Emitter>` that takes a a dictionary with the configuration information. The
+dictionary can be constructed programmatically, loaded from a configuration file, or hardcoded
+into an application. This allows the programmer to easily set defaults and allow the user to
+override those from a configuration file. Here's an example:
 
 .. testcode:: dict_config
 
@@ -246,7 +244,7 @@ In this example, the programmer creates a twiggy configuration in the applicatio
 to configure twiggy.  The configuration closely mirrors the objects that were created in the
 :ref:`twiggy-setup` section.  The ``outputs`` field contains definitions of ``alice_output`` and
 ``bob_output`` that write to the ``alice.log`` and ``bob.log`` files respectively.  The ``emitters``
-field defines three emitters, their levels and filters to output to the 
+field defines three emitters, their levels and filters to output to the
 
 The configuration should be done near the start of your application.  It's
 particularly important to set up Twiggy *before spawning new processes*.
@@ -266,12 +264,9 @@ configuration dictionary mean.
 User Overrides
 ==============
 
-Each site that runs an application is likely to have different views on where they want the
-application to log to.  With Twiggy's `dict_config` it is easy to let the user override the
-configuration specified by the program.  For instance, the application could have a yaml
-configuration file with a ``logging_config`` section which contains a Twiggy Config.  Allowing the
-site to override the default with the configuration from the config file is as simple as running
-this code after loading the defaults::
+Each site that runs an application is likely to have different logging needs. Using
+`dict_config` it is easy to let the user override the configuration specified by the program. For
+instance, the application could have a yaml configuration file with a ``logging_config`` section::
 
     import yaml
     config = yaml.safe_load('config_file.yml')
@@ -358,13 +353,13 @@ emitters
     If both ``emitters`` and ``output`` are None and `incremental` is False then
     :data:`twiggy.emitters` will be cleared.
 
-Sometimes you want to have an entry in ``args`` or ``kwargs`` that is a python object.  For
+Sometimes you want to have an entry in ``args`` or ``kwargs`` that is a python object. For
 instance, :class:`~twiggy.outputs.StreamOutput` takes a stream keyword argument so you may want to
-give ``sys.stdout`` to it.  If you are writing the configuration in Python code you can simply
-include the actual object in the field.  However, if you are writing in a text configuration file,
-you need another way to specify this.  Twiggy allows you to prefix the string with ``ext://`` in
-this case.  When Twiggy sees that the string starts with ``ext://`` it will strip off the prefix and
-then try to import an object with the rest of the name.
+give ``sys.stdout`` to it. If you are building the configuration dictionary in Python code you can
+simply use the actual object. However, if you are writing in a text configuration file, you can
+specify existing objects by prefixing the string with ``ext://``. When Twiggy sees that the string
+starts with ``ext://`` it will strip off the prefix and then try to import an object with the rest
+of the name.
 
 Here's an example config that you might find in a YAML config file:
 

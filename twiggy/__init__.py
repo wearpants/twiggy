@@ -96,13 +96,7 @@ def dict_config(config):
 
     .. versionadded: 0.5
     """
-    try:
-        cfg = _validate_config(config)
-    except ValueError as e:
-        internal_log.warning("Error parsing twiggy setup: {0}", e)
-        # XXX Looks like twiggy does not generate fatal errors on setup.  Instead it generates
-        # errors on usage. (If this changes, could re-raise exception here)
-        return
+    cfg = _validate_config(config)
 
     cfg_outputs = {}
     for name, output in cfg['outputs'].items():

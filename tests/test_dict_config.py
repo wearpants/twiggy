@@ -67,9 +67,9 @@ def internal_log():
 
 
 def test_dict_config_invalid(internal_log):
-    twiggy.dict_config({})
-    assert re.search(r"WARNING:twiggy.internal|Error parsing twiggy setup: Config dict"
-                     " must contain a 'version' key", internal_log.getvalue())
+    with pytest.raises(ValueError) as excinfo:
+        twiggy.dict_config({})
+        assert excinfo.value.message == "Config dict must contain a 'version' key"
 
 
 def test_dict_config_valid(mocker):
