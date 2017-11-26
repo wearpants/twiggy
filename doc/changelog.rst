@@ -12,6 +12,7 @@ Changelog
 - support {}, %, $ as style aliases.
 - PEP8 name compliance
 - add logging_compat module for compatibility with stdlib's logging
+- add dict_config to configure logging from user configuration
 
 ******************************
 0.4.7

@@ -23,9 +23,16 @@ Global Objects
 
     the global :class:`emitters <.Emitter>` dictionary, tied to the :data:`.log`
 
+*************************
+Configuration
+*************************
+
 .. autofunction:: add_emitters
 
+.. autofunction:: dict_config
+
 .. autofunction:: quick_setup
+
 
 *************************
 Features
