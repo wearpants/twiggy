@@ -1,5 +1,4 @@
 import copy
-import re
 
 import pytest
 from six import StringIO
