@@ -173,6 +173,8 @@ Formats
 
     a default :class:`.LineFormat` for use in the shell.  Same as :data:`.line_format` but uses :data:`.shell_conversion` for :attr:`.fields`.
 
+.. autoclass:: JSONFormat
+
 *************************
 Levels
 *************************
@@ -393,12 +395,12 @@ Outputs
         Class variable, indicating that locks should be used when running in a synchronous, multithreaded environment. Threadsafe subclasses may disable locking for higher throughput. Defaults to True.
 
     .. automethod:: __init__
-    
+
     .. versionadded:: 0.4.1
-        Add the `close_atexit` parameter.     
-    
+        Add the `close_atexit` parameter.
+
     .. method:: close
-        
+
         Finalize the output.
 
     The following methods should be implemented by subclasses.
@@ -428,7 +430,7 @@ Outputs
 .. autoclass:: NullOutput
 
 .. autoclass:: ListOutput
-    
+
 .. versionchanged:: 0.4.1
     Replace `DequeOutput` with more useful `ListOutput`.
 

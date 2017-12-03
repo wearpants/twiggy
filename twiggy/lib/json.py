@@ -1,16 +1,29 @@
 import datetime
 import decimal
 import json
+import time
 import uuid
+
+from ..levels import LogLevel
 
 class TwiggyJSONEncoder(json.JSONEncoder):
     """
-    JSONEncoder subclass that knows how to encode date/time, decimal types, and
-    UUIDs.
+    JSONEncoder subclass that knows how to encode date/time, decimal types, UUIDs and LogLevels.
 
     Based on DjangoJSONEncoder.
     """
     def default(self, o):
+        if isinstance(o, LogLevel):
+            return str(o)
+        elif isinstance(o, (decimal.Decimal, uuid.UUID)):
+            return str(o)
+        elif isinstance(o, time.struct_time):
+            # XXX broken, as we never reach this function (or even encode()), since struct_time is a
+            # tuple, and JSONEncoder handles it before we get here. Hmm.
+
+            # convert struct_time to datetime
+            o = datetime.datetime.fromtimestamp(time.mktime(o))
+
         # See "Date Time String Format" in the ECMA-262 specification.
         if isinstance(o, datetime.datetime):
             r = o.isoformat()
@@ -30,8 +43,6 @@ class TwiggyJSONEncoder(json.JSONEncoder):
             return r
         elif isinstance(o, datetime.timedelta):
             return duration_iso_string(o)
-        elif isinstance(o, (decimal.Decimal, uuid.UUID)):
-            return str(o)
         else:
             return super().default(o)
 
@@ -73,3 +84,14 @@ def duration_iso_string(duration):
     days, hours, minutes, seconds, microseconds = _get_duration_components(duration)
     ms = '.{:06d}'.format(microseconds) if microseconds else ""
     return '{}P{}DT{:02d}H{:02d}M{:02d}{}S'.format(sign, days, hours, minutes, seconds, ms)
+
+
+def is_aware(value):
+    """
+    Determine if a given datetime.datetime is aware.
+    The concept is defined in Python's docs:
+    http://docs.python.org/library/datetime.html#datetime.tzinfo
+    Assuming value.tzinfo is either None or a proper datetime.tzinfo,
+    value.utcoffset() implements the appropriate logic.
+    """
+    return value.utcoffset() is not None
