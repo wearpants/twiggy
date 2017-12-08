@@ -1,7 +1,11 @@
+# coding: utf-8
+
+import itertools
 import re
 import sys
 
-from six import StringIO
+import pytest
+from six import StringIO, string_types
 
 import twiggy as _twiggy
 from twiggy import logger, outputs, levels, filters
@@ -15,103 +19,144 @@ else:
         raise RuntimeError("unittest2 is required for Python < 2.7")
 
 
-class LoggerTestBase(object):
-    """common tests for loggers"""
+@pytest.fixture(params=(logger.Logger, logger.InternalLogger))
+def test_logger(request):
+    output = outputs.ListOutput(close_atexit=False)
+    if issubclass(request.param, logger.InternalLogger):
+        yield request.param(output=output)
+    else:
+        log = request.param()
+        emitters = log._emitters
+        emitters['*'] = filters.Emitter(levels.DEBUG, None, output)
+        yield log
 
-    def test_fields_dict(self):
-        d = {42: 42}
-        log = self.log.fields_dict(d)
-        assert log is not self.log
-        assert log._fields == d
-        assert log._fields is not d
-        # we could do the same tests on options/min_level as done
-        # in test_clone, but that's starting to get redundant
+    output.close()
 
-    def test_fields(self):
-        log = self.log.fields(a=42)
-        assert log is not self.log
-        assert log._fields == {'a': 42}
 
-    def test_name(self):
-        log = self.log.name('bob')
-        assert log is not self.log
-        assert log._fields == {'name': 'bob'}
+class TestLoggerFields(object):
+    TEST_FIELDS_DATA = (
+            {42: 42},
+            {b'a': 42},
+            {u'a': 42},
+            {b'a': b'b'},
+            {u'a': u'b'},
+            {b'\xe4\xb8\xad': 42},
+            {u'中': 42},
+            {b'a': b'\xe4\xb8\xad'},
+            {u'a': u'中'},
+            )
 
-    def test_options(self):
-        log = self.log.options(suppress_newlines=True)
-        assert log is not self.log
+    TEST_NAMES_DATA = (
+            ('bob', {'name': 'bob'}),
+            (b'\xe4\xb8\xad', {'name': b'\xe4\xb8\xad'}),
+            (u'中', {'name': u'中'}),
+            )
+
+    @pytest.mark.parametrize('fields', TEST_FIELDS_DATA)
+    def test_fields_dict(self, test_logger, fields):
+        log = test_logger.fields_dict(fields)
+        assert log is not test_logger
+        assert log._fields == fields
+        assert log._fields is not fields
+
+    # Note: On python2, byte strings are valid keyword argument identifiers but not on python3
+    @pytest.mark.parametrize('fields', (d for d in TEST_FIELDS_DATA if
+                                        isinstance(list(d.keys())[0], string_types)))
+    def test_fields(self, test_logger, fields):
+        log = test_logger.fields(**fields)
+        assert log is not test_logger
+        assert log._fields == fields
+        assert log._fields is not fields
+
+    @pytest.mark.parametrize('name, expected', TEST_NAMES_DATA)
+    def test_name(self, test_logger, name, expected):
+        log = test_logger.name(name)
+        assert log is not test_logger
+        assert log._fields == expected
+
+
+class TestOptions(object):
+    # More comprehensive options tests done in test_message
+    def test_options(self, test_logger):
+        log = test_logger.options(suppress_newlines=True)
+        assert log is not test_logger
         assert log._options['suppress_newlines'] is True
 
-    def test_bad_options(self):
-        with self.assertRaises(ValueError):
-            self.log.options(boom=True)
+    def test_bad_options(self, test_logger):
+        with pytest.raises(ValueError):
+            test_logger.options(boom=True)
 
-    def test_trace(self):
-        log = self.log.trace('error')
-        assert log is not self.log
+    def test_trace(self, test_logger):
+        log = test_logger.trace('error')
+        assert log is not test_logger
         assert log._options['trace'] == 'error'
 
-    def test_debug(self):
-        self.log.debug('hi')
-        assert len(self.messages) == 1
-        m = self.messages.pop()
-        assert m.text == 'hi'
-        assert m.fields['level'] == levels.DEBUG
 
-    def test_info(self):
-        self.log.info('hi')
-        assert len(self.messages) == 1
-        m = self.messages.pop()
-        assert m.text == 'hi'
-        assert m.fields['level'] == levels.INFO
+class TestLevels(object):
+    TEST_LEVELS_MSGS = (
+            (u'hi', u'hi'),
+            (b'hi', u'hi'),
+            (b'\xe4\xb8\xad', u'中'),
+            (u'中', u'中'),
+            )
 
-    def test_notice(self):
-        self.log.notice('hi')
-        assert len(self.messages) == 1
-        m = self.messages.pop()
-        assert m.text == 'hi'
-        assert m.fields['level'] == levels.NOTICE
+    TEST_LEVELS_LEVELS = (
+            ('debug', levels.DEBUG),
+            ('info', levels.INFO),
+            ('notice', levels.NOTICE),
+            ('warning', levels.WARNING),
+            ('error', levels.ERROR),
+            ('critical', levels.CRITICAL),
+            )
 
-    def test_warning(self):
-        self.log.warning('hi')
-        assert len(self.messages) == 1, self.messages
-        m = self.messages.pop()
-        assert m.text == 'hi'
-        assert m.fields['level'] == levels.WARNING
+    @pytest.fixture
+    def level_logger(self, test_logger):
+        if isinstance(test_logger, logger.InternalLogger):
+            messages = test_logger.output.messages
+        else:
+            emitter = None
+            for emitter in test_logger._emitters.values():
+                break
+            messages = emitter._output.messages
 
-    def test_error(self):
-        self.log.error('hi')
-        assert len(self.messages) == 1
-        m = self.messages.pop()
-        assert m.text == 'hi'
-        assert m.fields['level'] == levels.ERROR
+        yield test_logger, messages
 
-    def test_critical(self):
-        self.log.critical('hi')
-        assert len(self.messages) == 1
-        m = self.messages.pop()
-        assert m.text == 'hi'
-        assert m.fields['level'] == levels.CRITICAL
+    @pytest.mark.parametrize('level_params, msg_params',
+                             itertools.product(TEST_LEVELS_LEVELS, TEST_LEVELS_MSGS))
+    def test_level_functions(self, level_logger, level_params, msg_params):
+        level, expected_level = level_params
+        msg, expected_msg = msg_params
+        test_logger, test_messages = level_logger
 
-    def test_logger_min_level(self):
-        log = self.log.name('test_min_level')
+        level_function = getattr(test_logger, level)
+        level_function(msg)
+        assert len(test_messages) == 1
+        m = test_messages.pop()
+        assert m.text == expected_msg
+        assert m.fields['level'] == expected_level
+
+    @pytest.mark.parametrize('msg, expected', TEST_LEVELS_MSGS)
+    def test_logger_min_level(self, level_logger, msg, expected):
+        test_logger, test_messages = level_logger
+
+        log = test_logger.name('test_min_level')
         log.min_level = levels.WARNING
 
-        log.warning('hi')
-        assert len(self.messages) == 1
-        m = self.messages.pop()
-        assert m.text == 'hi'
+        log.warning(msg)
+        assert len(test_messages) == 1
+        m = test_messages.pop()
+        assert m.text == expected
 
-        log.error('hi')
-        assert len(self.messages) == 1
-        m = self.messages.pop()
-        assert m.text == 'hi'
+        log.error(msg)
+        assert len(test_messages) == 1
+        m = test_messages.pop()
+        assert m.text == expected
 
-        log.info('hi')
-        assert len(self.messages) == 0
+        log.info(msg)
+        assert len(test_messages) == 0
 
 
-class InternalLoggerTest(LoggerTestBase, unittest.TestCase):
+class InternalLoggerTest(unittest.TestCase):
 
     def setUp(self):
         self.output = outputs.ListOutput(close_atexit=False)
@@ -184,7 +229,7 @@ class InternalLoggerTest(LoggerTestBase, unittest.TestCase):
         assert "Traceback" in sio.getvalue()
 
 
-class LoggerTestCase(LoggerTestBase, unittest.TestCase):
+class LoggerTestCase(unittest.TestCase):
 
     def setUp(self):
         self.log = logger.Logger()

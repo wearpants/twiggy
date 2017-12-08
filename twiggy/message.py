@@ -4,6 +4,7 @@ from string import Template
 
 from six import iteritems
 
+from .lib.text import to_text
 
 __all__ = ['Message']
 
@@ -31,6 +32,7 @@ class Message(object):
         :arg dict options: a dictionary of :ref:`options <message-options>` to control message
             creation.
         """
+        format_spec = to_text(format_spec, errors='surrogate_or_replace')
 
         self.fields = fields
         self.suppress_newlines = options['suppress_newlines']
