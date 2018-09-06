@@ -33,19 +33,15 @@ def _populate_globals():
 
     emitters = log._emitters
 
-    __internal_format = formats.LineFormat(conversion=formats.line_conversion)
-    __internal_output = outputs.StreamOutput(format=__internal_format, stream=sys.stderr)
-
-    internal_log = logger.InternalLogger(fields=__fields, output=__internal_output
-                                         ).name('twiggy.internal').trace('error')
+    internal_log = logger.internal_log
 
     devel_log = logger.InternalLogger(fields=__fields, output=outputs.NullOutput()
                                       ).name('twiggy.devel')
 
 
 def _del_globals():
-    global __fields, log, emitters, __internal_format, __internal_output, internal_log, devel_log
-    del __fields, log, emitters, __internal_format, __internal_output, internal_log, devel_log
+    global __fields, log, emitters, internal_log, devel_log
+    del __fields, log, emitters, internal_log, devel_log
 
 
 if not os.environ.get('TWIGGY_UNDER_TEST', None):  # pragma: no cover

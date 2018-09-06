@@ -3,7 +3,8 @@ from collections import Mapping, Sequence
 from six import integer_types, string_types
 from six.moves import builtins
 
-import twiggy
+from .. import formats
+from .. import levels
 
 
 def _import_module(module_name):
@@ -182,7 +183,7 @@ def _validate_config(config):
         raise ValueError("`outputs` must be a dict mapping output_names to outputs")
 
     for output_name, output in config['outputs'].items():
-        new_output = {'args': [], 'kwargs': {}, 'format': twiggy.formats.line_format}
+        new_output = {'args': [], 'kwargs': {}, 'format': formats.line_format}
 
         if not isinstance(output, Mapping):
             raise ValueError("`outputs` must be a dict of dicts")
@@ -225,13 +226,13 @@ def _validate_config(config):
             raise ValueError("Every entry in `emitters` must contain a `level` field")
         if isinstance(emitter['level'], string_types):
             try:
-                level = twiggy.levels.name2level(emitter['level'])
+                level = levels.name2level(emitter['level'])
             except KeyError:
                 raise ValueError("The `level` field of `emitters` must be the string name of"
                                  " a twiggy log level")
         else:
             level = emitter['level']
-        if not isinstance(level, twiggy.levels.LogLevel):
+        if not isinstance(level, levels.LogLevel):
             raise ValueError("The `level` field of `emitters` must be a string naming"
                              " a Twiggy LogLevel")
         new_emitter['level'] = level
