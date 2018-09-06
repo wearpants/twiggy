@@ -1,14 +1,16 @@
 from __future__ import print_function
 
 import sys
+import time
 import traceback
 import warnings
 from functools import wraps
 
 from six import iteritems
 
-import twiggy as _twiggy
+from . import formats
 from . import levels
+from . import outputs
 from .lib import iso8601time
 from .message import Message
 
@@ -255,8 +257,8 @@ class Logger(BaseLogger):
             if not self.filter(format_spec):
                 return
         except Exception:
-            _twiggy.internal_log.info("Error in Logger filtering with {0} on {1}",
-                                      repr(self.filter), format_spec)
+            internal_log.info("Error in Logger filtering with {0} on {1}",
+                              repr(self.filter), format_spec)
             # just continue emitting in face of filter error
 
             # XXX should we trap here too b/c of "Dictionary changed size during iteration" (or
@@ -272,9 +274,9 @@ class Logger(BaseLogger):
                           args, kwargs)
         except Exception:
             # XXX use .fields() instead?
-            _twiggy.internal_log.info("Error formatting message level: {0!r}, format: {1!r},"
-                                      " fields: {2!r}, options: {3!r}, args: {4!r}, kwargs: {5!r}",
-                                      level, format_spec, self._fields, self._options, args, kwargs)
+            internal_log.info("Error formatting message level: {0!r}, format: {1!r},"
+                              " fields: {2!r}, options: {3!r}, args: {4!r}, kwargs: {5!r}",
+                              level, format_spec, self._fields, self._options, args, kwargs)
             return
 
         outputs = set()
@@ -283,8 +285,8 @@ class Logger(BaseLogger):
             try:
                 include = emitter.filter(msg)
             except Exception:
-                _twiggy.internal_log.info("Error filtering with emitter {0}. Filter: {1}"
-                                          " Message: {2!r}", name, repr(emitter.filter), msg)
+                internal_log.info("Error filtering with emitter {0}. Filter: {1}"
+                                  " Message: {2!r}", name, repr(emitter.filter), msg)
                 include = True  # output anyway if error
 
             if include:
@@ -294,4 +296,12 @@ class Logger(BaseLogger):
             try:
                 o.output(msg)
             except Exception:
-                _twiggy.internal_log.warning("Error outputting with {0!r}. Message: {1!r}", o, msg)
+                internal_log.warning("Error outputting with {0!r}. Message: {1!r}", o, msg)
+
+
+__fields = {'time': time.gmtime}
+__internal_format = formats.LineFormat(conversion=formats.line_conversion)
+__internal_output = outputs.StreamOutput(format=__internal_format, stream=sys.stderr)
+
+internal_log = InternalLogger(fields=__fields, output=__internal_output
+                              ).name('twiggy.internal').trace('error')
