@@ -87,7 +87,7 @@ def dict_config(config):
     :arg config: a dictionary which configures twiggy's outputs and emitters.  See
         :attr:`TWIGGY_CONFIG_SCHEMA` for details of the format of the dict.
 
-    .. seealso:: :ref:`dict_config` for a thorough explaination of the outputs and emitters
+    .. seealso:: :ref:`dict_config` for a thorough explanation of the outputs and emitters
         concepts from the dictionary
 
     .. versionadded: 0.5
