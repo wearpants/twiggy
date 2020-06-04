@@ -28,8 +28,8 @@ def msg_filter(x):
         raise ValueError("Unknown filter: {0!r}".format(x))
 
 
-def list_wrapper(l):
-    filts = [msg_filter(i) for i in l]
+def list_wrapper(lst):
+    filts = [msg_filter(i) for i in lst]
 
     def wrapped(msg):
         return all(f(msg) for f in filts)
