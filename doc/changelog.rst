@@ -5,8 +5,7 @@ Changelog
 ******************************
 0.5.0
 ******************************
-*XXX Unreleased*
-
+*06/05/2020*
 - add a NOTICE level between INFO and WARNING
 - add sameValue, sameItem, drop helper functions to lib.converter
 - support {}, %, $ as style aliases.
@@ -70,3 +69,4 @@ Changelog
 
 First serious public release
 
+**
