@@ -30,8 +30,3 @@ Twiggy is a Pythonic logger.
 You should use Twiggy because it is awesome. For more information, read the
 `documentation <https://twiggy.readthedocs.io/en/latest/>`_ or `see this blog post
 <https://wearpants.org/petecode/meet-twiggy/>`_.
-
-Note that `master` is currently in flux and may be broken. Please use the
-maint-0.4_ branch for stable development/forks.
-
-.. _maint-0.4: https://github.com/wearpants/twiggy/tree/maint-0.4
