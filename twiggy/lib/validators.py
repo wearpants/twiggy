@@ -1,4 +1,9 @@
-from collections import Mapping, Sequence
+try:
+    # Python 3.10+ requires collections.abc
+    from collections.abc import Mapping, Sequence
+except ImportError:
+    # Python 2 compatibility
+    from collections import Mapping, Sequence
 
 from six import integer_types, string_types
 from six.moves import builtins
