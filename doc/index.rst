@@ -26,22 +26,17 @@ And fun to use!
     >>> log.name('frank').fields(number=42).info("hello {who}, it's a {0} day", 'sunny', who='world')
     INFO:frank:number=42|hello world, it's a sunny day
 
-:author: `Peter Fein <https://wearpants.org/about>`_
+:author: `Pete Fein <https://wearpants.org/>`_
 :email: pete@wearpants.org
-:twitter: `@petecode <https://twitter.com/petecode>`_
-:homepage: http://twiggy.readthedocs.io/en/latest/
-:hosting: https://github.com/wearpants/twiggy
-:IRC: `irc://irc.freenode.net/#twiggy <http://irc.lc/freenode/twiggy/>`_
+:twitter: `@wearpants <https://twitter.com/wearpants>`_
+:homepage: https://github.com/wearpants/twiggy
 :license: `BSD <https://opensource.org/licenses/bsd-license.php>`_
-:Python: 2.6, 2.7
 
 Twiggy was born at `Pycon 2010 <http://pyvideo.org/events/pycon-us-2010.html>`_ after I whined about the standard library's `logging <https://docs.python.org/3/library/logging.html>`_ and Jesse Noller "invited" me to do something about it.
 
 Install straight with distutils from the `Cheeseshop <https://pypi.python.org/pypi/Twiggy>`_ or::
 
     pip install Twiggy
-
-    easy_install -U Twiggy
 
 Get the latest version::
 
@@ -51,7 +46,7 @@ Get the latest version::
 Why Twiggy Should Be Your New Logger
 *************************************
 
-You should use Twiggy because it is awesome. For more information, `see this blog post <https://wearpants.org/petecode/meet-twiggy/>`_.
+You should use Twiggy because it is awesome. For more information, `see this blog post <https://snake.dev/blog/meet-twiggy/>`_.
 
 .. warning::
     Twiggy works great, but is not rock solid (yet); do not use for nuclear power plants, spaceships or mortgage derivatives trading (not that it'd matter).
