@@ -9,8 +9,8 @@ import os.path
 import sys
 
 # stop with the bug reports
-if sys.version_info < (2, 6):
-    raise RuntimeError("Twiggy requires Python 2.6 or greater")
+if sys.version_info < (2, 7):
+    raise RuntimeError("Twiggy requires Python 2.7 or greater")
 
 # this horrible mess brought to you by the crap that is Python distutils. Just use CPAN.
 version_file = os.path.join(os.path.dirname(__file__), 'VERSION')
@@ -22,7 +22,7 @@ setup(name='Twiggy',
       description='a Pythonic logger',
       author='Pete Fein',
       author_email='pete@wearpants.org',
-      url='http://twiggy.wearpants.org',
+      url='https://github.com/wearpants/twiggy/',
       packages=['twiggy', 'twiggy.lib', 'twiggy.features'],
       install_requires=['six'],
       license = "BSD",
@@ -32,13 +32,13 @@ setup(name='Twiggy',
       "Intended Audience :: Developers",
       "Programming Language :: Python",
       "Programming Language :: Python :: 2",
-      "Programming Language :: Python :: 2.6",
       "Programming Language :: Python :: 2.7",
       "Programming Language :: Python :: 3",
-      "Programming Language :: Python :: 3.4",
       "Programming Language :: Python :: 3.5",
       "Programming Language :: Python :: 3.6",
       "Programming Language :: Python :: 3.7",
+      "Programming Language :: Python :: 3.8",
+      "Programming Language :: Python :: 3.9",
       "License :: OSI Approved :: BSD License",],
       long_description=open('README.rst').read(),
       )
