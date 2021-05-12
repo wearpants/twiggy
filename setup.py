@@ -44,4 +44,3 @@ setup(name='Twiggy',
       "License :: OSI Approved :: BSD License",],
       long_description=open('README.rst').read(),
       )
-nn
