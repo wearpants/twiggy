@@ -29,4 +29,4 @@ Twiggy is a Pythonic logger.
 
 You should use Twiggy because it is awesome. For more information, read the
 `documentation <https://twiggy.readthedocs.io/en/latest/>`_ or `see this blog post
-<https://wearpants.org/petecode/meet-twiggy/>`_.
+<https://snake.dev/blog/meet-twiggy/>`_.
