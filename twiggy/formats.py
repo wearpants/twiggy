@@ -1,6 +1,8 @@
 import copy
+import json
 
 from .lib.converter import ConversionTable, Converter
+from .lib.json import TwiggyJSONEncoder
 from .lib import iso8601time
 
 #: a default line-oriented converter
@@ -72,3 +74,27 @@ line_format = LineFormat(conversion=line_conversion)
 #: a format for use in the shell - no timestamp
 shell_format = copy.copy(line_format)
 shell_format.conversion.get('time').convert_item = lambda k, v: None
+
+import json
+
+class JSONFormat(object):
+    """format messages to JSON. Returns a string.
+
+    The resulting JSON will have keys: `text`, `traceback` (possibly null) and `fields`.
+    Set `inline_fields` to True to include fields directly instead.
+
+    :ivar bool inline_fields: hoist individual fields to top-level keys. Defaults to False.
+    :ivar dict kwargs: extra keyword arguments to pass to `json.dumps()`
+    """
+
+    def __init__(self, inline_fields=False, **kwargs):
+        self.inline_fields = inline_fields
+        self.kwargs = kwargs
+
+    def __call__(self, msg):
+        # XXX this ignores msg.suppress_newlines. Hmm.
+        return json.dumps(
+            {'text': msg.text,
+             'traceback': msg.traceback,
+             **(msg.fields if self.inline_fields else {'fields': msg.fields})},
+            cls=TwiggyJSONEncoder, **self.kwargs)

@@ -52,7 +52,7 @@ class ConversionsTestCase(unittest.TestCase):
             formats.shell_format.conversion.convert(d)
 
 
-class FormatTestCase(unittest.TestCase):
+class LineFormatTestCase(unittest.TestCase):
 
     fields = {'time': when,
               'level': levels.INFO,
@@ -142,3 +142,48 @@ class FormatTestCase(unittest.TestCase):
         s = fmt(msg)
         lines = s.split('\n')
         assert len(lines) == 2
+
+class JSONFormatTestCase(unittest.TestCase):
+
+    fields = {'time': when,
+              'level': levels.INFO,
+              'name': 'mylog',
+              'pants': 42,
+              }
+
+    def test_basic(self):
+
+        fmt = formats.JSONFormat()
+
+        opts = message.Message._default_options.copy()
+        msg = message.Message(levels.INFO, "I wear {0}", self.fields, opts, ['pants'], {})
+        assert fmt(msg) == '2010-10-28T02:15:57Z:INFO:mylog:pants=42|I wear pants\n'
+
+    def test_inline_fields(self):
+
+        fmt = formats.JSONFormat(inline_fields=True)
+
+        opts = message.Message._default_options.copy()
+        msg = message.Message(levels.INFO, "I wear {0}", self.fields, opts, ['pants'], {})
+        assert fmt(msg) == '2010-10-28T02:15:57Z:INFO:mylog:pants=42|I wear pants\n'
+
+
+    def test_trace(self):
+
+        fmt = formats.JSONFormat()
+
+        opts = message.Message._default_options.copy()
+        opts['trace'] = 'error'
+
+        try:
+            1 / 0
+        except ZeroDivisionError:
+            msg = message.Message(levels.INFO, "I wear {0}", self.fields, opts, ['pants'], {})
+
+        s = fmt(msg)
+        lines = s.split('\n')
+        assert len(lines) == 6
+        for i in lines[1:-1]:
+            assert i.startswith('TRACE')
+
+        assert lines[0] == '2010-10-28T02:15:57Z:INFO:mylog:pants=42|I wear pants'
