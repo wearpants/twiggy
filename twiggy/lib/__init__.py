@@ -4,7 +4,7 @@ import time
 
 def thread_name():
     """return the name of the current thread"""
-    return threading.currentThread().getName()
+    return threading.current_thread().name
 
 
 def iso8601time(gmtime=None):
