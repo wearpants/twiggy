@@ -15,7 +15,7 @@ def tearDownModule():
 class HijackTest(TestCase):
 
     def compare_modules(self, m1, m2):
-        self.failUnlessEqual(m1.__name__, m2.__name__)
+        self.assertEqual(m1.__name__, m2.__name__)
 
     def verify_orig(self):
         import logging
@@ -47,16 +47,16 @@ class TestGetLogger(TestCase):
 
     def test_name(self):
         from twiggy.logging_compat import getLogger
-        self.failUnlessEqual(getLogger("spam")._logger._fields["name"], "spam")
+        self.assertEqual(getLogger("spam")._logger._fields["name"], "spam")
 
     def test_root(self):
         from twiggy.logging_compat import getLogger, root
-        self.failUnlessEqual(getLogger(), root)
+        self.assertEqual(getLogger(), root)
 
     def test_cache(self):
         from twiggy.logging_compat import getLogger
         eggs = getLogger("eggs")
-        self.failUnless(getLogger("eggs") is eggs)
+        self.assertIs(getLogger("eggs"), eggs)
 
 
 class TestFakeLogger(TestCase):
@@ -75,49 +75,49 @@ class TestFakeLogger(TestCase):
         from twiggy.logging_compat import INFO, ERROR
         for level in [INFO, ERROR]:
             self.logger.setLevel(level)
-            self.failUnlessEqual(self.logger.level, level)
+            self.assertEqual(self.logger.level, level)
 
     def test_percent(self):
-        self.failUnlessEqual(self.logger._logger._options["style"], "percent")
+        self.assertEqual(self.logger._logger._options["style"], "percent")
 
     def test_exception(self):
         try:
             1 / 0
         except ZeroDivisionError:
             self.logger.exception("spam")
-        self.failUnless("ZeroDivisionError" in self.messages[0].traceback)
+        self.assertIn("ZeroDivisionError", self.messages[0].traceback)
 
     def test_isEnabledFor(self):
         from twiggy.logging_compat import INFO, DEBUG
         self.logger.setLevel(INFO)
-        self.failIf(self.logger.isEnabledFor(DEBUG))
+        self.assertFalse(self.logger.isEnabledFor(DEBUG))
         self.logger.setLevel(DEBUG)
-        self.failUnless(self.logger.isEnabledFor(DEBUG))
+        self.assertTrue(self.logger.isEnabledFor(DEBUG))
 
     def test_log_no_exc_info(self):
         self.logger.info("nothing", exc_info=True)
-        self.failUnlessEqual(self.messages[0].traceback, None)
+        self.assertEqual(self.messages[0].traceback, None)
 
     def test_log_exc_info(self):
         try:
             1 / 0
         except ZeroDivisionError:
             self.logger.error("exception", exc_info=True)
-        self.failUnless("ZeroDivisionError" in self.messages[0].traceback)
+        self.assertIn("ZeroDivisionError", self.messages[0].traceback)
 
     def test_basicConfig(self):
         from twiggy.logging_compat import basicConfig
-        self.failUnlessRaises(RuntimeError, basicConfig)
+        self.assertRaises(RuntimeError, basicConfig)
 
     def test_log(self):
         from twiggy.logging_compat import INFO, ERROR
         for index, level in enumerate((INFO, ERROR)):
             self.logger.log(level, "spam")
-            self.failUnlessEqual(self.messages[index].text, "spam")
-            self.failUnlessEqual(self.messages[index].level, level)
+            self.assertEqual(self.messages[index].text, "spam")
+            self.assertEqual(self.messages[index].level, level)
 
     def test_log_bad_level(self):
-        self.failUnlessRaises(ValueError, self.logger.log, "illegal level", "eggs")
+        self.assertRaises(ValueError, self.logger.log, "illegal level", "eggs")
 
 
 class TestLoggingBridge(TestCase):
@@ -132,7 +132,7 @@ class TestLoggingBridge(TestCase):
         messages = list_output.messages
         add_emitters(("spam", DEBUG, None, list_output))
         logger.error("eggs")
-        self.failUnlessEqual(messages[0], ('|eggs\n', ERROR, 'spam'))
+        self.assertEqual(messages[0], ('|eggs\n', ERROR, 'spam'))
 
     def test_sanity(self):
         from twiggy import add_emitters, log

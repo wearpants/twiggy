@@ -247,7 +247,7 @@ class LoggerTestCase(unittest.TestCase):
         self.log.struct_dict(d)
         assert len(self.messages) == 1
         m = self.messages.pop()
-        self.assertDictContainsSubset(d, m.fields)
+        self.assertLessEqual(d.items(), m.fields.items())
         assert m.fields is not d
         assert m.text == ""
         assert m.level == levels.INFO
@@ -258,7 +258,8 @@ class LoggerTestCase(unittest.TestCase):
         self.log.struct(x=42)
         assert len(self.messages) == 1
         m = self.messages.pop()
-        self.assertDictContainsSubset({'x': 42}, m.fields)
+        d = {'x': 42}
+        self.assertLessEqual(d.items(), m.fields.items())
         assert m.text == ""
         assert m.level == levels.INFO
 
